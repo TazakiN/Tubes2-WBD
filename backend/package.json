@@ -4,9 +4,18 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "db:pull": "prisma db pull",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate"
   },
   "author": "WBD",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "wbd-backend": "file:"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
 }
