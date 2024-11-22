@@ -9,7 +9,7 @@ import reactLogo from "@/assets/react.svg";
 
 const Header = () => {
   return (
-    <header className="mx-20 flex items-center justify-between bg-white py-2 shadow">
+    <header className="flex items-center justify-between bg-white px-20 py-2 shadow">
       <div className="flex items-center gap-3">
         <img src={reactLogo} alt="Company Logo" />
         <span className="text-xl font-bold">LinkinPurry</span>
