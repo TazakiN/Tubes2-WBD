@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "../config/db";
-import { User } from "../models/users";
 import { signJWT } from "../utils/signJWT";
 
 export class AuthService {
@@ -28,17 +27,15 @@ export class AuthService {
   }
 
   static async login(identifier: string, password: string) {
-    const userPrisma = await db.users.findFirst({
+    const user = await db.users.findFirst({
       where: {
         OR: [{ username: identifier }, { email: identifier }],
       },
     });
 
-    if (!userPrisma) {
+    if (!user) {
       throw new Error("Identifiers or password is incorrect");
     }
-
-    const user = User.fromPrisma(userPrisma);
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
