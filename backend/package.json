@@ -8,6 +8,7 @@
     "start": "tsx src/index.ts",
     "db:pull": "prisma db pull",
     "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate"
   },
   "author": "WBD",

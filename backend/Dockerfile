@@ -12,8 +12,13 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
-ENV PORT=3000
+RUN npm install
 
-EXPOSE 3000
+ENV PORT=4001
 
-CMD ["node", "index.js"]
+EXPOSE 4001
+
+COPY --chown=node:node docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
