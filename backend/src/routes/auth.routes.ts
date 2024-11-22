@@ -1,7 +1,12 @@
-import express from "express";
+import { Hono } from "hono";
 import { AuthController } from "../controllers/auth.controller";
 
-export const authRoutes = express.Router();
+export const authRoutes = new Hono();
 
-authRoutes.post("/login", AuthController.login);
-authRoutes.post("/register", AuthController.register);
+authRoutes.post("/login", async (c) => {
+  return await AuthController.login(c);
+});
+
+authRoutes.post("/register", async (c) => {
+  return await AuthController.register(c);
+});

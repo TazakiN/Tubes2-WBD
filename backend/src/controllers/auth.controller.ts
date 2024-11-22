@@ -1,45 +1,51 @@
-import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
+import { Context } from "hono";
 
 export class AuthController {
-  static async register(req: Request, res: Response) {
+  static async register(c: Context) {
     try {
-      const { username, email, password } = req.body;
+      const body = await c.req.json();
+      const { username, email, password } = body;
 
       if (!username || !email || !password) {
-        return res.status(400).json({
-          success: false,
-          message: "Username, email, and password are required",
-        });
+        return c.json(
+          {
+            success: false,
+            message: "Username, email, and password are required",
+          },
+          400
+        );
       }
 
       const newUser = await AuthService.register(username, email, password);
-      return res.status(201).json({
-        success: true,
-        message: "Register successful",
-        body: {
-          token: newUser,
+      return c.json(
+        {
+          success: true,
+          message: "Register successful",
+          body: {
+            token: newUser,
+          },
         },
-      });
+        201
+      );
     } catch (error) {
-      return res.status(500).json({ message: (error as Error).message });
+      return c.json({ message: (error as Error).message }, 500);
     }
   }
 
-  static async login(req: Request, res: Response) {
+  static async login(c: Context) {
     try {
-      const { identifier, password } = req.body;
+      const body = await c.req.json();
+      const { identifier, password } = body;
 
       if (!identifier || !password) {
-        return res
-          .status(400)
-          .json({ message: "Identifier and password are required" });
+        return c.json({ message: "Identifier and password are required" }, 400);
       }
 
       const token = await AuthService.login(identifier, password);
-      return res.status(200).json({ message: "Login successful", token });
+      return c.json({ message: "Login successful", token }, 200);
     } catch (error) {
-      return res.status(401).json({ message: (error as Error).message });
+      return c.json({ message: (error as Error).message }, 500);
     }
   }
 }
