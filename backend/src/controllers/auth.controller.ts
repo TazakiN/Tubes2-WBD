@@ -18,13 +18,13 @@ export class AuthController {
         );
       }
 
-      const newUser = await AuthService.register(username, email, password);
+      const token = await AuthService.register(username, email, password);
       return c.json(
         {
           success: true,
           message: "Register successful",
           body: {
-            token: newUser,
+            token: token,
           },
         },
         201
