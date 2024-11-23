@@ -17,4 +17,5 @@ app.route("/profile", profileRoutes);
 base.use(logger());
 base.route("/api", app);
 
+console.log(`Server is listening on port ${port}`);
 serve({ fetch: base.fetch, port: port });
