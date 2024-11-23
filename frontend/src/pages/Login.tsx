@@ -3,15 +3,30 @@ import { AuthLayout } from "@/layouts/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate({ from: "/login" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt", { identifier: identifier, password });
+    const payload = { identifier, password };
+    fetch("http://localhost:4001/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then((res) => {
+      if (res.status === 200) {
+        navigate({ to: "/" });
+      } else {
+        console.error("Login failed");
+        console.error("error: ", res);
+      }
+    });
   };
 
   return (
@@ -61,7 +76,7 @@ export default function Login() {
           href="/register"
           className="font-medium text-blue-600 hover:text-blue-500"
         >
-          Join now
+          Register now
         </Link>
       </p>
     </AuthLayout>
