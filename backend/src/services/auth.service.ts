@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import db from "../config/db";
 import { signJWT } from "../utils/signJWT";
 
-export class AuthService {
+export default class AuthService {
   static async register(username: string, email: string, password: string) {
     const hashedPassword = (await bcrypt.hash(password, 10)) as string;
 
