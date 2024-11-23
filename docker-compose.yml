@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./backend/src:/app/src
+      - ./backend/src:/home/node/app/src:cached
     depends_on:
       - db
     ports:
