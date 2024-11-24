@@ -9,6 +9,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const navigate = useNavigate({ from: "/register" });
 
   function handleSubmit(e: React.FormEvent): void {
@@ -18,7 +19,7 @@ const Register = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, name: fullName }),
     }).then((res) => {
       if (res.status === 201) {
         console.log("Registration successful");
@@ -44,6 +45,20 @@ const Register = () => {
             className="mt-1"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="fullName">Full Name</Label>
+          <Input
+            id="fullName"
+            name="fullName"
+            type="text"
+            autoComplete="name"
+            required
+            className="mt-1"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
         </div>
 

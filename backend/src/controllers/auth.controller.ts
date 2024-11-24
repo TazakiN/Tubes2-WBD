@@ -6,19 +6,19 @@ export class AuthController {
   static async register(c: Context) {
     try {
       const body = await c.req.json();
-      const { username, email, password } = body;
+      const { username, email, name, password } = body;
 
-      if (!username || !email || !password) {
+      if (!username || !email || !password || !name) {
         return c.json(
           {
             success: false,
-            message: "Username, email, and password are required",
+            message: "Username, email, name, and password are required",
           },
           400
         );
       }
 
-      const token = await AuthService.register(username, email, password);
+      const token = await AuthService.register(username, email, password, name);
       return c.json(
         {
           success: true,
