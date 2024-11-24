@@ -5,6 +5,7 @@ import { signJWT } from "../utils/signJWT";
 export default class AuthService {
   static async register(username: string, email: string, password: string) {
     const hashedPassword = (await bcrypt.hash(password, 10)) as string;
+    const defaultPP = "uploads/default.jpg";
 
     const user = await db.users.create({
       data: {
@@ -13,6 +14,7 @@ export default class AuthService {
         password_hash: hashedPassword,
         created_at: new Date(),
         updated_at: new Date(),
+        profile_photo_path: defaultPP,
       },
     });
 
