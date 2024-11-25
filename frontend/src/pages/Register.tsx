@@ -4,6 +4,7 @@ import { AuthLayout } from "@/layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -22,10 +23,10 @@ const Register = () => {
       body: JSON.stringify({ username, email, password, name: fullName }),
     }).then((res) => {
       if (res.status === 201) {
-        console.log("Registration successful");
+        toast.success("Registration successful");
         navigate({ to: "/" });
       } else {
-        console.error("Registration failed");
+        toast.error("Registration failed");
         console.error("error: ", res);
       }
     });

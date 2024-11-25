@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
@@ -21,9 +22,10 @@ export default function Login() {
       body: JSON.stringify(payload),
     }).then((res) => {
       if (res.status === 200) {
+        toast.success("Login successful");
         navigate({ to: "/" });
       } else {
-        console.error("Login failed");
+        toast.error("Login failed");
         console.error("error: ", res);
       }
     });
