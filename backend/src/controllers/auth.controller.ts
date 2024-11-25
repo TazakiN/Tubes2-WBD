@@ -1,4 +1,4 @@
-import { setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import AuthService from "../services/auth.service";
 import { Context } from "hono";
 
@@ -45,11 +45,22 @@ export class AuthController {
 
       const token = await AuthService.login(identifier, password);
       setCookie(c, "token", token, {
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60,
         httpOnly: true,
+        secure: false,
+        path: "/",
       });
 
       return c.json({ message: "Login successful", token }, 200);
+    } catch (error) {
+      return c.json({ message: (error as Error).message }, 500);
+    }
+  }
+
+  static async logout(c: Context) {
+    try {
+      deleteCookie(c, "token");
+      return c.json({ message: "Logout successful" }, 200);
     } catch (error) {
       return c.json({ message: (error as Error).message }, 500);
     }

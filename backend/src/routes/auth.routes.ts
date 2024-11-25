@@ -10,3 +10,7 @@ authRoutes.post("/login", async (c) => {
 authRoutes.post("/register", async (c) => {
   return await AuthController.register(c);
 });
+
+authRoutes.post("/logout", async (c) => {
+  return await AuthController.logout(c);
+});
