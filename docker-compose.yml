@@ -2,11 +2,14 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./backend/src:/home/node/app/src:cached
+      - ./backend:/home/node/app
+      - /home/node/app/node_modules
     depends_on:
       - db
     ports:
       - "4001:4001"
+    environment:
+      - NODE_ENV=development
   frontend:
     build: ./frontend
     volumes:
