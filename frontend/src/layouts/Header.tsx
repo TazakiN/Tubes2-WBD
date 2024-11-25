@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import reactLogo from "@/assets/react.svg";
+import { toast } from "sonner";
 
 const Header = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { userData } = useContext(UserDataContext);
-  const isAuthenticated = Boolean(userData);
+  const isAuthenticated = !!userData;
 
   const handleLogout = async () => {
     try {
@@ -29,7 +30,7 @@ const Header = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate({ to: "/login" });
+      toast.info("You are a Guest now");
     }
   }, [isAuthenticated, navigate]);
 
