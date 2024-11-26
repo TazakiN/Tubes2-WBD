@@ -49,7 +49,15 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			blue: {
+				primary: '#6482AD',
+				secondary: '#7FA1C3',
+			},
+			gray: {
+				light: '#E2DAD6',
+				lighter: '#F5EDED',
+			},
   		}
   	}
   },
