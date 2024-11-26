@@ -1,26 +1,37 @@
 import { ReactNode } from "react";
-import default_profile_picture from '@/assets/default-profile-picture.jpg'
+import { Link } from "@tanstack/react-router";
+import person_svg from '@/assets/svg/person.svg';
+import { ProfileData } from "@/lib/types/userData";
 
 interface ProfileLayoutProps {
-  name: string;
-  profile_picture: string;
-  num_connection: number;
-  children: ReactNode;
-
+  children?: ReactNode;
+  profile: ProfileData;
 }
 
-export function ProfileLayout({ name = "Olajide Olayinka Williams", profile_picture = default_profile_picture, num_connection = 0, children }: ProfileLayoutProps) {
+export function ProfileLayout({ children, profile }: ProfileLayoutProps) {
   return (
-    <div className="min-h-screen flex justify-center bg-gray-light">
+    <div className="min-h-screen bg-gray-light">
       <div className="flex flex-col justify-center py-12 sm:px-24 max-w-screen-lg w-full mx-auto">
-        <div className="bg-blue-secondary h-24 rounded-t-lg"></div>
+        <div className="overflow-hidden rounded-t-2xl bg-blue-secondary h-32"></div>
         <img
-          className="mx-auto h-32 w-auto rounded-full border-4 border-white"
-          src={profile_picture}
-          alt={"Profile picture of " + name}
+          className="relative -top-20 ml-6 sm:ml-10 lg:ml-16 h-32 w-32 rounded-full border-4 border-gray-lighter"
+          src={profile.profile_photo}
+          alt={"Profile picture of " + profile.name}
         />
-        <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-          {children}
+        <div className="overflow-hidden rounded-b-2xl -mt-32 bg-gray-lighter px-4 shadow">
+          <div className="flex flex-col mt-16 ml-6 sm:ml-10 lg:ml-16">
+            <div className="flex flex-row">
+              <img className="w-8 h-8" src={person_svg} alt="Person Icon"/>
+              <h2 className="text-2xl text-gray-dark font-medium ml-1"> {profile.name} </h2>
+            </div>
+
+            <Link
+              to="/connection"
+              className="text-md text-blue-secondary font-medium ml-1 mt-4 mb-10"
+            >
+              {profile.connection_count + " Connections"}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

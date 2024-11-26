@@ -6,5 +6,5 @@ export const Route = createLazyFileRoute('/profile')({
 })
 
 function RouteComponent() {
-  return <Profile />
+  return <Profile/>
 }

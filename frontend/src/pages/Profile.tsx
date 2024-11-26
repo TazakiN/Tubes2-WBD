@@ -1,110 +1,43 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Link } from "@tanstack/react-router";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { ProfileLayout } from "@/layouts/ProfileLayout";
+import { ProfileData, DefaultProfile} from "@/lib/types/userData";
+import default_profile_picture from '@/assets/img/default-profile-picture.jpg';
 
-const Register = () => {
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
-    // const [username, setUsername] = useState("");
-    // const [fullName, setFullName] = useState("");
-    // const navigate = useNavigate({ from: "/register" });
-  
-    // function handleSubmit(e: React.FormEvent): void {
-    //   e.preventDefault();
-    //   fetch("http://localhost:4001/api/register", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ username, email, password, name: fullName }),
-    //   }).then((res) => {
-    //     if (res.status === 201) {
-    //       toast.success("Registration successful");
-    //       navigate({ to: "/" });
-    //     } else {
-    //       toast.error("Registration failed");
-    //       console.error("error: ", res);
-    //     }
-    //   });
-    // }
-  
+const Profile = () => {
+    const { user_id } = useParams<{ user_id: string }>();
+    const [loading, setLoading] = useState(true);
+    const [profileData, setProfileData] = useState<ProfileData>(DefaultProfile({username : "",
+      profile_photo : default_profile_picture,
+      name : "",
+      work_history : "",
+      skills : "",
+      connection_count : 0,}));
+    const [error, setError] = useState(null);
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(`/api/profile/${user_id}`);
+          if (!response.ok) throw new Error("User not found");
+          const data = await response.json();
+          setProfileData(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProfile();
+    }, [user_id]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
     return (
-      <ProfileLayout title="Register Linkinpurry">
-          <div>
-            <Label htmlFor="name">Username</Label>
-            {/* <Input
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              required
-              className="mt-1"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            /> */}
-          </div>
-  
-          <div>
-            <Label htmlFor="fullName">Full Name</Label>
-            {/* <Input
-              id="fullName"
-              name="fullName"
-              type="text"
-              autoComplete="name"
-              required
-              className="mt-1"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            /> */}
-          </div>
-  
-          <div>
-            <Label htmlFor="email">Email address</Label>
-            {/* <Input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="mt-1"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            /> */}
-          </div>
-  
-          <div>
-            <Label htmlFor="password">Password</Label>
-            {/* <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="mt-1"
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            /> */}
-          </div>
-  
-          <Button type="submit" className="w-full">
-            Register
-          </Button>
-  
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Already on Linkinpurry?{" "}
-          <Link
-            href="/login"
-            className="font-medium text-blue-600 hover:text-blue-500"
-          >
-            Sign In
-          </Link>
-        </p>
-      </ProfileLayout>
+      <ProfileLayout profile={profileData}/>
     );
   };
   
-  export default Register;
+  export default Profile;
   

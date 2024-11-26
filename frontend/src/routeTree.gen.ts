@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ProfileuseridImport } from './routes/profile/[user_id]'
 
 // Create Virtual Routes
 
@@ -47,6 +48,12 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ProfileuseridRoute = ProfileuseridImport.update({
+  id: '/[user_id]',
+  path: '/[user_id]',
+  getParentRoute: () => ProfileLazyRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -79,53 +86,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
     }
+    '/profile/[user_id]': {
+      id: '/profile/[user_id]'
+      path: '/[user_id]'
+      fullPath: '/profile/[user_id]'
+      preLoaderRoute: typeof ProfileuseridImport
+      parentRoute: typeof ProfileLazyImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ProfileLazyRouteChildren {
+  ProfileuseridRoute: typeof ProfileuseridRoute
+}
+
+const ProfileLazyRouteChildren: ProfileLazyRouteChildren = {
+  ProfileuseridRoute: ProfileuseridRoute,
+}
+
+const ProfileLazyRouteWithChildren = ProfileLazyRoute._addFileChildren(
+  ProfileLazyRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
-  '/profile': typeof ProfileLazyRoute
+  '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
+  '/profile/[user_id]': typeof ProfileuseridRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
-  '/profile': typeof ProfileLazyRoute
+  '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
+  '/profile/[user_id]': typeof ProfileuseridRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
-  '/profile': typeof ProfileLazyRoute
+  '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
+  '/profile/[user_id]': typeof ProfileuseridRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/profile' | '/register'
+  fullPaths: '/' | '/login' | '/profile' | '/register' | '/profile/[user_id]'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/profile' | '/register'
-  id: '__root__' | '/' | '/login' | '/profile' | '/register'
+  to: '/' | '/login' | '/profile' | '/register' | '/profile/[user_id]'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/profile/[user_id]'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
-  ProfileLazyRoute: typeof ProfileLazyRoute
+  ProfileLazyRoute: typeof ProfileLazyRouteWithChildren
   RegisterLazyRoute: typeof RegisterLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
-  ProfileLazyRoute: ProfileLazyRoute,
+  ProfileLazyRoute: ProfileLazyRouteWithChildren,
   RegisterLazyRoute: RegisterLazyRoute,
 }
 
@@ -152,10 +187,17 @@ export const routeTree = rootRoute
       "filePath": "login.lazy.tsx"
     },
     "/profile": {
-      "filePath": "profile.lazy.tsx"
+      "filePath": "profile.lazy.tsx",
+      "children": [
+        "/profile/[user_id]"
+      ]
     },
     "/register": {
       "filePath": "register.lazy.tsx"
+    },
+    "/profile/[user_id]": {
+      "filePath": "profile/[user_id].tsx",
+      "parent": "/profile"
     }
   }
 }
