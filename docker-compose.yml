@@ -26,6 +26,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: linkinpurry
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d
 
   # redis:
   #   image: redis:latest
