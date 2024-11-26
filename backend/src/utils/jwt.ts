@@ -1,4 +1,4 @@
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 
 export function signJWT(userPayload: any) {
   const currentTimeInSeconds = Math.floor(Date.now() / 1000);
@@ -9,4 +9,9 @@ export function signJWT(userPayload: any) {
   };
   const secret = process.env.JWT_SECRET!;
   return sign(payload, secret);
+}
+
+export function verifyJWT(token: string) {
+  const secret = process.env.JWT_SECRET!;
+  return verify(token, secret);
 }

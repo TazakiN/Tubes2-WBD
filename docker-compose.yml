@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./backend:/home/node/app
+      - ./backend/src:/app/src
       - /home/node/app/node_modules
     depends_on:
       - db
@@ -10,6 +10,7 @@ services:
       - "4001:4001"
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
   frontend:
     build: ./frontend
     volumes:
@@ -25,6 +26,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: linkinpurry
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d
 
   # redis:
   #   image: redis:latest

@@ -8,11 +8,19 @@ import { cors } from "hono/cors";
 
 dotenv.config();
 const base = new Hono();
-
 const app = new Hono();
+
 const port: number = Number(process.env.PORT);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    allowMethods: ["GET", "POST", "PUT", "DELETE"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    maxAge: 6000,
+    credentials: true,
+  })
+);
 
 app.route("/", authRoutes);
 app.route("/profile", profileRoutes);

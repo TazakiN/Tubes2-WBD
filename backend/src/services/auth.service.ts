@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import db from "../config/db";
-import { signJWT } from "../utils/signJWT";
+import { signJWT, verifyJWT } from "../utils/jwt";
 
 export default class AuthService {
   static async register(
@@ -49,7 +49,7 @@ export default class AuthService {
       throw new Error("Identifiers or password is incorrect");
     }
 
-    const token = signJWT({
+    const token = await signJWT({
       id: user.id.toString(),
       email: user.email,
       role: "job_seeker",
