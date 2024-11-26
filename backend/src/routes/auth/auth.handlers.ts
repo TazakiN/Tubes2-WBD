@@ -1,13 +1,9 @@
-import { Hono } from "hono";
-import { AuthController } from "../controllers/auth.controller";
-import { zValidator } from "@hono/zod-validator";
-import { loginSchema, registerSchema } from "../schemas/auth.schema";
+import { Context } from "hono";
+import { AuthController } from "../../controllers/auth.controller";
 import { deleteCookie, setCookie } from "hono/cookie";
 
-export const authRoutes = new Hono();
-
-authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
-  const { identifier, password } = c.req.valid("json");
+export const login = async (c: Context) => {
+  const { identifier, password } = await c.req.json();
   try {
     const token = await AuthController.login(identifier, password);
     setCookie(c, "token", token, {
@@ -20,11 +16,11 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
   } catch (error) {
     return c.json({ success: false, error: (error as Error).message }, 500);
   }
-});
+};
 
-authRoutes.post("/register", zValidator("json", registerSchema), async (c) => {
+export const register = async (c: Context) => {
   try {
-    const { username, email, name, password } = c.req.valid("json");
+    const { username, email, name, password } = await c.req.json();
     const token = await AuthController.register(
       username,
       email,
@@ -42,13 +38,13 @@ authRoutes.post("/register", zValidator("json", registerSchema), async (c) => {
   } catch (error) {
     return c.json({ success: false, error: (error as Error).message }, 500);
   }
-});
+};
 
-authRoutes.post("/logout", async (c) => {
+export const logout = async (c: Context) => {
   try {
     deleteCookie(c, "token");
     return c.json({ message: "Logout successful" }, 200);
   } catch (error) {
     return c.json({ message: (error as Error).message }, 500);
   }
-});
+};
