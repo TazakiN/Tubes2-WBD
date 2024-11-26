@@ -14,7 +14,10 @@ export const login = async (c: Context) => {
     });
     return c.json({ success: true, token }, 200);
   } catch (error) {
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    if ((error as Error).message === "Identifiers or password is incorrect") {
+      return c.json({ success: false, message: (error as Error).message }, 401);
+    }
+    return c.json({ success: false, message: "Internal server error" }, 500);
   }
 };
 
@@ -27,16 +30,17 @@ export const register = async (c: Context) => {
       password,
       name
     );
-
     setCookie(c, "token", token, {
       maxAge: 60 * 60,
       httpOnly: true,
       secure: false,
     });
-
     return c.json({ success: true, token }, 201);
   } catch (error) {
-    return c.json({ success: false, error: (error as Error).message }, 500);
+    if ((error as Error).message === "Username or Email already exists") {
+      return c.json({ success: false, message: (error as Error).message }, 409);
+    }
+    return c.json({ success: false, message: "Internal server error" }, 500);
   }
 };
 
@@ -45,6 +49,9 @@ export const logout = async (c: Context) => {
     deleteCookie(c, "token");
     return c.json({ message: "Logout successful" }, 200);
   } catch (error) {
-    return c.json({ message: (error as Error).message }, 500);
+    return c.json(
+      { success: false, message: "An unexpected error occurred during logout" },
+      500
+    );
   }
 };
