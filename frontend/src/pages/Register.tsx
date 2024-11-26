@@ -21,13 +21,13 @@ const Register = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, email, password, name: fullName }),
-    }).then((res) => {
+    }).then(async (res) => {
+      const { message } = await res.json();
       if (res.status === 201) {
         toast.success("Registration successful");
         navigate({ to: "/" });
       } else {
-        toast.error("Registration failed");
-        console.error("error: ", res);
+        toast.error(message);
       }
     });
   }
