@@ -56,8 +56,17 @@ export default function Login() {
   };
 
   return (
-    <AuthLayout title="Sign in">
-      <form className="space-y-6" onSubmit={handleSubmit}>
+    <AuthLayout>
+      <div className="bg-blue-primary mx-auto flex size-32 items-center justify-center rounded-lg text-white">
+        {" "}
+      </div>
+      <div className="my-4">
+        <h1 className="text-2xl font-semibold">Welcome to Linkinpurry 2.0</h1>
+        <h2 className="text-base">
+          Please Enter your identifiers and password to sign in
+        </h2>
+      </div>
+      <form className="space-y-6 text-left" onSubmit={handleSubmit}>
         <div>
           <Label htmlFor="identifier">Username or Email</Label>
           <Input
@@ -82,7 +91,7 @@ export default function Login() {
             type="password"
             autoComplete="current-password"
             required
-            className="mt-1"
+            className="bg-gray-dark mt-1"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
@@ -92,30 +101,40 @@ export default function Login() {
 
         <Button
           type="submit"
-          className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+          className="w-full rounded bg-red px-4 py-2 font-normal text-white hover:bg-orange-700"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-              Signing in...
+              Logging in...
             </div>
           ) : (
-            "Sign in"
+            "LOGIN"
           )}
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
-        Not a member?{" "}
-        <Link
-          to="/register"
-          className="font-medium text-blue-600 hover:text-blue-500"
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <span className="border-gray-dark w-full border-2" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-gray-lighter px-2 text-base text-gray-600">
+            OR
+          </span>
+        </div>
+      </div>
+
+      <Link to="/register">
+        <Button
+          type="submit"
+          className="bg-blue-secondary hover:bg-blue-600 w-full rounded px-4 py-2 font-normal text-white"
           disabled={isLoading}
         >
-          Register now
-        </Link>
-      </p>
+          REGISTER
+        </Button>
+      </Link>
     </AuthLayout>
   );
 }

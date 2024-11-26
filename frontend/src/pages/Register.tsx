@@ -2,39 +2,65 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { UserDataContext } from "@/contexts/UserDataContext";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { setUserData } = useContext(UserDataContext);
   const navigate = useNavigate({ from: "/register" });
 
-  function handleSubmit(e: React.FormEvent): void {
+  async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
-    fetch("http://localhost:4001/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, email, password, name: fullName }),
-    }).then(async (res) => {
-      const { message } = await res.json();
-      if (res.status === 201) {
-        toast.success("Registration successful");
-        navigate({ to: "/" });
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:4001/api/register", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password, name: fullName }),
+      });
+
+      const { message } = await response.json();
+
+      if (response.status === 201) {
+        const profileResponse = await fetch(
+          "http://localhost:4001/api/profile/info",
+          {
+            credentials: "include",
+          },
+        );
+
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          setUserData(profileData.body);
+          toast.success("Registration successful");
+          navigate({ to: "/" });
+        }
       } else {
         toast.error(message);
       }
-    });
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("An error occurred during registration");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <AuthLayout title="Register Linkinpurry">
-      <form className="space-y-6" onSubmit={handleSubmit}>
+    <AuthLayout>
+      <h1 className="mb-4 text-2xl">Create an Account</h1>
+      <form className="space-y-6 text-left" onSubmit={handleSubmit}>
         <div>
           <Label htmlFor="name">Username</Label>
           <Input
@@ -92,20 +118,42 @@ const Register = () => {
           />
         </div>
 
-        <Button type="submit" className="w-full">
-          Register
+        <Button
+          type="submit"
+          className="w-full rounded bg-red px-4 py-2 font-normal text-white hover:bg-orange-700"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center gap-2">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+              Registering...
+            </div>
+          ) : (
+            "REGISTER"
+          )}
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
-        Already on Linkinpurry?{" "}
-        <Link
-          href="/login"
-          className="font-medium text-blue-600 hover:text-blue-500"
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <span className="border-gray-dark w-full border-2" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-gray-lighter px-2 text-base text-gray-600">
+            OR
+          </span>
+        </div>
+      </div>
+
+      <Link to="/login">
+        <Button
+          type="submit"
+          className="bg-blue-secondary hover:bg-blue-600 w-full rounded px-4 py-2 font-normal text-white"
+          disabled={isLoading}
         >
-          Sign In
-        </Link>
-      </p>
+          LOGIN
+        </Button>
+      </Link>
     </AuthLayout>
   );
 };
