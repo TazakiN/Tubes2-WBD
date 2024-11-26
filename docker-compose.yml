@@ -10,6 +10,7 @@ services:
       - "4001:4001"
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
   frontend:
     build: ./frontend
     volumes:
