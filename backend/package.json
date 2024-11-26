@@ -17,10 +17,13 @@
   "description": "",
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "@hono/zod-openapi": "^0.18.0",
+    "@hono/zod-validator": "^0.4.1",
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "hono": "^4.6.11"
+    "hono": "^4.6.11",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
