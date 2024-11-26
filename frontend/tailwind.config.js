@@ -57,7 +57,11 @@ export default {
 			gray: {
 				light: '#E2DAD6',
 				lighter: '#F5EDED',
+				dark: '#757575',
 			},
+			green: '#A6AD64',
+			red: '#AD6465',
+			black: '#1E1E1E',
   		}
   	}
   },
