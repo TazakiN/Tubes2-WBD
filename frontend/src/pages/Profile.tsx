@@ -1,43 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { ProfileLayout } from "@/layouts/ProfileLayout";
-import { ProfileData, DefaultProfile} from "@/lib/types/userData";
-import default_profile_picture from '@/assets/img/default-profile-picture.jpg';
+import { ProfileData, DefaultProfile } from "@/lib/types/userData";
+import default_profile_picture from "@/assets/img/default-profile-picture.jpg";
+import { toast } from "sonner";
 
 const Profile = () => {
-    const { user_id } = useParams<{ user_id: string }>();
-    const [loading, setLoading] = useState(true);
-    const [profileData, setProfileData] = useState<ProfileData>(DefaultProfile({username : "",
-      profile_photo : default_profile_picture,
-      name : "",
-      work_history : "",
-      skills : "",
-      connection_count : 0,}));
-    const [error, setError] = useState(null);
-    useEffect(() => {
-      const fetchProfile = async () => {
-        try {
-          setLoading(true);
-          const response = await fetch(`/api/profile/${user_id}`);
-          if (!response.ok) throw new Error("User not found");
-          const data = await response.json();
-          setProfileData(data);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchProfile();
-    }, [user_id]);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-
-    return (
-      <ProfileLayout profile={profileData}/>
-    );
+  const getUserIdFromUrl = () => {
+    const pathParts = window.location.pathname.split("/");
+    return pathParts[pathParts.length - 1];
   };
-  
-  export default Profile;
-  
+
+  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState<ProfileData>(
+    DefaultProfile({
+      username: "",
+      profile_photo: default_profile_picture,
+      name: "",
+      work_history: "",
+      skills: "",
+      connection_count: 0,
+    }),
+  );
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const user_id = getUserIdFromUrl();
+        const response = await fetch(`/api/profile/${user_id}`);
+        if (!response.ok) throw new Error("User not found");
+        const data = await response.json();
+        setProfileData(data);
+      } catch (err) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+        } else {
+          toast.error("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
+  return <ProfileLayout profile={profileData} />;
+};
+
+export default Profile;
