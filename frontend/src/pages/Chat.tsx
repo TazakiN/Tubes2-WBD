@@ -9,7 +9,7 @@ const Chat = () => {
       </div>
       <div className="flex flex-grow flex-row gap-8">
         <ChatList />
-        <ChatPanel />
+        <ChatPanel name={""} chats={[]} />
       </div>
     </main>
   );
