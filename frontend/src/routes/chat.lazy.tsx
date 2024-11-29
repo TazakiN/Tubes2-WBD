@@ -1,10 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import ChatPage from "@/pages/ChatPage";
+import Chat from "@/pages/Chat";
 
 export const Route = createLazyFileRoute("/chat")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <ChatPage />;
+  return <Chat />;
 }
