@@ -11,7 +11,7 @@ function ChatContext({
   contact: ChatContextProp;
 }) {
   return (
-    <div className="hover:bg-gray-lighter-hover flex min-w-96 max-w-xs flex-row px-4 py-2 text-gray-dark">
+    <div className="hover:bg-gray-lighter-hover flex min-w-96 max-w-xs flex-row rounded-lg px-4 py-2 text-gray-dark transition-transform duration-200 hover:scale-105 hover:cursor-pointer">
       <div className="flex-shrink-0 rounded-full p-2">
         <img
           src={chatContextData.image}
