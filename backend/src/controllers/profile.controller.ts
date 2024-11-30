@@ -25,8 +25,9 @@ export class profileController {
         },
         200
       );
+
     } catch (error) {
-      return c.json({ error: (error as Error).message }, 500);
+      return c.json({ success: false, message: (error as Error).message, error: null }, 500);
     }
   }
 
@@ -34,20 +35,24 @@ export class profileController {
     const user_id = BigInt(c.req.param("user_id"));
     try {
       const profile = await profileService.getProfile(user_id);
-
       return c.json(
         {
           success: true,
           message: "Profile found",
           body: {
-            name: profile?.username,
-            email: profile?.email,
+            username: profile?.username,
+            name: profile?.full_name,
+            work_history: profile?.work_history,
+            skills: profile?.skills,
+            // TODO: Get Connection Count
+            profile_photo: profile?.profile_photo_path,
           },
         },
         200
       );
+
     } catch (error) {
-      return c.json({ error: (error as Error).message }, 500);
+      return c.json({ success: false, message: (error as Error).message, error: null }, 500);
     }
   }
 }

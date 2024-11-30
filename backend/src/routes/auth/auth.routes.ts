@@ -14,7 +14,7 @@ export const login = createRoute({
         "application/json": {
           schema: loginSchema,
           example: {
-            email: "user@example.com",
+            identifier: "user@example.com",
             password: "securePassword123",
           },
         },
@@ -39,17 +39,17 @@ export const login = createRoute({
         },
       },
     },
-    400: {
+    401: {
       description: "Bad Request - Invalid login credentials",
       content: {
         "application/json": {
           schema: z.object({
             success: z.boolean(),
-            error: z.string().describe("Detailed error message"),
+            message: z.string().describe("Detailed error message"),
           }),
           example: {
             success: false,
-            error: "Invalid email or password",
+            message: "Invalid email or password",
           },
         },
       },
@@ -60,11 +60,11 @@ export const login = createRoute({
         "application/json": {
           schema: z.object({
             success: z.boolean(),
-            error: z.string().describe("Server-side error description"),
+            message: z.string().describe("Server-side error description"),
           }),
           example: {
             success: false,
-            error: "An unexpected error occurred during login",
+            message: "An unexpected error occurred during login",
           },
         },
       },
@@ -102,20 +102,15 @@ export const register = createRoute({
           schema: z.object({
             success: z.boolean(),
             token: z.string().describe("JWT access token for new user"),
-            userId: z
-              .string()
-              .optional()
-              .describe("Newly created user's unique identifier"),
           }),
           example: {
             success: true,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            userId: "user_123456",
           },
         },
       },
     },
-    400: {
+    409: {
       description: "Bad Request - Registration validation failed",
       content: {
         "application/json": {

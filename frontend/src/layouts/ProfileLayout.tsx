@@ -6,9 +6,11 @@ import { ProfileData } from "@/lib/types/userData";
 interface ProfileLayoutProps {
   children?: ReactNode;
   profile: ProfileData;
+  connection_count: number;
 }
 
-export function ProfileLayout({ children, profile }: ProfileLayoutProps) {
+export function ProfileLayout({ children, profile, connection_count }: ProfileLayoutProps) {
+  console.log("received profile: ");
   return (
     <div className="min-h-screen bg-gray-light">
       <div className="flex flex-col justify-center py-12 sm:px-24 max-w-screen-lg w-full mx-auto">
@@ -16,7 +18,7 @@ export function ProfileLayout({ children, profile }: ProfileLayoutProps) {
         <img
           className="relative -top-20 ml-6 sm:ml-10 lg:ml-16 h-32 w-32 rounded-full border-4 border-gray-lighter"
           src={profile.profile_photo}
-          alt={"Profile picture of " + profile.name}
+          alt={"Profile picture of " + profile.username}
         />
         <div className="overflow-hidden rounded-b-2xl -mt-32 bg-gray-lighter px-4 shadow">
           <div className="flex flex-col mt-16 ml-6 sm:ml-10 lg:ml-16">
@@ -29,7 +31,7 @@ export function ProfileLayout({ children, profile }: ProfileLayoutProps) {
               to="/connection"
               className="text-md text-blue-secondary font-medium ml-1 mt-4 mb-10"
             >
-              {profile.connection_count + " Connections"}
+              {connection_count + " Connections"}
             </Link>
           </div>
         </div>
