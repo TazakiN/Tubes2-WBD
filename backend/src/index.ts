@@ -4,12 +4,20 @@ import dotenv from "dotenv";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
-import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
+import { createNodeWebSocket } from "@hono/node-ws";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { Hono } from "hono";
+import { websocketHandler } from "./utils/ws";
 
 dotenv.config();
 const app = new OpenAPIHono();
 const port: number = Number(process.env.PORT);
+
+const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
+  app: app as Hono,
+});
+export { upgradeWebSocket };
 
 app.use(logger());
 
@@ -37,5 +45,8 @@ app.doc("/doc", {
 
 app.get("/ui", swaggerUI({ url: "/doc" }));
 
+app.get("/ws", websocketHandler());
+
 console.log(`Server is listening on port ${port}`);
-serve({ fetch: app.fetch, port: port });
+const server = serve({ fetch: app.fetch, port: port });
+injectWebSocket(server);
