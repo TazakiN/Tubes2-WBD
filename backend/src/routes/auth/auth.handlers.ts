@@ -47,7 +47,7 @@ export const register = async (c: Context) => {
 export const logout = async (c: Context) => {
   try {
     deleteCookie(c, "token");
-    return c.json({ message: "Logout successful" }, 200);
+    return c.json({ success: true, message: "Logout successful" }, 200);
   } catch (error) {
     return c.json(
       { success: false, message: "An unexpected error occurred during logout" },
