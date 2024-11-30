@@ -1,3 +1,5 @@
+import { Context } from "hono";
+import { getCookie } from "hono/cookie";
 import { sign, verify } from "hono/jwt";
 
 export function signJWT(userPayload: any) {
@@ -14,4 +16,13 @@ export function signJWT(userPayload: any) {
 export function verifyJWT(token: string) {
   const secret = process.env.JWT_SECRET!;
   return verify(token, secret);
+}
+
+export function getUserIDbyTokenInCookie(c: Context) {
+  const token = getCookie(c, "token");
+  if (!token) {
+    throw new Error("Token not found");
+  }
+  const payload = verifyJWT(token);
+  return (payload as any).id as string;
 }
