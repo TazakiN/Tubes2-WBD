@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { ProfileLayout } from "@/layouts/ProfileLayout";
-import { ProfileData, DefaultProfile } from "@/lib/types/userData";
-import default_profile_picture from "@/assets/img/default-profile-picture.jpg";
+import { ProfileData, CreateProfileData } from "@/lib/types/userData";
 import { toast } from "sonner";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Profile = () => {
   const getUserIdFromUrl = () => {
@@ -12,27 +13,22 @@ const Profile = () => {
 
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<ProfileData>(
-    DefaultProfile({
-      username: "",
-      profile_photo: default_profile_picture,
-      name: "",
-      work_history: "",
-      skills: "",
-      connection_count: 0,
-    }),
+    CreateProfileData({}),
   );
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
         const user_id = getUserIdFromUrl();
-        const response = await fetch(`/api/profile/${user_id}`);
+        const requestPath = `${BASE_URL}/profile/${user_id}`;
+        const response = await fetch(requestPath, {credentials: "include"});
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        setProfileData(data);
+        setProfileData(data.body);
       } catch (err) {
         if (err instanceof Error) {
           toast.error(err.message);
+
         } else {
           toast.error("An unknown error occurred");
         }
@@ -45,7 +41,7 @@ const Profile = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  return <ProfileLayout profile={profileData} />;
+  return <ProfileLayout profile={profileData} connection_count={0} />;
 };
 
 export default Profile;

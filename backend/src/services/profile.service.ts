@@ -18,6 +18,13 @@ export default class profileService {
       where: {
         id: user_id,
       },
+      select: {
+        username: true,
+        full_name: true,
+        work_history: true,
+        skills: true,
+        profile_photo_path: true,
+      },
     });
   }
 }

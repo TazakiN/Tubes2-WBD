@@ -6,23 +6,21 @@ export interface UserData {
 }
 
 export interface ProfileData {
-  username: string;
-  profile_photo: string;
-  name: string;
-  work_history: string;
-  skills: string;
-  connection_count: number;
+  username?: string;
+  profile_photo?: string;
+  name?: string;
+  work_history?: string;
+  skills?: string;
 }
 
-export function DefaultProfile ({
+export function CreateProfileData ({
   username = "",
   profile_photo = default_profile_picture,
   name = "",
   work_history = "",
   skills = "",
-  connection_count = 0,
   }: ProfileData): ProfileData {
-    return {username, profile_photo, name, work_history, skills, connection_count};
+    return {username, profile_photo, name, work_history, skills};
 }
 
 export interface UseAuthReturn {
