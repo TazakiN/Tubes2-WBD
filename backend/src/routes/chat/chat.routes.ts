@@ -18,7 +18,17 @@ export const getChatInterlocutorsHistory = createRoute({
           example: {
             success: true,
             message: "Success get chat interlocutors history",
-            data: ["1", "2", "3"],
+            data: [
+              {
+                interlocutor_id: "1",
+                profile_photo_path: "https://example.com/profile.jpg",
+                username: "example",
+                last_message: {
+                  message: "Hello",
+                  timestamp: "2021-09-01T00:00:00.000Z",
+                },
+              },
+            ],
           },
         },
       },

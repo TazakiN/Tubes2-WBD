@@ -4,13 +4,13 @@ import { ChatController } from "../../controllers/chat.controller";
 
 export const getChatInterlocutorsHistory = async (c: Context) => {
   try {
-    const userId = getUserIDbyTokenInCookie(c);
-    const chated_id = await ChatController.getChatInterlocutorsHistory(userId);
+    const userId = await getUserIDbyTokenInCookie(c);
+    const data = await ChatController.getChatInterlocutorsHistory(userId);
     return c.json(
       {
         success: true,
         message: "Success get chat interlocutors history",
-        data: chated_id,
+        data,
       },
       200
     );

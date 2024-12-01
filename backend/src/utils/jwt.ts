@@ -18,11 +18,11 @@ export function verifyJWT(token: string) {
   return verify(token, secret);
 }
 
-export function getUserIDbyTokenInCookie(c: Context) {
+export async function getUserIDbyTokenInCookie(c: Context) {
   const token = getCookie(c, "token");
   if (!token) {
     throw new Error("Token not found");
   }
-  const payload = verifyJWT(token);
+  const payload = await verifyJWT(token);
   return (payload as any).id as string;
 }
