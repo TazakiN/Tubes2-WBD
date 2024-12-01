@@ -9,7 +9,7 @@ import { Hono } from "hono";
 import { websocketHandler } from "./utils/ws";
 
 import authRoutes from "./routes/auth/auth.index";
-import profileRoutes from "./routes/profile.routes";
+import profileRouter from "./routes/profile/profile.index";
 import chatRouter from "./routes/chat/chat.index";
 
 dotenv.config();
@@ -34,7 +34,7 @@ app.use(
 );
 
 app.route("/api/", authRoutes);
-app.route("/api/profile", profileRoutes);
+app.route("/api/profile", profileRouter);
 app.route("/api/chat", chatRouter);
 
 // Open API + Swagger UI

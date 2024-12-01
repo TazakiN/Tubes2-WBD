@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProfileLayout } from "@/layouts/ProfileLayout";
-import { ProfileData, CreateProfileData } from "@/lib/types/userData";
+import { ProfileData } from "@/lib/types/userData";
 import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -12,9 +12,7 @@ const Profile = () => {
   };
 
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState<ProfileData>(
-    CreateProfileData({}),
-  );
+  const [profileData, setProfileData] = useState<ProfileData>({});
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -28,7 +26,6 @@ const Profile = () => {
       } catch (err) {
         if (err instanceof Error) {
           toast.error(err.message);
-
         } else {
           toast.error("An unknown error occurred");
         }
