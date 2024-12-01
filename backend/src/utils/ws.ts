@@ -2,6 +2,7 @@ import { verify } from "hono/jwt";
 import { getCookie } from "hono/cookie";
 import { upgradeWebSocket } from "../index";
 import { WSContext } from "hono/ws";
+import { ChatService } from "../services/chat.service";
 
 const clients = new Map<string, WSContext>();
 
@@ -21,16 +22,34 @@ export function websocketHandler() {
         clients.set(userId, ws);
         console.log(`User ${userId} connected`);
       },
-      onMessage: async (event, _) => {
+      onMessage: async (event, ws) => {
         const data = JSON.parse(event.data as string);
-        const { to_id, message } = data;
+        const { from_id, to_id, message } = data;
+        console.log(`User ${userId} sent message to ${to_id}: ${message}`);
+
+        ChatService.saveChatMessage(
+          BigInt(userId),
+          BigInt(to_id as string),
+          message as string
+        );
+
         const recipientSocket = clients.get(to_id);
-        // TODO: simpan pesan ke database
         if (recipientSocket) {
-          recipientSocket.send(JSON.stringify(data));
+          recipientSocket.send(
+            JSON.stringify({
+              from_id: userId,
+              message,
+              timestamp: new Date(),
+            })
+          );
         } else {
-          // TODO: kirim notifikasi ke PWA
+          // TODO Penerima tidak online, kirim notifikasi atau
+          // ...
         }
+      },
+      onClose: () => {
+        clients.delete(userId);
+        console.log(`User ${userId} disconnected`);
       },
     };
   });

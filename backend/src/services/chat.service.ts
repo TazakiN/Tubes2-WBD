@@ -103,4 +103,23 @@ export class ChatService {
       throw error;
     }
   }
+
+  static async saveChatMessage(
+    from_id: bigint,
+    to_id: bigint,
+    message: string
+  ) {
+    try {
+      const chat = await db.chat.create({
+        data: {
+          from_id,
+          to_id,
+          message,
+        },
+      });
+      return chat;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import ChatContext, { ChatContextProp } from "./ChatContact";
+import ChatContact, { ChatContactProp } from "./ChatContact";
 import { SelectedInterlocutorData } from "@/pages/Chat";
 
-function ChatList({
-  onSelectChat,
-}: {
+type ChatListProps = {
   onSelectChat: (setSelectedInterlocutorData: SelectedInterlocutorData) => void;
-}) {
-  const [chatList, setChatList] = useState<ChatContextProp[]>([]);
+  onNewMessage: (updatedChatList: ChatContactProp[]) => void;
+};
+
+function ChatList({ onSelectChat, onNewMessage }: ChatListProps) {
+  const [chatList, setChatList] = useState<ChatContactProp[]>([]);
 
   useEffect(() => {
     const fetchChatList = async () => {
@@ -21,6 +22,7 @@ function ChatList({
         const result = await response.json();
         if (result.success) {
           setChatList(result.data);
+          onNewMessage(result.data);
         }
       } catch (error) {
         console.error("Error fetching chat list:", error);
@@ -28,7 +30,11 @@ function ChatList({
     };
 
     fetchChatList();
-  }, []);
+  }, [onNewMessage]);
+
+  useEffect(() => {
+    onNewMessage(chatList);
+  }, [chatList, onNewMessage]);
 
   return (
     <div className="max-w-sm divide-y-2 divide-gray-dark rounded-lg bg-gray-lighter drop-shadow-xl">
@@ -41,7 +47,7 @@ function ChatList({
         </div>
       ) : (
         chatList.map((chatContextData) => (
-          <ChatContext
+          <ChatContact
             key={chatContextData.interlocutor_id}
             contact={chatContextData}
             onSelectChat={onSelectChat}

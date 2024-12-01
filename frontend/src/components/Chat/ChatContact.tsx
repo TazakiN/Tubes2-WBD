@@ -1,6 +1,6 @@
 import { SelectedInterlocutorData } from "@/pages/Chat";
 
-export type ChatContextProp = {
+export type ChatContactProp = {
   interlocutor_id: number;
   username: string;
   profile_photo_path: string;
@@ -10,11 +10,11 @@ export type ChatContextProp = {
   };
 };
 
-function ChatContext({
+function ChatContact({
   contact: chatContextData,
   onSelectChat,
 }: {
-  contact: ChatContextProp;
+  contact: ChatContactProp;
   onSelectChat: (SelectedInterlocutorData: SelectedInterlocutorData) => void;
 }) {
   return (
@@ -44,4 +44,4 @@ function ChatContext({
   );
 }
 
-export default ChatContext;
+export default ChatContact;
