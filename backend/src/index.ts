@@ -1,5 +1,3 @@
-import authRoutes from "./routes/auth/auth.index";
-import { profileRoutes } from "./routes/profile.routes";
 import dotenv from "dotenv";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
@@ -9,6 +7,10 @@ import { createNodeWebSocket } from "@hono/node-ws";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { Hono } from "hono";
 import { websocketHandler } from "./utils/ws";
+
+import authRoutes from "./routes/auth/auth.index";
+import profileRoutes from "./routes/profile.routes";
+import chatRouter from "./routes/chat/chat.index";
 
 dotenv.config();
 const app = new OpenAPIHono();
@@ -33,6 +35,7 @@ app.use(
 
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRoutes);
+app.route("/api/chat", chatRouter);
 
 // Open API + Swagger UI
 app.doc("/doc", {
