@@ -1,6 +1,34 @@
 import db from "../config/db";
 
 export class ChatService {
+  static async getChatConversation(user_id_1: bigint, user_id_2: bigint) {
+    try {
+      const chats = await db.chat.findMany({
+        where: {
+          OR: [
+            { from_id: user_id_1, to_id: user_id_2 },
+            { from_id: user_id_2, to_id: user_id_1 },
+          ],
+        },
+        select: {
+          id: true,
+          from_id: true,
+          to_id: true,
+          message: true,
+          timestamp: true,
+        },
+      });
+      return chats.map((chat) => ({
+        ...chat,
+        from_id: chat.from_id.toString(),
+        to_id: chat.to_id.toString(),
+        id: chat.id.toString(),
+      }));
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getChatInterlocutorsHistory(userId: bigint) {
     try {
       const chats = await db.chat.findMany({

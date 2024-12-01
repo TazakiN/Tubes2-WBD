@@ -1,12 +1,10 @@
-import { FormEvent, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { useNavigate } from "@tanstack/react-router";
+import ChatInput from "./ChatInput";
 
 export type Chat = {
-  id: number;
-  from_id: bigint;
-  to_id: bigint;
+  id: string;
+  from_id: string;
+  to_id: string;
   message: string;
   timestamp: Date;
 };
@@ -17,14 +15,10 @@ export type ChatPanelProp = {
 };
 
 function ChatPanel({ name, chats }: ChatPanelProp) {
-  const [message, setMessage] = useState("");
   const navigate = useNavigate({ from: "/chat" });
 
-  function handleSubmitMessage(e: FormEvent<HTMLFormElement>): void {
-    e.preventDefault();
-    if (message.trim() === "") return;
+  function handleMessageSubmit(message: string): void {
     console.log("Message sent:", message);
-    setMessage("");
   }
 
   return (
@@ -39,29 +33,15 @@ function ChatPanel({ name, chats }: ChatPanelProp) {
       </div>
       <div className="flex-grow bg-gray-lighter">
         <div className="flex flex-col gap-4 p-4">
-          {/* TODO: Show Chat Here */}
+          {chats.map((chat) => (
+            <div key={chat.id}>
+              <p>{chat.message}</p>
+              <span>{chat.timestamp.toLocaleString()}</span>
+            </div>
+          ))}
         </div>
       </div>
-      <form
-        className="flex flex-row gap-6 rounded-b-xl bg-blue-secondary p-8 pl-4 pt-4"
-        onSubmit={handleSubmitMessage}
-      >
-        <div className="flex-grow rounded-xl bg-gray-lighter">
-          <Input
-            type="text"
-            className="rounded-xl border-none bg-gray-lighter px-4 py-2 outline-none"
-            autoFocus
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </div>
-        <Button
-          className="rounded-xl bg-blue-primary text-gray-lighter"
-          type="submit"
-        >
-          Send
-        </Button>
-      </form>
+      <ChatInput onSubmit={handleMessageSubmit} />
     </div>
   );
 }
