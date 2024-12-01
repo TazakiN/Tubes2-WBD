@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import ChatContext, { ChatContextProp } from "./ChatContact";
+import { SelectedInterlocutorData } from "@/pages/Chat";
 
-function ChatList() {
+function ChatList({
+  onSelectChat,
+}: {
+  onSelectChat: (setSelectedInterlocutorData: SelectedInterlocutorData) => void;
+}) {
   const [chatList, setChatList] = useState<ChatContextProp[]>([]);
 
   useEffect(() => {
@@ -39,6 +44,7 @@ function ChatList() {
           <ChatContext
             key={chatContextData.interlocutor_id}
             contact={chatContextData}
+            onSelectChat={onSelectChat}
           />
         ))
       )}

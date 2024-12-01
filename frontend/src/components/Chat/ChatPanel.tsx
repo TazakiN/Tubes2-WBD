@@ -14,7 +14,7 @@ export type ChatPanelProp = {
   chats: Chat[];
 };
 
-function ChatPanel({ name, chats }: ChatPanelProp) {
+function ChatPanel(chatPanelProps: ChatPanelProp) {
   const navigate = useNavigate({ from: "/chat" });
 
   function handleMessageSubmit(message: string): void {
@@ -28,12 +28,12 @@ function ChatPanel({ name, chats }: ChatPanelProp) {
           className="cursor-pointer truncate text-2xl text-gray-lighter transition-all duration-300 ease-in-out hover:text-3xl"
           onClick={() => navigate({ to: "/" })}
         >
-          {name}
+          {chatPanelProps.name}
         </h3>
       </div>
       <div className="flex-grow bg-gray-lighter">
         <div className="flex flex-col gap-4 p-4">
-          {chats.map((chat) => (
+          {chatPanelProps.chats.map((chat) => (
             <div key={chat.id}>
               <p>{chat.message}</p>
               <span>{chat.timestamp.toLocaleString()}</span>
