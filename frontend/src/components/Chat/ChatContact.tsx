@@ -19,7 +19,7 @@ function ChatContact({
 }) {
   return (
     <div
-      className="flex min-w-96 max-w-xs flex-row rounded-lg px-4 py-2 text-gray-dark transition-transform duration-200 hover:scale-105 hover:cursor-pointer hover:bg-gray-lighter-hover"
+      className="flex h-fit min-w-96 max-w-xs flex-row rounded-lg px-4 py-2 text-gray-dark transition-transform duration-200 hover:scale-105 hover:cursor-pointer hover:bg-gray-lighter-hover"
       onClick={() =>
         onSelectChat({
           interlocutor_id: chatContextData.interlocutor_id,

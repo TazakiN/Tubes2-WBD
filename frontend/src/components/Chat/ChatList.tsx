@@ -31,7 +31,7 @@ function ChatList({
   }, []);
 
   return (
-    <div className="max-w-sm divide-y-2 divide-gray-dark rounded-lg bg-gray-lighter drop-shadow-xl">
+    <div className="flex h-[600px] max-w-sm divide-y-2 divide-gray-dark overflow-y-auto rounded-lg bg-gray-lighter drop-shadow-xl">
       {chatList.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center px-8 py-4 text-center text-3xl">
           <span className="text-3xl text-gray-600">No chat history</span>
