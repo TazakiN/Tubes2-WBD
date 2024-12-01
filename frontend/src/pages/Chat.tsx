@@ -13,6 +13,7 @@ const Chat = () => {
   const [chatPanelData, setChatPanelData] = useState<ChatPanelProp>({
     name: "Please select a chat",
     chats: [],
+    interlocutor_id: "",
   });
 
   useEffect(() => {
@@ -30,6 +31,8 @@ const Chat = () => {
             setChatPanelData({
               name: selectedInterlocutorData.username,
               chats: result.data,
+              interlocutor_id:
+                selectedInterlocutorData.interlocutor_id.toString(),
             });
           }
         } catch (error) {

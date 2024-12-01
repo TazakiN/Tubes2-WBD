@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import ChatInput from "./ChatInput";
+import ChatBubble from "./ChatBubble";
 
 export type Chat = {
   id: string;
@@ -10,6 +11,7 @@ export type Chat = {
 };
 
 export type ChatPanelProp = {
+  interlocutor_id: string;
   name: string;
   chats: Chat[];
 };
@@ -20,7 +22,6 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
   function handleMessageSubmit(message: string): void {
     console.log("Message sent:", message);
   }
-
   return (
     <div className="flex w-[600px] flex-grow flex-col rounded-lg bg-gray-lighter">
       <div className="rounded-t-xl bg-blue-secondary px-10 py-5">
@@ -34,10 +35,16 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
       <div className="flex-grow bg-gray-lighter">
         <div className="flex flex-col gap-4 p-4">
           {chatPanelProps.chats.map((chat) => (
-            <div key={chat.id}>
-              <p>{chat.message}</p>
-              <span>{chat.timestamp.toLocaleString()}</span>
-            </div>
+            <ChatBubble
+              {...chat}
+              key={chat.id}
+              username={
+                chat.from_id === chatPanelProps.interlocutor_id
+                  ? chatPanelProps.name
+                  : "You"
+              }
+              from_user={chat.to_id === chatPanelProps.interlocutor_id}
+            />
           ))}
         </div>
       </div>
