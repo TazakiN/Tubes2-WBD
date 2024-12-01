@@ -1,8 +1,11 @@
 export type ChatContextProp = {
-  id: number;
-  name: string;
-  image: string;
-  lastMessage: string;
+  interlocutor_id: number;
+  username: string;
+  profile_photo_path: string;
+  last_message: {
+    message: string;
+    timestamp: Date;
+  };
 };
 
 function ChatContext({
@@ -11,17 +14,19 @@ function ChatContext({
   contact: ChatContextProp;
 }) {
   return (
-    <div className="hover:bg-gray-lighter-hover flex min-w-96 max-w-xs flex-row rounded-lg px-4 py-2 text-gray-dark transition-transform duration-200 hover:scale-105 hover:cursor-pointer">
+    <div className="flex min-w-96 max-w-xs flex-row rounded-lg px-4 py-2 text-gray-dark transition-transform duration-200 hover:scale-105 hover:cursor-pointer hover:bg-gray-lighter-hover">
       <div className="flex-shrink-0 rounded-full p-2">
         <img
-          src={chatContextData.image}
-          alt={chatContextData.name}
+          src={chatContextData.profile_photo_path}
+          alt={chatContextData.username}
           className="size-24"
         />
       </div>
       <div className="flex max-w-[230px] flex-col justify-center">
-        <h2 className="text-2xl">{chatContextData.name}</h2>
-        <p className="truncate text-lg">{chatContextData.lastMessage}</p>
+        <h2 className="text-2xl">{chatContextData.username}</h2>
+        <p className="truncate text-lg">
+          {chatContextData.last_message.message}
+        </p>
       </div>
     </div>
   );

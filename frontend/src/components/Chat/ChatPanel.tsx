@@ -38,7 +38,9 @@ function ChatPanel({ name, chats }: ChatPanelProp) {
         </h3>
       </div>
       <div className="flex-grow bg-gray-lighter">
-        <div className="flex flex-col gap-4 p-4"></div>
+        <div className="flex flex-col gap-4 p-4">
+          {/* TODO: Show Chat Here */}
+        </div>
       </div>
       <form
         className="flex flex-row gap-6 rounded-b-xl bg-blue-secondary p-8 pl-4 pt-4"
