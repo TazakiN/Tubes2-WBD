@@ -15,11 +15,11 @@ export type ChatPanelProp = {
   interlocutor_id: string;
   name: string;
   chats: Chat[];
-  onSendMessage: (message: string) => void;
 };
 
 function ChatPanel(chatPanelProps: ChatPanelProp) {
   const navigate = useNavigate({ from: "/chat" });
+  const [ws, setWs] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<Chat[]>(chatPanelProps.chats);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -27,8 +27,48 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const webSocket = new WebSocket("ws://localhost:4001/ws");
+
+    webSocket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    webSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setMessages((prevMessages) => [...prevMessages, data]);
+    };
+
+    webSocket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    setWs(webSocket);
+
+    return () => {
+      webSocket.close();
+    };
+  }, [chatPanelProps.interlocutor_id]);
+
   function handleMessageSubmit(message: string): void {
-    chatPanelProps.onSendMessage(message);
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          to_id: chatPanelProps.interlocutor_id,
+          message,
+        }),
+      );
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: Date.now().toString(),
+          from_id: "You",
+          to_id: chatPanelProps.interlocutor_id,
+          message,
+          timestamp: new Date(),
+        },
+      ]);
+    }
   }
 
   useEffect(() => {

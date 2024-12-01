@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import ChatContact, { ChatContactProp } from "./ChatContact";
 import { SelectedInterlocutorData } from "@/pages/Chat";
 
-type ChatListProps = {
+function ChatList({
+  onSelectChat,
+}: {
   onSelectChat: (setSelectedInterlocutorData: SelectedInterlocutorData) => void;
-  onNewMessage: (updatedChatList: ChatContactProp[]) => void;
-};
-
-function ChatList({ onSelectChat, onNewMessage }: ChatListProps) {
+}) {
   const [chatList, setChatList] = useState<ChatContactProp[]>([]);
 
   useEffect(() => {
@@ -22,7 +21,6 @@ function ChatList({ onSelectChat, onNewMessage }: ChatListProps) {
         const result = await response.json();
         if (result.success) {
           setChatList(result.data);
-          onNewMessage(result.data);
         }
       } catch (error) {
         console.error("Error fetching chat list:", error);
@@ -30,11 +28,7 @@ function ChatList({ onSelectChat, onNewMessage }: ChatListProps) {
     };
 
     fetchChatList();
-  }, [onNewMessage]);
-
-  useEffect(() => {
-    onNewMessage(chatList);
-  }, [chatList, onNewMessage]);
+  }, []);
 
   return (
     <div className="max-w-sm divide-y-2 divide-gray-dark rounded-lg bg-gray-lighter drop-shadow-xl">
