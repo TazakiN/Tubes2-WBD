@@ -40,7 +40,7 @@ export const register = async (c: Context) => {
     if ((error as Error).message === "Username or Email already exists") {
       return c.json({ success: false, message: (error as Error).message }, 409);
     }
-    return c.json({ success: false, message: "Internal server error" }, 500);
+    return c.json({ success: false, message: (error as Error).message }, 500);
   }
 };
 

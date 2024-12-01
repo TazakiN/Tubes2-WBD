@@ -59,7 +59,10 @@ export default {
         },
         gray: {
           light: "#E2DAD6",
-          lighter: "#F5EDED",
+          lighter: {
+            DEFAULT: "#F5EDED",
+            hover: "#B1B1B1",
+          },
           dark: "#757575",
         },
         green: "#A6AD64",

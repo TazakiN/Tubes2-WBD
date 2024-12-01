@@ -86,9 +86,9 @@ export const register = createRoute({
           schema: registerSchema,
           example: {
             username: "newuser",
+            name: "newUserFullName",
             email: "newuser@example.com",
             password: "strongPassword456",
-            confirmPassword: "strongPassword456",
           },
         },
       },
