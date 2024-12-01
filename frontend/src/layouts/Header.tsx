@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import NavButton from "@/components/Header/NavButton";
+import { Search } from "lucide-react";
 
 import LoginSVG from "@/assets/svg/login.svg";
 import NetworkSparkle from "@/assets/svg/network-sparkle.svg";
@@ -36,13 +37,23 @@ const Header = () => {
 
   return (
     <header className="flex items-center justify-between bg-gray-lighter px-64 py-2 shadow">
-      <div className="flex items-center justify-center gap-3">
+      <div className="flex items-center justify-center gap-4">
         <img
           src="/favicon.ico"
           alt="Company Logo"
-          className="size-8 rounded-lg"
+          className="size-10 rounded-lg"
         />
-        <Input type="search" placeholder="Search" className="w-96"></Input>
+        <div className="relative w-96">
+          <Input
+            type="search"
+            placeholder="Search"
+            className="pl-8 text-base"
+          />
+          <Search
+            className="absolute inset-y-0 left-3 my-auto text-gray-500"
+            size={15}
+          />
+        </div>
       </div>
       <div className="inline-block">
         {isAuthenticated ? (
