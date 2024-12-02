@@ -47,7 +47,7 @@ function Connect() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-light px-80 text-gray-dark">
       <h1 className="mt-16 text-6xl">Connections</h1>
-      <div className="x-64 my-4 flex w-full flex-col items-center justify-center rounded-xl bg-gray-lighter py-4">
+      <div className="x-64 my-4 flex w-full flex-col items-center justify-center gap-1 rounded-xl bg-gray-lighter py-2">
         <h2 className="text-center text-2xl">Invitations</h2>
         <Select
           value={typeSelected}
