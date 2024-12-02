@@ -13,10 +13,8 @@ export class ConnectionRequestService {
         to_id: user_id,
       },
     });
-    console.log("hai");
     if (isAccepted) {
       try {
-        console.log("Creating connection...");
         await db.connection.create({
           data: {
             from_id: from_id,
@@ -24,9 +22,7 @@ export class ConnectionRequestService {
             created_at: new Date(),
           },
         });
-        console.log("Connection created successfully.");
       } catch (error) {
-        console.error("Error creating connection:", error);
         throw error;
       }
     }
