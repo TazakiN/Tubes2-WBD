@@ -8,6 +8,7 @@ const chatRouter = new OpenAPIHono()
     routes.getChatInterlocutorsHistory,
     handlers.getChatInterlocutorsHistory
   )
-  .openapi(routes.getChatConversation, handlers.getChatConversation);
+  .openapi(routes.getChatConversation, handlers.getChatConversation)
+  .openapi(routes.searchConnectedUsers, handlers.searchConnectedUsers);
 
 export default chatRouter;

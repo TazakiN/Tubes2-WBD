@@ -1,6 +1,7 @@
 import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
 import { ChatController } from "../../controllers/chat.controller";
+import { ChatService } from "../../services/chat.service";
 
 export const getChatInterlocutorsHistory = async (c: Context) => {
   try {
@@ -47,6 +48,39 @@ export const getChatConversation = async (c: Context) => {
       {
         success: true,
         message: "Success get chat conversation",
+        data,
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: "Internal server error",
+      },
+      500
+    );
+  }
+};
+
+export const searchConnectedUsers = async (c: Context) => {
+  try {
+    const username = c.req.query("username");
+    if (!username) {
+      return c.json(
+        {
+          success: false,
+          message: "Username is required",
+        },
+        400
+      );
+    }
+    const data = await ChatService.searchConnectedUsers(username);
+
+    return c.json(
+      {
+        success: true,
+        message: "Success search connected users",
         data,
       },
       200

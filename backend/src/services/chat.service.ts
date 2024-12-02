@@ -1,6 +1,30 @@
 import db from "../config/db";
 
 export class ChatService {
+  static async searchConnectedUsers(username: string) {
+    try {
+      const users = await db.users.findMany({
+        where: {
+          username: {
+            contains: username,
+          },
+        },
+        select: {
+          id: true,
+          username: true,
+          profile_photo_path: true,
+          email: true,
+        },
+      });
+      return users.map(({ id, ...rest }) => ({
+        ...rest,
+        user_id: id.toString(),
+      }));
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getChatConversation(user_id_1: bigint, user_id_2: bigint) {
     try {
       const chats = await db.chat.findMany({

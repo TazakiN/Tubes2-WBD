@@ -5,6 +5,9 @@ import {
   GetChatConversationQuerySchema,
   GetChatConversationResponseSchema,
   GetChatConversationErrorResponseSchema,
+  SearchConnectedUsersQuerySchema,
+  SearchConnectedUsersResponseSchema,
+  SearchConnectedUsersErrorResponseSchema,
 } from "./chat.schema";
 
 export const getChatInterlocutorsHistory = createRoute({
@@ -98,6 +101,62 @@ export const getChatConversation = createRoute({
       content: {
         "application/json": {
           schema: GetChatConversationErrorResponseSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const searchConnectedUsers = createRoute({
+  method: "get",
+  path: "/search-connected-users",
+  summary: "Search connected users",
+  tags: ["chat"],
+  request: {
+    query: SearchConnectedUsersQuerySchema,
+  },
+  responses: {
+    200: {
+      description: "Success search connected users",
+      content: {
+        "application/json": {
+          schema: SearchConnectedUsersResponseSchema,
+          example: {
+            success: true,
+            message: "Success search connected users",
+            data: [
+              {
+                user_id: "1",
+                profile_photo_path: "https://example.com/profile.jpg",
+                username: "example",
+                email: "user@example.com",
+              },
+            ],
+          },
+        },
+      },
+    },
+    400: {
+      description: "Query is required",
+      content: {
+        "application/json": {
+          schema: SearchConnectedUsersErrorResponseSchema,
+          example: {
+            success: false,
+            message: "Query is required",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: SearchConnectedUsersErrorResponseSchema,
           example: {
             success: false,
             message: "Internal server error",
