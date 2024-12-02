@@ -11,6 +11,7 @@ import { websocketHandler } from "./utils/ws";
 import authRoutes from "./routes/auth/auth.index";
 import profileRouter from "./routes/profile/profile.index";
 import chatRouter from "./routes/chat/chat.index";
+import connectionRequestRouter from "./routes/connection_request/connection_request.index";
 
 dotenv.config();
 const app = new OpenAPIHono();
@@ -36,6 +37,7 @@ app.use(
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRouter);
 app.route("/api/chat", chatRouter);
+app.route("/api/connection-request", connectionRequestRouter);
 
 // Open API + Swagger UI
 app.doc("/doc", {
