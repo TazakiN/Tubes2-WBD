@@ -10,7 +10,6 @@ import ConnectionCard, {
   ConnectionCardProps,
 } from "@/components/Connect/ConnectionCard";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 function Connect() {
   const [typeSelected, setTypeSelected] = useState("Outgoing");
@@ -35,10 +34,6 @@ function Connect() {
   useEffect(() => {
     refetch();
   }, [typeSelected, refetch]);
-
-  if (data) {
-    toast.success(data.message);
-  }
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -65,7 +60,7 @@ function Connect() {
       </div>
       <div className="mt-2 grid grid-cols-1 gap-4 pb-4 md:grid-cols-2 lg:grid-cols-3">
         {data?.data.map((connection: ConnectionCardProps, index: number) => (
-          <ConnectionCard key={index} {...connection} />
+          <ConnectionCard key={index} {...connection} refetch={refetch} />
         ))}
       </div>
     </main>

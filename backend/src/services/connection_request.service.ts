@@ -2,11 +2,28 @@ import db from "../config/db";
 import profileService from "./profile.service";
 
 export class ConnectionRequestService {
+  private static async isExist(user_id: bigint, to_id: bigint) {
+    return await db.connection_request.findFirst({
+      where: {
+        from_id: user_id,
+        to_id,
+      },
+    });
+  }
+
   static async updateConnectionRequest(
     user_id: bigint,
     from_id: bigint,
     isAccepted: boolean
   ) {
+    if (user_id === from_id) {
+      throw new Error("You cannot accept your own connection request");
+    }
+
+    if (await this.isExist(user_id, from_id)) {
+      throw new Error("You have already accepted this connection request");
+    }
+
     await db.connection_request.deleteMany({
       where: {
         from_id,
@@ -15,12 +32,19 @@ export class ConnectionRequestService {
     });
     if (isAccepted) {
       try {
-        await db.connection.create({
-          data: {
-            from_id: from_id,
-            to_id: user_id,
-            created_at: new Date(),
-          },
+        await db.connection.createMany({
+          data: [
+            {
+              from_id: from_id,
+              to_id: user_id,
+              created_at: new Date(),
+            },
+            {
+              from_id: user_id,
+              to_id: from_id,
+              created_at: new Date(),
+            },
+          ],
         });
       } catch (error) {
         throw error;
@@ -33,14 +57,7 @@ export class ConnectionRequestService {
       throw new Error("You cannot send a connection request to yourself");
     }
 
-    const existingRequest = await db.connection_request.findFirst({
-      where: {
-        from_id: user_id,
-        to_id,
-      },
-    });
-
-    if (existingRequest) {
+    if (await this.isExist(user_id, to_id)) {
       throw new Error(
         "You have already sent a connection request to this user"
       );

@@ -5,7 +5,6 @@ import { ConnectionRequestService } from "../../services/connection_request.serv
 export const getAllConnectionRequests = async (c: Context) => {
   const user_id = BigInt(await getUserIDbyTokenInCookie(c));
   const type = c.req.query("type") ?? "Outgoing";
-  console.log("type: ", type);
   try {
     const connectionRequests =
       await ConnectionRequestService.getAllConnectionRequests(user_id, type);
@@ -57,7 +56,6 @@ export const createConnectionRequest = async (c: Context) => {
 export const acceptConnectionRequest = async (c: Context) => {
   const user_id = BigInt(await getUserIDbyTokenInCookie(c));
   const { from_id } = await c.req.json();
-  console.log("from_id: ", from_id);
 
   try {
     await ConnectionRequestService.updateConnectionRequest(

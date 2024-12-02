@@ -1,11 +1,13 @@
 import React from "react";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 export interface ConnectionCardProps {
   user_id: bigint;
   username: string;
   profile_photo_path: string;
   status: string;
+  refetch: () => void;
 }
 
 const ConnectionCard: React.FC<ConnectionCardProps> = ({
@@ -13,49 +15,72 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   username,
   profile_photo_path,
   status,
+  refetch,
 }) => {
-  const handleAccept = async () => {
-    const response = await fetch(
-      "http://localhost:4001/api/connection_request/accept",
-      {
-        credentials: "include",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  const acceptMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        "http://localhost:4001/api/connection_request/accept",
+        {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from_id: user_id,
+          }),
         },
-        body: JSON.stringify({
-          from_id: user_id,
-        }),
-      },
-    );
-
-    if (response.ok) {
+      );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    },
+    onSuccess: () => {
       toast.success("Connection request accepted");
-    } else {
+      refetch();
+    },
+    onError: () => {
       toast.error("Failed to accept connection request");
-    }
+    },
+  });
+
+  const declineMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        "http://localhost:4001/api/connection_request/reject",
+        {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from_id: user_id,
+          }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to decline connection request");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Connection request declined");
+      refetch();
+    },
+    onError: () => {
+      toast.error("Failed to decline connection request");
+    },
+  });
+
+  const handleAccept = () => {
+    acceptMutation.mutate();
   };
 
-  const handleDecline = async () => {
-    const response = await fetch(
-      "http://localhost:4001/api/connection_request/reject",
-      {
-        credentials: "include",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from_id: user_id,
-        }),
-      },
-    );
-
-    if (response.ok) {
-      toast.success("Connection request declined");
-    } else {
-      toast.error("Failed to accept connection request");
-    }
+  const handleDecline = () => {
+    declineMutation.mutate();
   };
 
   return (
