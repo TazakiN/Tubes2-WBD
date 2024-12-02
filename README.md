@@ -1,4 +1,4 @@
-This is the repository for IF-3310 Web Development Class Project
+# This is the repository for IF-3310 Web Development Class Project
 
 ## backlog ala ala
 
@@ -21,6 +21,6 @@ This is the repository for IF-3310 Web Development Class Project
 - [ ] Profil
 - [ ] Feed
 - [ ] Daftar Pengguna
-- [ ] Permintaan Koneksi
+- [x] Permintaan Koneksi
 - [ ] Daftar Koneksi
 - [x] Chat
