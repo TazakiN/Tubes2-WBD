@@ -2,6 +2,25 @@ import db from "../config/db";
 import profileService from "./profile.service";
 
 export class ConnectionRequestService {
+  static async getConnectionRequest(user_id: bigint, from_id: bigint) {
+    const request = await db.connection_request.findFirst({
+      where: {
+        from_id,
+        to_id: user_id,
+      },
+    });
+
+    if (request) {
+      return {
+        ...request,
+        from_id: request.from_id.toString(),
+        to_id: request.to_id.toString(),
+      };
+    }
+
+    return null;
+  }
+
   private static async isExist(user_id: bigint, to_id: bigint) {
     return await db.connection_request.findFirst({
       where: {

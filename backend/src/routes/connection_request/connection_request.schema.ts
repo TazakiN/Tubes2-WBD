@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const connectionRequestParamsSchema = z.object({
+export const GetAllConnectionRequestQuerySchema = z.object({
   type: z.enum(["Incoming", "Outgoing"]).openapi({
     description: "The status of the connection request",
     example: "Incoming",
   }),
 });
 
-export const ConnectionRequestResponseSchema = z.object({
+export const GetAllConnectionRequestResponseSchema = z.object({
   success: z.literal(true),
   message: z.string(),
   data: z.array(
@@ -20,7 +20,29 @@ export const ConnectionRequestResponseSchema = z.object({
   ),
 });
 
-export const ConnectionRequestErrorResponseSchema = z.object({
+export const GetAllConnectionRequestErrorResponseSchema = z.object({
+  success: z.literal(false),
+  message: z.string(),
+});
+
+export const GetConnectionRequestParamsSchema = z.object({
+  from_id: z.string().openapi({
+    description: "The user id of the sender",
+    example: "2",
+  }),
+});
+
+export const GetConnectionRequestResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+  data: z.object({
+    from_id: z.string(),
+    to_id: z.string(),
+    created_at: z.string(),
+  }),
+});
+
+export const GetConnectionRequestResponseErrorSchema = z.object({
   success: z.literal(false),
   message: z.string(),
 });

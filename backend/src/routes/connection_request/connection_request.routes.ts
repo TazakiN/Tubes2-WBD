@@ -3,15 +3,17 @@ import {
   AcceptConnectionRequestSchema,
   AcceptConnectionResponseErrorSchema,
   AcceptConnectionResponseSchema,
-  ConnectionRequestErrorResponseSchema,
-  connectionRequestParamsSchema,
-  ConnectionRequestResponseSchema,
+  GetAllConnectionRequestErrorResponseSchema,
+  GetAllConnectionRequestQuerySchema,
+  GetAllConnectionRequestResponseSchema,
   CreateConnectionRequestSchema,
   CreateCOnnectionResponseErrorSchema,
   CreateConnectionResponseSchema,
   RejectConnectionRequestSchema,
   RejectConnectionResponseErrorSchema,
   RejectConnectionResponseSchema,
+  GetConnectionRequestResponseSchema,
+  GetConnectionRequestResponseErrorSchema,
 } from "./connection_request.schema";
 
 export const getAllConnectionRequests = createRoute({
@@ -21,14 +23,14 @@ export const getAllConnectionRequests = createRoute({
   description: "Get all connection requests",
   tags: ["Connection Request"],
   request: {
-    query: connectionRequestParamsSchema,
+    query: GetAllConnectionRequestQuerySchema,
   },
   responses: {
     200: {
       description: "Success get all connection requests",
       content: {
         "application/json": {
-          schema: ConnectionRequestResponseSchema,
+          schema: GetAllConnectionRequestResponseSchema,
           example: {
             success: true,
             message: "Success get all connection requests",
@@ -54,7 +56,49 @@ export const getAllConnectionRequests = createRoute({
       description: "Internal server error",
       content: {
         "application/json": {
-          schema: ConnectionRequestErrorResponseSchema,
+          schema: GetAllConnectionRequestErrorResponseSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const getConnectionRequest = createRoute({
+  method: "get",
+  path: "/:from_id",
+  summary: "Get a connection request",
+  description: "Get a connection request",
+  tags: ["Connection Request"],
+  // request: {
+  //   params:
+  // },
+  responses: {
+    200: {
+      description: "Success get a connection request",
+      content: {
+        "application/json": {
+          schema: GetConnectionRequestResponseSchema,
+          example: {
+            success: true,
+            message: "Success get connection request",
+            data: {
+              from_id: "2",
+              to_id: "1",
+              created_at: "2021-09-07T07:00:00.000Z",
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: GetConnectionRequestResponseErrorSchema,
           example: {
             success: false,
             message: "Internal server error",
