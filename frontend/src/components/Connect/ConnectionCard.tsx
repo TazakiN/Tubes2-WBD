@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "sonner";
 
 export interface ConnectionCardProps {
   user_id: bigint;
@@ -8,10 +9,55 @@ export interface ConnectionCardProps {
 }
 
 const ConnectionCard: React.FC<ConnectionCardProps> = ({
+  user_id,
   username,
   profile_photo_path,
   status,
 }) => {
+  const handleAccept = async () => {
+    const response = await fetch(
+      "http://localhost:4001/api/connection_request/accept",
+      {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from_id: user_id,
+        }),
+      },
+    );
+
+    if (response.ok) {
+      toast.success("Connection request accepted");
+    } else {
+      toast.error("Failed to accept connection request");
+    }
+  };
+
+  const handleDecline = async () => {
+    const response = await fetch(
+      "http://localhost:4001/api/connection_request/reject",
+      {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from_id: user_id,
+        }),
+      },
+    );
+
+    if (response.ok) {
+      toast.success("Connection request declined");
+    } else {
+      toast.error("Failed to accept connection request");
+    }
+  };
+
   return (
     <div className="flex w-64 flex-col items-center overflow-hidden rounded-lg bg-gray-lighter shadow-md">
       <div className="h-16 w-full bg-blue-secondary"></div>
@@ -34,10 +80,16 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
             </>
           ) : (
             <>
-              <button className="rounded-full border border-gray-300 bg-green px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground">
+              <button
+                className="rounded-full border border-gray-300 bg-green px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground"
+                onClick={handleAccept}
+              >
                 Accept
               </button>
-              <button className="rounded-full border border-gray-300 bg-red px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground">
+              <button
+                className="rounded-full border border-gray-300 bg-red px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground"
+                onClick={handleDecline}
+              >
                 Decline
               </button>
             </>

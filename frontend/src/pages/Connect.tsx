@@ -19,7 +19,7 @@ function Connect() {
     queryKey: ["userData", typeSelected],
     queryFn: () =>
       fetch(
-        "http://localhost:4001/api/connection-request?" +
+        "http://localhost:4001/api/connection_request?" +
           new URLSearchParams({ type: typeSelected }),
         {
           credentials: "include",
