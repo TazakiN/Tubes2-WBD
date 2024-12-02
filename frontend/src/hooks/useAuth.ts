@@ -22,7 +22,6 @@ export const useAuth = () => {
         }
         return res.json();
       }),
-    enabled: userData !== null,
   });
 
   useEffect(() => {
@@ -31,12 +30,6 @@ export const useAuth = () => {
       setProfileData(data);
     }
   }, [data, setUserData]);
-
-  useEffect(() => {
-    if (userData) {
-      refetch();
-    }
-  }, [userData, refetch]);
 
   useEffect(() => {
     if (error) {
