@@ -5,7 +5,7 @@ import * as routes from "./connection.routes";
 
 const connectionRequestRouter = new OpenAPIHono().openapi(
   routes.getAllConnect,
-  handlers.getAllConnect
+  handlers.getAllConnection
 );
 
 export default connectionRequestRouter;

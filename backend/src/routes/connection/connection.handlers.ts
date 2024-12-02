@@ -2,11 +2,11 @@ import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
 import { ConnectService } from "../../services/connection.service";
 
-export const getAllConnect = async (c: Context) => {
+export const getAllConnection = async (c: Context) => {
   const user_id = BigInt(await getUserIDbyTokenInCookie(c));
 
   try {
-    const connect = await ConnectService.getAllConnect(user_id);
+    const connect = await ConnectService.getAllConnection(user_id);
 
     return c.json(
       {

@@ -1,7 +1,7 @@
 import db from "../config/db";
 
 export class ConnectService {
-  static async getAllConnect(user_id: bigint) {
+  static async getAllConnection(user_id: bigint) {
     const allConnection = await db.connection.findMany({
       where: {
         OR: [
@@ -28,5 +28,16 @@ export class ConnectService {
     });
 
     return allConnection;
+  }
+
+  static async isConnected(from_id: bigint, to_id: bigint) {
+    const connection = await db.connection.findFirst({
+      where: {
+        from_id,
+        to_id,
+      },
+    });
+
+    return connection;
   }
 }
