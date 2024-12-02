@@ -20,9 +20,9 @@ export const getAllConnectionRequests = createRoute({
   summary: "Get all connection requests",
   description: "Get all connection requests",
   tags: ["Connection Request"],
-  // request: {
-  //   params: connectionRequestParamsSchema,
-  // },
+  request: {
+    query: connectionRequestParamsSchema,
+  },
   responses: {
     200: {
       description: "Success get all connection requests",
@@ -34,8 +34,16 @@ export const getAllConnectionRequests = createRoute({
             message: "Success get all connection requests",
             data: [
               {
-                user_id: "1",
-                created_at: "2021-09-01T00:00:00.000Z",
+                user_id: "2",
+                username: "user2",
+                profile_photo_path: "profile_photo_path2",
+                created_at: "2021-09-07T07:00:00.000Z",
+              },
+              {
+                user_id: "3",
+                username: "user3",
+                profile_photo_path: "profile_photo_path3",
+                created_at: "2021-09-07T07:00:00.000Z",
               },
             ],
           },

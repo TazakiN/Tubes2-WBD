@@ -10,16 +10,22 @@ export const getAllConnectionRequests = async (c: Context) => {
     const connectionRequests =
       await ConnectionRequestService.getAllConnectionRequests(user_id, type);
 
-    return c.json({
-      success: true,
-      message: "Success get all connection requests",
-      data: connectionRequests,
-    });
+    return c.json(
+      {
+        success: true,
+        message: "Success get all connection requests",
+        data: connectionRequests,
+      },
+      200
+    );
   } catch (error) {
-    return c.json({
-      success: false,
-      message: (error as Error).message,
-    });
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
   }
 };
 
@@ -30,15 +36,21 @@ export const createConnectionRequest = async (c: Context) => {
   try {
     await ConnectionRequestService.createConnectionRequest(user_id, to_id);
 
-    return c.json({
-      success: true,
-      message: "Success create connection request",
-    });
+    return c.json(
+      {
+        success: true,
+        message: "Success create connection request",
+      },
+      200
+    );
   } catch (error) {
-    return c.json({
-      success: false,
-      message: (error as Error).message,
-    });
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
   }
 };
 
@@ -54,15 +66,21 @@ export const acceptConnectionRequest = async (c: Context) => {
       true
     );
 
-    return c.json({
-      success: true,
-      message: "Success accept connection request",
-    });
+    return c.json(
+      {
+        success: true,
+        message: "Success accept connection request",
+      },
+      200
+    );
   } catch (error) {
-    return c.json({
-      success: false,
-      message: (error as Error).message,
-    });
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
   }
 };
 
@@ -77,14 +95,20 @@ export const rejectConnectionRequest = async (c: Context) => {
       false
     );
 
-    return c.json({
-      success: true,
-      message: "Success delete connection request",
-    });
+    return c.json(
+      {
+        success: true,
+        message: "Success delete connection request",
+      },
+      200
+    );
   } catch (error) {
-    return c.json({
-      success: false,
-      message: (error as Error).message,
-    });
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
   }
 };

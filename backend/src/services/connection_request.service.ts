@@ -79,8 +79,8 @@ export class ConnectionRequestService {
 
           return {
             user_id: otherUserId.toString(),
-            username: userInfo?.username,
-            profile_photo_path: userInfo?.profile_photo_path,
+            username: userInfo!.username,
+            profile_photo_path: userInfo!.profile_photo_path,
             created_at: request.created_at,
           };
         })
