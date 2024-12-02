@@ -1,21 +1,27 @@
 import React from "react";
 
 export interface ConnectionCardProps {
-  name: string;
+  user_id: bigint;
+  username: string;
+  profile_photo_path: string;
   status: string;
 }
 
-const ConnectionCard: React.FC<ConnectionCardProps> = ({ name, status }) => {
+const ConnectionCard: React.FC<ConnectionCardProps> = ({
+  username,
+  profile_photo_path,
+  status,
+}) => {
   return (
     <div className="flex w-64 flex-col items-center overflow-hidden rounded-lg bg-gray-lighter shadow-md">
       <div className="h-16 w-full bg-blue-secondary"></div>
       <img
-        src="https://via.placeholder.com/48"
+        src={profile_photo_path}
         alt="profile"
         className="-mt-8 h-16 w-16 rounded-full"
       />
       <div className="pb-4 text-center">
-        <h3 className="text-2xl">{name}</h3>
+        <h3 className="text-2xl">{username}</h3>
         <div className="mt-2 flex gap-2 text-xl">
           {status === "Outgoing" ? (
             <>
