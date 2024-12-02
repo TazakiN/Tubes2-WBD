@@ -23,7 +23,7 @@ export const GetChatInterlocutorsHistoryErrorResponseSchema = z.object({
   message: z.string(),
 });
 
-export const GetChatConversationParamsSchema = z.object({
+export const GetChatConversationQuerySchema = z.object({
   interlocutor_id: z.string(),
 });
 

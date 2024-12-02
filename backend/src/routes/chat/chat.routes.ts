@@ -2,7 +2,7 @@ import { createRoute } from "@hono/zod-openapi";
 import {
   GetChatInterlocutorsHistoryResponseSchema,
   GetChatInterlocutorsHistoryErrorResponseSchema,
-  GetChatConversationParamsSchema,
+  GetChatConversationQuerySchema,
   GetChatConversationResponseSchema,
   GetChatConversationErrorResponseSchema,
 } from "./chat.schema";
@@ -56,6 +56,9 @@ export const getChatConversation = createRoute({
   path: "/conversation",
   summary: "Get chat conversation",
   tags: ["chat"],
+  request: {
+    query: GetChatConversationQuerySchema,
+  },
   responses: {
     200: {
       description: "Success get chat conversation",
