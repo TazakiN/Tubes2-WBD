@@ -24,3 +24,20 @@ export const ConnectionRequestErrorResponseSchema = z.object({
   success: z.literal(false),
   message: z.string(),
 });
+
+export const CreateConnectionRequestSchema = z.object({
+  to_id: z.string().openapi({
+    description: "The user id of the receiver",
+    example: "2",
+  }),
+});
+
+export const CreateConnectionResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+});
+
+export const CreateCOnnectionResponseErrorSchema = z.object({
+  success: z.literal(false),
+  message: z.string(),
+});

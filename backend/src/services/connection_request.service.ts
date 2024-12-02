@@ -2,6 +2,35 @@ import db from "../config/db";
 import profileService from "./profile.service";
 
 export class ConnectionRequestService {
+  static async createConnectionRequest(user_id: bigint, to_id: bigint) {
+    if (user_id === to_id) {
+      throw new Error("You cannot send a connection request to yourself");
+    }
+
+    const existingRequest = await db.connection_request.findFirst({
+      where: {
+        from_id: user_id,
+        to_id,
+      },
+    });
+
+    if (existingRequest) {
+      throw new Error(
+        "You have already sent a connection request to this user"
+      );
+    }
+
+    await db.connection_request.create({
+      data: {
+        from_id: user_id,
+        to_id,
+        created_at: new Date(),
+      },
+    });
+
+    return true;
+  }
+
   static async getAllConnectionRequests(user_id: bigint, type: string) {
     const whereClause =
       type === "Outgoing" ? { from_id: user_id } : { to_id: user_id };

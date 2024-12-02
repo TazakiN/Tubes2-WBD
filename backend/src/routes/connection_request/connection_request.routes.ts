@@ -3,6 +3,9 @@ import {
   ConnectionRequestErrorResponseSchema,
   connectionRequestParamsSchema,
   ConnectionRequestResponseSchema,
+  CreateConnectionRequestSchema,
+  CreateCOnnectionResponseErrorSchema,
+  CreateConnectionResponseSchema,
 } from "./connection_request.schema";
 
 export const getAllConnectionRequests = createRoute({
@@ -38,6 +41,54 @@ export const getAllConnectionRequests = createRoute({
       content: {
         "application/json": {
           schema: ConnectionRequestErrorResponseSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const createConnectionRequest = createRoute({
+  method: "post",
+  path: "/",
+  summary: "Create a connection request",
+  description: "Create a connection request",
+  tags: ["Connection Request"],
+  request: {
+    body: {
+      description: "User registration details",
+      content: {
+        "application/json": {
+          schema: CreateConnectionRequestSchema,
+          example: {
+            from_id: "1",
+            to_id: "2",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Success create a connection request",
+      content: {
+        "application/json": {
+          schema: CreateConnectionResponseSchema,
+          example: {
+            success: true,
+            message: "Success create a connection request",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: CreateCOnnectionResponseErrorSchema,
           example: {
             success: false,
             message: "Internal server error",

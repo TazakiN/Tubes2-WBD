@@ -22,3 +22,22 @@ export const getAllConnectionRequests = async (c: Context) => {
     });
   }
 };
+
+export const createConnectionRequest = async (c: Context) => {
+  const user_id = BigInt(await getUserIDbyTokenInCookie(c));
+  const { to_id } = await c.req.json();
+
+  try {
+    await ConnectionRequestService.createConnectionRequest(user_id, to_id);
+
+    return c.json({
+      success: true,
+      message: "Success create connection request",
+    });
+  } catch (error) {
+    return c.json({
+      success: false,
+      message: (error as Error).message,
+    });
+  }
+};
