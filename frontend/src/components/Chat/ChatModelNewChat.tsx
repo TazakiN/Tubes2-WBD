@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { X, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useQuery } from "@tanstack/react-query";
 
 interface ChatModelNewChatProps {
   onClose: () => void;
@@ -16,24 +17,36 @@ interface User {
 function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [searchResults, setSearchResults] = useState<User[]>([]);
-
-  const handleSearch = async (query: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:4001/api/users/search?q=${query}`,
-        {
-          credentials: "include",
-        },
-      );
-      const data = await response.json();
-      if (data.success) {
-        setSearchResults(data.data);
-      }
-    } catch (error) {
-      console.error("Error searching users:", error);
+  const searchUsers = async (query: string) => {
+    if (!query) return [];
+    const response = await fetch(
+      "http://localhost:4001/api/chat/search-connected-users?" +
+        new URLSearchParams({ username: query }),
+      {
+        credentials: "include",
+      },
+    );
+    const data = await response.json();
+    if (data.success) {
+      return data.data;
     }
+    throw new Error("Failed to fetch users");
   };
+
+  const { data: searchResults = [], isError } = useQuery({
+    queryKey: ["searchUsers", searchQuery],
+    queryFn: () => searchUsers(searchQuery),
+    enabled: searchQuery.length > 0,
+  });
+
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const timeoutId = setTimeout(() => {
+      setSearchQuery(value);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -55,39 +68,29 @@ function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
             type="text"
             placeholder="Search users..."
             className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              handleSearch(e.target.value);
-            }}
+            onChange={handleSearch}
             autoFocus
           />
         </div>
 
         <div className="max-h-60 overflow-y-auto">
-          {searchResults.map((user: User) => (
-            <div
-              key={user.id}
-              className="cursor-pointer rounded-lg p-3 hover:bg-gray-100"
-              onClick={() => {
-                // TODO: Add to ChatList and open in ChatPanel
-                onClose();
-              }}
-            >
-              <div className="font-medium">{user.username}</div>
-              <div className="text-sm text-gray-500">{user.email}</div>
-            </div>
-          ))}
-          <div // ! contoh doang ini harus dihapus
-            key={1}
-            className="cursor-pointer rounded-lg p-3 hover:bg-gray-100"
-            onClick={() => {
-              onClose();
-            }}
-          >
-            <div className="font-medium">askdljsalkd</div>
-            <div className="text-sm text-gray-500">@alksjdlksadj</div>
-          </div>
+          {isError ? (
+            <div className="text-red-500 p-3">Error fetching users</div>
+          ) : (
+            searchResults.map((user: User) => (
+              <div
+                key={user.id}
+                className="cursor-pointer rounded-lg p-3 hover:bg-gray-100"
+                onClick={() => {
+                  // TODO: Add to ChatList and open in ChatPanel
+                  onClose();
+                }}
+              >
+                <div className="font-medium">{user.username}</div>
+                <div className="text-sm text-gray-500">{user.email}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
