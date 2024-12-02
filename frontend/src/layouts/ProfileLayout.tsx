@@ -1,16 +1,64 @@
-import { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import person_svg from '@/assets/svg/person.svg';
 import { ProfileData } from "@/lib/types/userData";
+import { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
+import TextCard from '@/components/ui/text-card';
 
 interface ProfileLayoutProps {
-  children?: ReactNode;
   profile: ProfileData;
-  connection_count: number;
+  authenticated: boolean;
 }
 
-export function ProfileLayout({ children, profile, connection_count }: ProfileLayoutProps) {
-  console.log("received profile: ");
+const UnauthenticatedComponent = () => {
+  return (
+    <div className="mt-8 mx-auto flex flex-col items-center">
+      <h2 className="text-2xl text-gray-dark font-large"> Login or Sign up to see more! </h2>
+      <div className="w-4/5 flex flex-row mt-6 justify-around">
+        <Link to="/login">
+          <Button
+            className="rounded bg-black px-6 py-4 text-white text-base"
+            variant="default"
+          >
+            Login
+          </Button>
+        </Link>
+        <Link to="/register">
+          <Button
+            className="rounded bg-black px-4 py-4 text-white text-base"
+            variant="default"
+          >
+            Sign up
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+interface AuthenticatedComponentProps {
+  work_history? : string;
+  skills?: string;
+}
+
+const AuthenticatedComponent = ({work_history, skills} : AuthenticatedComponentProps) => {
+  return (
+    <div className="w-full mt-4 mx-auto flex flex-col items-center">
+      {work_history && <TextCard title="Job History" content={work_history} className="mb-4"/>}
+      {skills && <TextCard title="Skills" content={skills} className="mb-4"/>}
+    </div>
+  );
+}
+
+export function ProfileLayout({ profile, authenticated }: ProfileLayoutProps) {
+  let children : ReactNode;
+  console.log(authenticated)
+  if (authenticated){
+    children = <AuthenticatedComponent work_history={profile.work_history} skills={profile.skills}/>
+  } else {
+    children = UnauthenticatedComponent();
+  }
+
   return (
     <div className="min-h-screen bg-gray-light">
       <div className="flex flex-col justify-center py-12 sm:px-24 max-w-screen-lg w-full mx-auto">
@@ -31,10 +79,11 @@ export function ProfileLayout({ children, profile, connection_count }: ProfileLa
               to="/connection"
               className="text-md text-blue-secondary font-medium ml-1 mt-4 mb-10"
             >
-              {connection_count + " Connections"}
+              {profile.connection_count + " Connections"}
             </Link>
           </div>
         </div>
+        {children}
       </div>
     </div>
   );
