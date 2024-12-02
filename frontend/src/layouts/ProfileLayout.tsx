@@ -8,6 +8,7 @@ import TextCard from '@/components/ui/text-card';
 interface ProfileLayoutProps {
   profile: ProfileData;
   authenticated: boolean;
+  owner: boolean;
 }
 
 const UnauthenticatedComponent = () => {
@@ -50,15 +51,32 @@ const AuthenticatedComponent = ({work_history, skills} : AuthenticatedComponentP
   );
 }
 
-export function ProfileLayout({ profile, authenticated }: ProfileLayoutProps) {
+const ProfileConditionalButton = ({ type }) => {
+  switch (type) {
+    case "Owner":
+      return <Button variant="default" className='bg-green rounded-full text-base px-6 py-4 mt-4 hover:bg-green/90'> Edit Profile </Button>;
+    case "Connected":
+      return <Button variant="destructive" className='rounded-full text-base px-6 py-4 mt-4'> Remove Connection </Button>;
+    case "Pending":
+      return <Button variant="default" className='bg-green rounded-full text-base px-6 py-4 mt-4 hover:bg-green/90'> Pending </Button>;
+    case "Not Connected":
+      return <Button variant="default" className='bg-blue-primary rounded-full text-base px-6 py-4 mt-4 hover:bg-blue-primary/90'> Connect </Button>;
+  }
+}
+
+export function ProfileLayout({ profile, authenticated, owner }: ProfileLayoutProps) {
   let children : ReactNode;
-  console.log(authenticated)
   if (authenticated){
     children = <AuthenticatedComponent work_history={profile.work_history} skills={profile.skills}/>
   } else {
-    children = UnauthenticatedComponent();
+    children = <UnauthenticatedComponent/>
   }
-
+  let buttonType;
+  if (owner){
+    buttonType = "Owner";
+  } else {
+    buttonType = "Not";
+  }
   return (
     <div className="min-h-screen bg-gray-light">
       <div className="flex flex-col justify-center py-12 sm:px-24 max-w-screen-lg w-full mx-auto">
@@ -69,7 +87,7 @@ export function ProfileLayout({ profile, authenticated }: ProfileLayoutProps) {
           alt={"Profile picture of " + profile.username}
         />
         <div className="overflow-hidden rounded-b-2xl -mt-32 bg-gray-lighter px-4 shadow">
-          <div className="flex flex-col mt-16 ml-6 sm:ml-10 lg:ml-16">
+          <div className="flex flex-col items-start mt-16 pb-10 ml-6 sm:ml-10 lg:ml-16">
             <div className="flex flex-row">
               <img className="w-8 h-8" src={person_svg} alt="Person Icon"/>
               <h2 className="text-2xl text-gray-dark font-medium ml-1"> {profile.name} </h2>
@@ -77,10 +95,12 @@ export function ProfileLayout({ profile, authenticated }: ProfileLayoutProps) {
 
             <Link
               to="/connection"
-              className="text-md text-blue-secondary font-medium ml-1 mt-4 mb-10"
+              className="text-md text-blue-secondary font-medium ml-1 mt-4"
             >
               {profile.connection_count + " Connections"}
             </Link>
+
+            <ProfileConditionalButton type={buttonType}/>
           </div>
         </div>
         {children}

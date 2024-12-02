@@ -12,7 +12,8 @@ const Profile = () => {
   };
 
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [owner, setOwner] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({});
   useEffect(() => {
     const fetchProfile = async () => {
@@ -23,7 +24,8 @@ const Profile = () => {
         const response = await fetch(requestPath, {credentials: "include"});
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        setAuthenticated(data.message=="Authenticated");
+        setAuthenticated(data.message!="Unauthenticated");
+        setOwner(data.message=="Owner");
         setProfileData(data.body);
       } catch (err) {
         if (err instanceof Error) {
@@ -40,7 +42,7 @@ const Profile = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  return <ProfileLayout profile={profileData} authenticated={authenticated} />;
+  return <ProfileLayout profile={profileData} authenticated={authenticated} owner={owner}/>;
 };
 
 export default Profile;
