@@ -24,7 +24,7 @@ export class profileController {
       const profile = await profileService.getProfile(user_id);
       return profile;
     } catch (error) {
-      return error
+      throw error;
     }
   }
 
@@ -34,7 +34,7 @@ export class profileController {
       const profile = await profileService.getProfile(user_id);
       return profile;
     } catch (error) {
-      return error
+      throw error;
     }
   }
 }

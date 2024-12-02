@@ -20,6 +20,7 @@ import { Route as ProfileuseridImport } from './routes/profile/[user_id]'
 const RegisterLazyImport = createFileRoute('/register')()
 const ProfileLazyImport = createFileRoute('/profile')()
 const LoginLazyImport = createFileRoute('/login')()
+const ConnectLazyImport = createFileRoute('/connect')()
 const ChatLazyImport = createFileRoute('/chat')()
 const IndexLazyImport = createFileRoute('/')()
 
@@ -42,6 +43,12 @@ const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
+const ConnectLazyRoute = ConnectLazyImport.update({
+  id: '/connect',
+  path: '/connect',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/connect.lazy').then((d) => d.Route))
 
 const ChatLazyRoute = ChatLazyImport.update({
   id: '/chat',
@@ -77,6 +84,13 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/connect': {
+      id: '/connect'
+      path: '/connect'
+      fullPath: '/connect'
+      preLoaderRoute: typeof ConnectLazyImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -127,6 +141,7 @@ const ProfileLazyRouteWithChildren = ProfileLazyRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/chat': typeof ChatLazyRoute
+  '/connect': typeof ConnectLazyRoute
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
@@ -136,6 +151,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/chat': typeof ChatLazyRoute
+  '/connect': typeof ConnectLazyRoute
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
@@ -146,6 +162,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/chat': typeof ChatLazyRoute
+  '/connect': typeof ConnectLazyRoute
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRouteWithChildren
   '/register': typeof RegisterLazyRoute
@@ -157,16 +174,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat'
+    | '/connect'
     | '/login'
     | '/profile'
     | '/register'
     | '/profile/[user_id]'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/login' | '/profile' | '/register' | '/profile/[user_id]'
+  to:
+    | '/'
+    | '/chat'
+    | '/connect'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/profile/[user_id]'
   id:
     | '__root__'
     | '/'
     | '/chat'
+    | '/connect'
     | '/login'
     | '/profile'
     | '/register'
@@ -177,6 +203,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   ChatLazyRoute: typeof ChatLazyRoute
+  ConnectLazyRoute: typeof ConnectLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   ProfileLazyRoute: typeof ProfileLazyRouteWithChildren
   RegisterLazyRoute: typeof RegisterLazyRoute
@@ -185,6 +212,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   ChatLazyRoute: ChatLazyRoute,
+  ConnectLazyRoute: ConnectLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   ProfileLazyRoute: ProfileLazyRouteWithChildren,
   RegisterLazyRoute: RegisterLazyRoute,
@@ -202,6 +230,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/chat",
+        "/connect",
         "/login",
         "/profile",
         "/register"
@@ -212,6 +241,9 @@ export const routeTree = rootRoute
     },
     "/chat": {
       "filePath": "chat.lazy.tsx"
+    },
+    "/connect": {
+      "filePath": "connect.lazy.tsx"
     },
     "/login": {
       "filePath": "login.lazy.tsx"
