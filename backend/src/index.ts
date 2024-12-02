@@ -37,7 +37,7 @@ app.use(
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRouter);
 app.route("/api/chat", chatRouter);
-app.route("/api/connection-request", connectionRequestRouter);
+app.route("/api/connection_request", connectionRequestRouter);
 
 // Open API + Swagger UI
 app.doc("/doc", {

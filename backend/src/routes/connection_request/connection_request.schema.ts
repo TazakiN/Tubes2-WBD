@@ -41,3 +41,37 @@ export const CreateCOnnectionResponseErrorSchema = z.object({
   success: z.literal(false),
   message: z.string(),
 });
+
+export const AcceptConnectionRequestSchema = z.object({
+  from_id: z.string().openapi({
+    description: "The user id of the sender",
+    example: "2",
+  }),
+});
+
+export const AcceptConnectionResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+});
+
+export const AcceptConnectionResponseErrorSchema = z.object({
+  success: z.literal(false),
+  message: z.string(),
+});
+
+export const RejectConnectionRequestSchema = z.object({
+  from_id: z.string().openapi({
+    description: "The user id of the sender",
+    example: "2",
+  }),
+});
+
+export const RejectConnectionResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+});
+
+export const RejectConnectionResponseErrorSchema = z.object({
+  success: z.literal(false),
+  message: z.string(),
+});

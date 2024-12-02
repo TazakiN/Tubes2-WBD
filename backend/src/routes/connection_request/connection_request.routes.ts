@@ -1,11 +1,17 @@
 import { createRoute } from "@hono/zod-openapi";
 import {
+  AcceptConnectionRequestSchema,
+  AcceptConnectionResponseErrorSchema,
+  AcceptConnectionResponseSchema,
   ConnectionRequestErrorResponseSchema,
   connectionRequestParamsSchema,
   ConnectionRequestResponseSchema,
   CreateConnectionRequestSchema,
   CreateCOnnectionResponseErrorSchema,
   CreateConnectionResponseSchema,
+  RejectConnectionRequestSchema,
+  RejectConnectionResponseErrorSchema,
+  RejectConnectionResponseSchema,
 } from "./connection_request.schema";
 
 export const getAllConnectionRequests = createRoute({
@@ -89,6 +95,100 @@ export const createConnectionRequest = createRoute({
       content: {
         "application/json": {
           schema: CreateCOnnectionResponseErrorSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const acceptConnectionRequest = createRoute({
+  method: "post",
+  path: "/accept",
+  summary: "Accept a connection request",
+  description: "Accept a connection request",
+  tags: ["Connection Request"],
+  request: {
+    body: {
+      description: "User registration details",
+      content: {
+        "application/json": {
+          schema: AcceptConnectionRequestSchema,
+          example: {
+            from_id: "2",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Success accept a connection request",
+      content: {
+        "application/json": {
+          schema: AcceptConnectionResponseSchema,
+          example: {
+            success: true,
+            message: "Success accept a connection request",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: AcceptConnectionResponseErrorSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const rejectConnectionRequest = createRoute({
+  method: "post",
+  path: "/reject",
+  summary: "Reject a connection request",
+  description: "Reject a connection request",
+  tags: ["Connection Request"],
+  request: {
+    body: {
+      description: "User registration details",
+      content: {
+        "application/json": {
+          schema: RejectConnectionRequestSchema,
+          example: {
+            from_id: "2",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Success reject a connection request",
+      content: {
+        "application/json": {
+          schema: RejectConnectionResponseSchema,
+          example: {
+            success: true,
+            message: "Success reject a connection request",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: RejectConnectionResponseErrorSchema,
           example: {
             success: false,
             message: "Internal server error",
