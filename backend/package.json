@@ -7,7 +7,7 @@
     "docker:dev": "npm run db:generate && npm run dev",
     "dev": "tsx watch src/index.ts --poll --watch-files src",
     "start": "tsx src/index.ts",
-    "db:seed": "tsx src/prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:pull": "prisma db pull",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
