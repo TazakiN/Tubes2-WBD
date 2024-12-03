@@ -1,7 +1,21 @@
 import db from "../config/db";
-import profileService from "./profile.service";
 
 export class ConnectionRequestService {
+  static async cancelConnectionRequest(from_id: bigint, to_id: bigint) {
+    try {
+      await db.connection_request.deleteMany({
+        where: {
+          from_id,
+          to_id,
+        },
+      });
+
+      return true;
+    } catch (error) {
+      throw new Error("Failed to cancel connection request");
+    }
+  }
+
   static async getConnectionRequest(user_id: bigint, from_id: bigint) {
     const request = await db.connection_request.findFirst({
       where: {

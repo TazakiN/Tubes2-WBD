@@ -16,8 +16,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useNavigate } from "@tanstack/react-router";
 
 const NavLinks = ({ isMobile = false }) => {
+  const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
   const linkClasses = isMobile
     ? "flex items-center gap-4 py-3 border-b hover:bg-gray-100 px-4"
@@ -28,6 +30,15 @@ const NavLinks = ({ isMobile = false }) => {
       toast.info("Logged in as a Guest.");
     }
   }, [isAuthenticated]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate({ to: "/login" });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return isAuthenticated ? (
     <div className={linkClasses}>
@@ -69,7 +80,7 @@ const NavLinks = ({ isMobile = false }) => {
         <DropdownMenuContent>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={logout}>
+          <DropdownMenuItem onClick={handleLogout}>
             <span className="text-red">Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

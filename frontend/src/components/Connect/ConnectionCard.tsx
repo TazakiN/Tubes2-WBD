@@ -1,6 +1,7 @@
 import React from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { Button } from "../ui/button";
 
 export interface ConnectionCardProps {
   user_id: bigint;
@@ -17,6 +18,35 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   status,
   refetch,
 }) => {
+  const createConnectionRequest = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/connection_request",
+        {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to_id: user_id.toString(),
+          }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Connection request sent");
+      refetch();
+    },
+    onError: () => {
+      toast.error("Failed to send connection request");
+    },
+  });
+
   const acceptMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(
@@ -75,12 +105,49 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
     },
   });
 
+  const cancelConnectionRequest = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/connection_request",
+        {
+          credentials: "include",
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to_id: user_id.toString(),
+          }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Connection request cancelled");
+      refetch();
+    },
+    onError: () => {
+      toast.error("Failed to cancel connection request");
+    },
+  });
+
   const handleAccept = () => {
     acceptMutation.mutate();
   };
 
   const handleDecline = () => {
     declineMutation.mutate();
+  };
+
+  const handleConnect = () => {
+    createConnectionRequest.mutate();
+  };
+
+  const handleCancelConnectionRequest = () => {
+    cancelConnectionRequest.mutate();
   };
 
   return (
@@ -93,51 +160,70 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
       />
       <div className="pb-4 text-center">
         <h3 className="text-2xl">{full_name}</h3>
-        <div className="mt-4 flex gap-2 text-xl">
+        <div className="mt-4 flex gap-2">
           {status === "Outgoing" && (
             <>
-              <span className="rounded-full bg-green px-2 py-1 text-gray-lighter">
+              <Button
+                className="rounded-full border border-gray-300 bg-green px-2 py-1 text-xl text-gray-lighter"
+                variant={"outline"}
+                onClick={handleCancelConnectionRequest}
+              >
                 Pending
-              </span>
-              <button className="rounded-full border border-gray-300 px-3 py-1 text-gray-600 hover:bg-gray-100">
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl"
+              >
                 Profile
-              </button>
+              </Button>
             </>
           )}
           {status === "Incoming" && (
             <>
-              <button
-                className="rounded-full border border-gray-300 bg-green px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground"
+              <Button
+                variant={"outline"}
+                className="rounded-full border border-gray-300 bg-green px-3 py-1 text-xl text-gray-lighter"
                 onClick={handleAccept}
               >
                 Accept
-              </button>
-              <button
-                className="rounded-full border border-gray-300 bg-red px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground"
+              </Button>
+              <Button
+                variant={"outline"}
+                className="rounded-full border border-gray-300 bg-red px-3 py-1 text-xl text-gray-lighter"
                 onClick={handleDecline}
               >
                 Decline
-              </button>
+              </Button>
             </>
           )}
           {status === "Connected" && (
             <>
-              <span className="bg-blue rounded-full bg-blue-primary px-2 py-1 text-gray-lighter">
+              <span className="bg-blue rounded-full bg-blue-primary px-2 py-1 text-xl text-gray-lighter">
                 Linked
               </span>
-              <button className="rounded-full border border-gray-300 px-3 py-1 text-gray-600 hover:bg-gray-100">
+              <Button
+                variant={"outline"}
+                className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl text-gray-600 hover:bg-gray-100"
+              >
                 Profile
-              </button>
+              </Button>
             </>
           )}
           {status === "Not Connected" && (
             <>
-              <button className="rounded-full border border-gray-300 bg-blue-primary px-3 py-1 text-gray-lighter hover:bg-accent hover:text-accent-foreground">
+              <Button
+                variant={"outline"}
+                className="rounded-full border border-gray-300 bg-blue-primary px-3 py-1 text-xl text-gray-lighter"
+                onClick={handleConnect}
+              >
                 Connect
-              </button>
-              <button className="rounded-full border border-gray-300 px-3 py-1 text-gray-600 hover:bg-gray-100">
+              </Button>
+              <Button
+                variant={"outline"}
+                className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl text-gray-600 hover:bg-gray-100"
+              >
                 Profile
-              </button>
+              </Button>
             </>
           )}
         </div>

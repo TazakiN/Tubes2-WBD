@@ -84,6 +84,34 @@ export const createConnectionRequest = async (c: Context) => {
   }
 };
 
+export const cancelConnectionRequest = async (c: Context) => {
+  const user_id = BigInt(await getUserIDbyTokenInCookie(c));
+  const { to_id } = await c.req.json();
+
+  try {
+    await ConnectionRequestService.cancelConnectionRequest(
+      user_id,
+      BigInt(to_id)
+    );
+
+    return c.json(
+      {
+        success: true,
+        message: "Success cancel connection request",
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
+  }
+};
+
 export const acceptConnectionRequest = async (c: Context) => {
   const user_id = BigInt(await getUserIDbyTokenInCookie(c));
   const { from_id } = await c.req.json();
