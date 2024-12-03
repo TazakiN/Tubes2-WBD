@@ -11,5 +11,5 @@ export const errorPayloadSchema = z.union([
 export const errorSchema = z.object({
   success: z.boolean(),
   message: z.string(),
-  error: errorPayloadSchema,
+  error: errorPayloadSchema.optional(),
 });
