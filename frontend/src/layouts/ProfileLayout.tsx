@@ -54,7 +54,11 @@ const AuthenticatedComponent = ({work_history, skills} : AuthenticatedComponentP
 const ProfileConditionalButton = ({ type }) => {
   switch (type) {
     case "Owner":
-      return <Button variant="default" className='bg-green rounded-full text-base px-6 py-4 mt-4 hover:bg-green/90'> Edit Profile </Button>;
+      return (
+          <Link to="/profile/edit">
+            <Button variant="default" className='bg-green rounded-full text-base px-6 py-4 mt-4 hover:bg-green/90'> Edit Profile </Button>
+          </Link>
+        );
     case "Connected":
       return <Button variant="destructive" className='rounded-full text-base px-6 py-4 mt-4'> Remove Connection </Button>;
     case "Pending":
