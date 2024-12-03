@@ -9,7 +9,7 @@ interface ChatModelNewChatProps {
 }
 
 interface User {
-  id: string;
+  user_id: string;
   username: string;
   email: string;
 }
@@ -80,7 +80,7 @@ function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
           ) : (
             searchResults.map((user: User) => (
               <div
-                key={user.id}
+                key={user.user_id}
                 className="cursor-pointer rounded-lg p-3 hover:bg-gray-100"
                 onClick={() => {
                   // TODO: Add to ChatList and open in ChatPanel
