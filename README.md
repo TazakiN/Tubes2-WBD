@@ -1,4 +1,10 @@
-# This is the repository for IF-3310 Web Development Class Project
+# LinkinPurry
+
+This project was created to fulfill the major assignment for the Web Application Development course. It is a website similar to LinkedIn, but with more simplified features. The website is developed using the following technologies:
+
+- React.js + Tailwind CSS for frontend development
+- Hono.js for backend framework
+- PostgreSQL as the database management system
 
 ## backlog ala ala
 
@@ -6,7 +12,7 @@
 
 - [x] Authentication and Authorization
 - [ ] Profil Pengguna
-- [ ] Koneksi Antar Pengguna
+- [x] Koneksi Antar Pengguna
 - [ ] Feed
 - [x] Chat dan Websocket
 - [ ] Notifikasi
@@ -20,7 +26,7 @@
 - [x] Register
 - [ ] Profil
 - [ ] Feed
-- [ ] Daftar Pengguna
+- [x] Daftar Pengguna
 - [x] Permintaan Koneksi
-- [ ] Daftar Koneksi
+- [x] Daftar Koneksi
 - [x] Chat
