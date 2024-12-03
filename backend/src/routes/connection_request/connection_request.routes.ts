@@ -157,6 +157,53 @@ export const createConnectionRequest = createRoute({
   },
 });
 
+export const cancelConnectionRequest = createRoute({
+  method: "delete",
+  path: "/",
+  summary: "Cancel a connection request",
+  description: "Cancel a connection request",
+  tags: ["Connection Request"],
+  request: {
+    body: {
+      description: "User registration details",
+      content: {
+        "application/json": {
+          schema: CreateConnectionRequestSchema,
+          example: {
+            to_id: "2",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Success cancel a connection request",
+      content: {
+        "application/json": {
+          schema: CreateConnectionResponseSchema,
+          example: {
+            success: true,
+            message: "Success cancel a connection request",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: CreateCOnnectionResponseErrorSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
 export const acceptConnectionRequest = createRoute({
   method: "post",
   path: "/accept",

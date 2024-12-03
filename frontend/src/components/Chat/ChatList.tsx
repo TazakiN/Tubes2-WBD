@@ -35,6 +35,10 @@ function ChatList({
     fetchChatList();
   }, []);
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex min-h-7 flex-col gap-2">
       <Button
@@ -62,9 +66,7 @@ function ChatList({
           ))
         )}
       </div>
-      {isModalOpen && (
-        <ChatModelNewChat onClose={() => setIsModalOpen(false)} />
-      )}
+      {isModalOpen && <ChatModelNewChat onClose={handleCloseModal} />}
     </div>
   );
 }
