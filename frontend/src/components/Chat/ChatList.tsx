@@ -17,7 +17,8 @@ function ChatList({
     const fetchChatList = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4001/api/chat/chat-interlocutors-history",
+          import.meta.env.VITE_API_BASE_URL +
+            "/chat/chat-interlocutors-history",
           {
             credentials: "include",
           },

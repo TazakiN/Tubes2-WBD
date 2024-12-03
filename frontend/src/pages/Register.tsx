@@ -21,20 +21,23 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4001/api/register", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/register",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, email, password, name: fullName }),
         },
-        body: JSON.stringify({ username, email, password, name: fullName }),
-      });
+      );
 
       const { message } = await response.json();
 
       if (response.status === 201) {
         const profileResponse = await fetch(
-          "http://localhost:4001/api/profile/info",
+          import.meta.env.VITE_API_BASE_URL + "/profile/info",
           {
             credentials: "include",
           },
@@ -136,7 +139,7 @@ const Register = () => {
 
       <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <span className="border-gray-dark w-full border-2" />
+          <span className="w-full border-2 border-gray-dark" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-gray-lighter px-2 text-base text-gray-600">
@@ -148,7 +151,7 @@ const Register = () => {
       <Link to="/login">
         <Button
           type="submit"
-          className="bg-blue-secondary hover:bg-blue-600 w-full rounded px-4 py-2 font-normal text-white"
+          className="w-full rounded bg-blue-secondary px-4 py-2 font-normal text-white hover:bg-blue-600"
           disabled={isLoading}
         >
           LOGIN

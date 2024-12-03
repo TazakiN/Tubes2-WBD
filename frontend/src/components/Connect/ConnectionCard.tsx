@@ -20,7 +20,7 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   const acceptMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        "http://localhost:4001/api/connection_request/accept",
+        import.meta.env.VITE_API_BASE_URL + "/connection_request/accept",
         {
           credentials: "include",
           method: "POST",
@@ -49,7 +49,7 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   const declineMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        "http://localhost:4001/api/connection_request/reject",
+        import.meta.env.VITE_API_BASE_URL + "/connection_request/reject",
         {
           credentials: "include",
           method: "POST",

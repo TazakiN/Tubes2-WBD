@@ -20,18 +20,21 @@ export default function Login() {
 
     try {
       const payload = { identifier, password };
-      const response = await fetch("http://localhost:4001/api/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/login",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
 
       if (response.ok) {
         const profileResponse = await fetch(
-          "http://localhost:4001/api/profile/info",
+          import.meta.env.VITE_API_BASE_URL + "/profile/info",
           {
             credentials: "include",
           },
@@ -57,7 +60,7 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <div className="bg-blue-primary mx-auto flex size-32 items-center justify-center rounded-lg text-white">
+      <div className="mx-auto flex size-32 items-center justify-center rounded-lg bg-blue-primary text-white">
         {" "}
       </div>
       <div className="my-4">
@@ -91,7 +94,7 @@ export default function Login() {
             type="password"
             autoComplete="current-password"
             required
-            className="bg-gray-dark mt-1"
+            className="mt-1 bg-gray-dark"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
@@ -117,7 +120,7 @@ export default function Login() {
 
       <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <span className="border-gray-dark w-full border-2" />
+          <span className="w-full border-2 border-gray-dark" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-gray-lighter px-2 text-base text-gray-600">
@@ -129,7 +132,7 @@ export default function Login() {
       <Link to="/register">
         <Button
           type="submit"
-          className="bg-blue-secondary hover:bg-blue-600 w-full rounded px-4 py-2 font-normal text-white"
+          className="w-full rounded bg-blue-secondary px-4 py-2 font-normal text-white hover:bg-blue-600"
           disabled={isLoading}
         >
           REGISTER

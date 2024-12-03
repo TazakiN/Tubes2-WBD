@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     ports:
-      - "4001:4001"
+      - "3000:3000"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
@@ -16,8 +16,7 @@ services:
     volumes:
       - ./frontend/src:/app/src
     ports:
-      # - "5173:5173"
-      - "3000:3000"
+      - "5173:5173"
   db:
     image: postgres:latest
     ports:
