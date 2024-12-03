@@ -23,6 +23,7 @@ const LoginLazyImport = createFileRoute('/login')()
 const FeedsLazyImport = createFileRoute('/feeds')()
 const ConnectLazyImport = createFileRoute('/connect')()
 const ChatLazyImport = createFileRoute('/chat')()
+const BrowseLazyImport = createFileRoute('/browse')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -63,6 +64,12 @@ const ChatLazyRoute = ChatLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/chat.lazy').then((d) => d.Route))
 
+const BrowseLazyRoute = BrowseLazyImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/browse.lazy').then((d) => d.Route))
+
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
@@ -84,6 +91,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseLazyImport
       parentRoute: typeof rootRoute
     }
     '/chat': {
@@ -154,6 +168,7 @@ const ProfileLazyRouteWithChildren = ProfileLazyRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
   '/feeds': typeof FeedsLazyRoute
@@ -165,6 +180,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
   '/feeds': typeof FeedsLazyRoute
@@ -177,6 +193,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
   '/feeds': typeof FeedsLazyRoute
@@ -190,6 +207,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/browse'
     | '/chat'
     | '/connect'
     | '/feeds'
@@ -200,6 +218,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/browse'
     | '/chat'
     | '/connect'
     | '/feeds'
@@ -210,6 +229,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/browse'
     | '/chat'
     | '/connect'
     | '/feeds'
@@ -222,6 +242,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  BrowseLazyRoute: typeof BrowseLazyRoute
   ChatLazyRoute: typeof ChatLazyRoute
   ConnectLazyRoute: typeof ConnectLazyRoute
   FeedsLazyRoute: typeof FeedsLazyRoute
@@ -232,6 +253,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  BrowseLazyRoute: BrowseLazyRoute,
   ChatLazyRoute: ChatLazyRoute,
   ConnectLazyRoute: ConnectLazyRoute,
   FeedsLazyRoute: FeedsLazyRoute,
@@ -251,6 +273,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/browse",
         "/chat",
         "/connect",
         "/feeds",
@@ -261,6 +284,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/browse": {
+      "filePath": "browse.lazy.tsx"
     },
     "/chat": {
       "filePath": "chat.lazy.tsx"
