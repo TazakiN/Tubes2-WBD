@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const RegisterLazyImport = createFileRoute('/register')()
 const LoginLazyImport = createFileRoute('/login')()
+const FeedsLazyImport = createFileRoute('/feeds')()
 const ConnectLazyImport = createFileRoute('/connect')()
 const ChatLazyImport = createFileRoute('/chat')()
 const BrowseLazyImport = createFileRoute('/browse')()
@@ -40,6 +41,12 @@ const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
+const FeedsLazyRoute = FeedsLazyImport.update({
+  id: '/feeds',
+  path: '/feeds',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/feeds.lazy').then((d) => d.Route))
 
 const ConnectLazyRoute = ConnectLazyImport.update({
   id: '/connect',
@@ -127,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectLazyImport
       parentRoute: typeof rootRoute
     }
+    '/feeds': {
+      id: '/feeds'
+      path: '/feeds'
+      fullPath: '/feeds'
+      preLoaderRoute: typeof FeedsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -179,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
+  '/feeds': typeof FeedsLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
@@ -192,6 +207,7 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
+  '/feeds': typeof FeedsLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
@@ -206,6 +222,7 @@ export interface FileRoutesById {
   '/browse': typeof BrowseLazyRoute
   '/chat': typeof ChatLazyRoute
   '/connect': typeof ConnectLazyRoute
+  '/feeds': typeof FeedsLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
@@ -221,6 +238,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/feeds'
     | '/login'
     | '/register'
     | '/profile/$user_id'
@@ -233,6 +251,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/feeds'
     | '/login'
     | '/register'
     | '/profile/$user_id'
@@ -245,6 +264,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/feeds'
     | '/login'
     | '/register'
     | '/profile/$user_id'
@@ -259,6 +279,7 @@ export interface RootRouteChildren {
   BrowseLazyRoute: typeof BrowseLazyRoute
   ChatLazyRoute: typeof ChatLazyRoute
   ConnectLazyRoute: typeof ConnectLazyRoute
+  FeedsLazyRoute: typeof FeedsLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
   ProfileUseridLazyRoute: typeof ProfileUseridLazyRoute
@@ -272,6 +293,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseLazyRoute: BrowseLazyRoute,
   ChatLazyRoute: ChatLazyRoute,
   ConnectLazyRoute: ConnectLazyRoute,
+  FeedsLazyRoute: FeedsLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
   ProfileUseridLazyRoute: ProfileUseridLazyRoute,
@@ -294,6 +316,7 @@ export const routeTree = rootRoute
         "/browse",
         "/chat",
         "/connect",
+        "/feeds",
         "/login",
         "/register",
         "/profile/$user_id",
@@ -313,6 +336,9 @@ export const routeTree = rootRoute
     },
     "/connect": {
       "filePath": "connect.lazy.tsx"
+    },
+    "/feeds": {
+      "filePath": "feeds.lazy.tsx"
     },
     "/login": {
       "filePath": "login.lazy.tsx"
