@@ -70,7 +70,7 @@ const NavLinks = ({ isMobile = false }) => {
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={logout}>
-            <span className="text-red-500">Logout</span>
+            <span className="text-red">Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
