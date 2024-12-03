@@ -37,13 +37,13 @@ export const getAllConnectionRequests = createRoute({
             data: [
               {
                 user_id: "2",
-                username: "user2",
+                full_name: "user2",
                 profile_photo_path: "profile_photo_path2",
                 created_at: "2021-09-07T07:00:00.000Z",
               },
               {
                 user_id: "3",
-                username: "user3",
+                full_name: "user3",
                 profile_photo_path: "profile_photo_path3",
                 created_at: "2021-09-07T07:00:00.000Z",
               },

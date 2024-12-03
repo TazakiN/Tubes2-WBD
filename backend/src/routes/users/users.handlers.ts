@@ -15,13 +15,13 @@ export const getAllUsers = async (c: Context) => {
         async (user: {
           id: bigint;
           username: string;
+          full_name: string | null;
           profile_photo_path: string;
-          status?: string;
         }) => {
           const status = await ConnectionService.getStatus(user_id, user.id);
           return {
             user_id: user.id.toString(),
-            username: user.username,
+            full_name: user.full_name ?? user.username,
             profile_photo_path: user.profile_photo_path,
             status: status as
               | "Connected"

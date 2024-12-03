@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 interface User {
   user_id: bigint;
-  username: string;
+  full_name: string;
   profile_photo_path: string;
   status: string;
 }
@@ -40,7 +40,7 @@ function Browse() {
               <ConnectionCard
                 key={user.user_id}
                 user_id={user.user_id}
-                username={user.username}
+                full_name={user.full_name}
                 profile_photo_path={user.profile_photo_path}
                 status={user.status}
                 refetch={refetch}

@@ -7,7 +7,7 @@ export const getAllUsersResponseSchema = z.object({
   data: z.array(
     z.object({
       user_id: z.string(),
-      username: z.string(),
+      full_name: z.string(),
       profile_photo_path: z.string(),
       status: z.enum(["Connected", "Not Connected", "Outgoing", "Incoming"]),
     })

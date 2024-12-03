@@ -20,13 +20,13 @@ export const getAllUsers = createRoute({
             data: [
               {
                 user_id: "1",
-                username: "user1",
+                full_name: "user1",
                 profile_photo_path: "profile_photo_path",
                 status: "Connected",
               },
               {
                 user_id: "2",
-                username: "user2",
+                full_name: "user2",
                 profile_photo_path: "profile_photo_path",
                 status: "Not Connected",
               },

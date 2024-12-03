@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface ConnectionCardProps {
   user_id: bigint;
-  username: string;
+  full_name: string;
   profile_photo_path: string;
   status: string;
   refetch: () => void;
@@ -12,7 +12,7 @@ export interface ConnectionCardProps {
 
 const ConnectionCard: React.FC<ConnectionCardProps> = ({
   user_id,
-  username,
+  full_name,
   profile_photo_path,
   status,
   refetch,
@@ -92,8 +92,8 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
         className="-mt-8 h-16 w-16 rounded-full"
       />
       <div className="pb-4 text-center">
-        <h3 className="text-2xl">{username}</h3>
-        <div className="mt-2 flex gap-2 text-xl">
+        <h3 className="text-2xl">{full_name}</h3>
+        <div className="mt-4 flex gap-2 text-xl">
           {status === "Outgoing" && (
             <>
               <span className="rounded-full bg-green px-2 py-1 text-gray-lighter">

@@ -9,7 +9,7 @@ export class UsersService {
         },
         OR: [
           {
-            username: {
+            full_name: {
               contains: query,
               mode: "insensitive",
             },
@@ -24,11 +24,12 @@ export class UsersService {
       },
       select: {
         id: true,
-        username: true,
+        full_name: true,
         profile_photo_path: true,
+        username: true,
       },
       orderBy: {
-        username: "asc",
+        full_name: "asc",
       },
     });
 
