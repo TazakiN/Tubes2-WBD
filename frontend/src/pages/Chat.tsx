@@ -21,7 +21,12 @@ const Chat = () => {
       const fetchChatPanelData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:4001/api/chat/conversation?interlocutor_id=${selectedInterlocutorData.interlocutor_id}`,
+            import.meta.env.VITE_API_BASE_URL +
+              "/chat/conversation?" +
+              new URLSearchParams({
+                interlocutor_id:
+                  selectedInterlocutorData.interlocutor_id.toString(),
+              }),
             {
               credentials: "include",
             },

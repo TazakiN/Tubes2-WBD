@@ -8,7 +8,7 @@ RUN npm ci --include=dev
 
 COPY . .
 
-ENV PORT=4001
-EXPOSE 4001
+ENV PORT=3000
+EXPOSE 3000
 
 CMD ["npm", "run", "docker:dev"]

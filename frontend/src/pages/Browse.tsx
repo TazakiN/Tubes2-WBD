@@ -13,7 +13,7 @@ function Browse() {
     staleTime: 1000 * 60 * 5,
     queryKey: ["users"],
     queryFn: () =>
-      fetch("http://localhost:4001/api/users", {
+      fetch(import.meta.env.VITE_API_BASE_URL + "/users", {
         credentials: "include",
       })
         .then((res) => res.json())

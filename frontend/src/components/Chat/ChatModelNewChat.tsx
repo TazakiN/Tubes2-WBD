@@ -20,7 +20,8 @@ function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
   const searchUsers = async (query: string) => {
     if (!query) return [];
     const response = await fetch(
-      "http://localhost:4001/api/chat/search-connected-users?" +
+      import.meta.env.VITE_API_BASE_URL +
+        "/chat/search-connected-users?" +
         new URLSearchParams({ username: query }),
       {
         credentials: "include",

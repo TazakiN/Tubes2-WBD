@@ -28,7 +28,7 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
   };
 
   useEffect(() => {
-    const webSocket = new WebSocket("ws://localhost:4001/ws");
+    const webSocket = new WebSocket("ws://localhost:3000/ws");
 
     webSocket.onopen = () => {
       console.log("WebSocket connected");

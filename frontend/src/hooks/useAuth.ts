@@ -12,7 +12,7 @@ export const useAuth = () => {
     staleTime: 1000 * 60 * 5,
     queryKey: ["userData"],
     queryFn: () =>
-      fetch("http://localhost:4001/api/profile/info", {
+      fetch(import.meta.env.VITE_API_BASE_URL + "/profile/info", {
         credentials: "include",
       }).then((res) => {
         if (res.status === 401) {
@@ -39,10 +39,13 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      const response = await fetch("http://localhost:4001/api/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
 
       if (!response.ok) {
         throw new Error("Failed to logout");
