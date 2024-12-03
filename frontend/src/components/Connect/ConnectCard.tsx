@@ -11,7 +11,7 @@ export interface ConnectionCardProps {
   refetch: () => void;
 }
 
-const ConnectionCard: React.FC<ConnectionCardProps> = ({
+const ConnectCard: React.FC<ConnectionCardProps> = ({
   user_id,
   full_name,
   profile_photo_path,
@@ -232,4 +232,4 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   );
 };
 
-export default ConnectionCard;
+export default ConnectCard;
