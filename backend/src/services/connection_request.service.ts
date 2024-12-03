@@ -107,11 +107,20 @@ export class ConnectionRequestService {
         connectionRequests.map(async (request) => {
           const otherUserId =
             type === "Outgoing" ? request.to_id : request.from_id;
-          const userInfo = await profileService.getProfileInfo(otherUserId);
+          const userInfo = await db.users.findFirst({
+            where: {
+              id: otherUserId,
+            },
+            select: {
+              username: true,
+              full_name: true,
+              profile_photo_path: true,
+            },
+          });
 
           return {
             user_id: otherUserId.toString(),
-            username: userInfo!.username,
+            full_name: userInfo?.full_name ?? userInfo!.username,
             profile_photo_path: userInfo!.profile_photo_path,
             created_at: request.created_at,
           };
