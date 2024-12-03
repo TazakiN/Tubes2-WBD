@@ -11,7 +11,7 @@ This project was created to fulfill the major assignment for the Web Application
 ### Fitur
 
 - [x] Authentication and Authorization
-- [ ] Profil Pengguna
+- [x] Profil Pengguna
 - [x] Koneksi Antar Pengguna
 - [ ] Feed
 - [x] Chat dan Websocket
@@ -24,8 +24,8 @@ This project was created to fulfill the major assignment for the Web Application
 
 - [x] Login
 - [x] Register
-- [ ] Profil
-- [ ] Feed
+- [x] Profile
+- [ ] Feeds
 - [x] Daftar Pengguna
 - [x] Permintaan Koneksi
 - [x] Daftar Koneksi
