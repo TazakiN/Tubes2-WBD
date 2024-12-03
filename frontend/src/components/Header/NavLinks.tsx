@@ -51,7 +51,7 @@ const NavLinks = ({ isMobile = false }) => {
       />
       <NavButton
         imgSrc={NetworkSparkle}
-        navRoute="/"
+        navRoute="/browse"
         navText="Browse"
         className={isMobile ? "w-full" : ""}
       />
@@ -79,7 +79,7 @@ const NavLinks = ({ isMobile = false }) => {
     <div className={linkClasses}>
       <NavButton
         imgSrc={NetworkSparkle}
-        navRoute="/"
+        navRoute="/browse"
         navText="Browse"
         className={isMobile ? "w-full" : ""}
       />
