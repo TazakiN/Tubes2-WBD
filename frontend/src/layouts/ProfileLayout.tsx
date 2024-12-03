@@ -52,10 +52,12 @@ const AuthenticatedComponent = ({work_history, skills} : AuthenticatedComponentP
 }
 
 const ProfileConditionalButton = ({ type }) => {
+  const pathParts = window.location.pathname.split("/");
+  const user_id = pathParts[pathParts.length - 1];
   switch (type) {
     case "Owner":
       return (
-          <Link to="/profile/edit">
+          <Link to={`/profile/edit/${user_id}`}>
             <Button variant="default" className='bg-green rounded-full text-base px-6 py-4 mt-4 hover:bg-green/90'> Edit Profile </Button>
           </Link>
         );

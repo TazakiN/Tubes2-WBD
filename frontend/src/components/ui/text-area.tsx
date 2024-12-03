@@ -1,25 +1,22 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 interface TextAreaProps {
-    placeholder?: string;
+    value: string;
+    onChange;
+    placeholder?:string;
     maxLength?: number;
     initialRow?: number;
     id: string;
 }
 
-const TextArea = ({placeholder, maxLength, id, initialRow} : TextAreaProps) => {
-    if (!placeholder){
-        placeholder = "";
-    }
-
-    const [text, setText] = useState(placeholder);
+const TextArea = ({value="", onChange, placeholder, maxLength, id, initialRow} : TextAreaProps) => {
     const textAreaRef = useRef(null);
 
     const handleInput = (e) => {
-        const value = e.target.value;
-        if (value.length <= maxLength) {
-          setText(value);
-          // Adjust height dynamically
+        const newValue = e.target.value;
+        if (newValue.length <= maxLength) {
+          // setText(value);
+          onChange(newValue);
           if (textAreaRef.current) {
             textAreaRef.current.style.height = "auto";
             textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
@@ -34,15 +31,14 @@ const TextArea = ({placeholder, maxLength, id, initialRow} : TextAreaProps) => {
           ref={textAreaRef}
           className="w-full bg-transparent border-none outline-none resize-none text-gray-dark"
           maxLength={maxLength}
-          value={text}
+          value={value}
           onInput={handleInput}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Write something..."
+          placeholder={placeholder}
           rows={initialRow}
           style={{ height: "auto" }}
         />
         <div className="absolute bottom-3 right-3 text-sm text-gray-dark/80">
-          {text.length}/{maxLength}
+          {value.length}/{maxLength}
         </div>
       </div>
     );

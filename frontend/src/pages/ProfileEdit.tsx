@@ -1,46 +1,57 @@
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import TextArea from "@/components/ui/text-area";
-import { ProfileData } from "@/lib/types/userData";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function ProfileEdit() {
-  const [profileData, setProfileData] = useState<ProfileData>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [jobHistory, setJobHistory] = useState("");
+  const [skills, setSkills] = useState("");
   // const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const user_id = getUserIdFromUrl();
-  //       const requestPath = `${BASE_URL}/profile/${user_id}`;
-  //       const response = await fetch(requestPath, {credentials: "include"});
-  //       if (!response.ok) throw new Error("User not found");
-  //       const data = await response.json();
-  //       setAuthenticated(data.message!="Unauthenticated");
-  //       setOwner(data.message=="Owner");
-  //       setProfileData(data.body);
-  //     } catch (err) {
-  //       if (err instanceof Error) {
-  //         toast.error(err.message);
-  //       } else {
-  //         toast.error("An unknown error occurred");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, []);
+  const getUserIdFromUrl = () => {
+    const pathParts = window.location.pathname.split("/");
+    return pathParts[pathParts.length - 1];
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoading(true);
+        const user_id = getUserIdFromUrl();
+        const requestPath = `${BASE_URL}/profile/${user_id}`;
+        const response = await fetch(requestPath, {credentials: "include"});
+        if (!response.ok) throw new Error("User not found");
+        const data = await response.json();
+        if (data.message!="Owner"){
+          // TODO: Navigate to Home Page
+        }
+        const profile = data.body;
+        setUsername(profile.username);
+        setFullName(profile.name);
+        setJobHistory(profile.work_history);
+        setSkills(profile.skills);
+      } catch (err) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+        } else {
+          toast.error("An unknown error occurred");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         console.log(e);
@@ -95,21 +106,6 @@ export default function ProfileEdit() {
           <form className="w-full py-2" onSubmit={handleSubmit}>
             <div className="text-left space-y-8 w-full">
               <div>
-                <Label htmlFor="email"> Email </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className="mt-1 border-2 border-gray-dark"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder=""
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div>
                 <Label htmlFor="username"> Username </Label>
                 <Input
                   id="username"
@@ -119,7 +115,6 @@ export default function ProfileEdit() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder=""
                   disabled={isLoading}
                 />
               </div>
@@ -134,7 +129,6 @@ export default function ProfileEdit() {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder=""
                   disabled={isLoading}
                 />
               </div>
@@ -148,7 +142,6 @@ export default function ProfileEdit() {
                   className="border-2 border-gray-dark mt-1"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder=""
                   disabled={isLoading}
                 />
               </div>
@@ -162,7 +155,6 @@ export default function ProfileEdit() {
                   className="border-2 border-gray-dark mt-1"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder=""
                   disabled={isLoading}
                 />
               </div>
@@ -177,12 +169,12 @@ export default function ProfileEdit() {
 
               <div className="mt-8 flex flex-col">
                 <Label htmlFor="job history" className="mb-2"> Job History </Label>
-                <TextArea maxLength={1000} initialRow={6} id={"job history"}/>
+                <TextArea value={jobHistory} onChange={(newValue : string) => setJobHistory(newValue)} maxLength={1000} initialRow={6} id={"job history"} placeholder={"Write your job history here!"}/>
               </div>
 
               <div className="mt-8 flex flex-col">
                 <Label htmlFor="skills" className="mb-2"> Skills </Label>
-                <TextArea maxLength={1000} initialRow={6} id={"skills"}/>
+                <TextArea value={skills} onChange={(newValue : string) => setSkills(newValue)} maxLength={1000} initialRow={6} id={"skills"} placeholder={"Write your skills here!"}/>
               </div>
             </div>
             <Button
@@ -197,7 +189,7 @@ export default function ProfileEdit() {
                   Logging in...
                 </div>
               ) : (
-                "LOGIN"
+                "EDITING"
               )}
             </Button>
           </form>

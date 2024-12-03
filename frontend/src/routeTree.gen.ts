@@ -23,8 +23,9 @@ const ChatLazyImport = createFileRoute('/chat')()
 const BrowseLazyImport = createFileRoute('/browse')()
 const IndexLazyImport = createFileRoute('/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
-const ProfileEditLazyImport = createFileRoute('/profile/edit')()
 const ProfileUseridLazyImport = createFileRoute('/profile/$user_id')()
+const ProfileEditIndexLazyImport = createFileRoute('/profile/edit/')()
+const ProfileEditUseridLazyImport = createFileRoute('/profile/edit/$user_id')()
 
 // Create/Update Routes
 
@@ -70,18 +71,28 @@ const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
 
-const ProfileEditLazyRoute = ProfileEditLazyImport.update({
-  id: '/profile/edit',
-  path: '/profile/edit',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/profile/edit.lazy').then((d) => d.Route))
-
 const ProfileUseridLazyRoute = ProfileUseridLazyImport.update({
   id: '/profile/$user_id',
   path: '/profile/$user_id',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/profile/$user_id.lazy').then((d) => d.Route),
+)
+
+const ProfileEditIndexLazyRoute = ProfileEditIndexLazyImport.update({
+  id: '/profile/edit/',
+  path: '/profile/edit/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/profile/edit/index.lazy').then((d) => d.Route),
+)
+
+const ProfileEditUseridLazyRoute = ProfileEditUseridLazyImport.update({
+  id: '/profile/edit/$user_id',
+  path: '/profile/edit/$user_id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/profile/edit/$user_id.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -137,18 +148,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileUseridLazyImport
       parentRoute: typeof rootRoute
     }
-    '/profile/edit': {
-      id: '/profile/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof ProfileEditLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/profile/': {
       id: '/profile/'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/edit/$user_id': {
+      id: '/profile/edit/$user_id'
+      path: '/profile/edit/$user_id'
+      fullPath: '/profile/edit/$user_id'
+      preLoaderRoute: typeof ProfileEditUseridLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/edit/': {
+      id: '/profile/edit/'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -164,8 +182,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/profile/edit': typeof ProfileEditLazyRoute
   '/profile': typeof ProfileIndexLazyRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
+  '/profile/edit': typeof ProfileEditIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -176,8 +195,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/profile/edit': typeof ProfileEditLazyRoute
   '/profile': typeof ProfileIndexLazyRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
+  '/profile/edit': typeof ProfileEditIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -189,8 +209,9 @@ export interface FileRoutesById {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/profile/edit': typeof ProfileEditLazyRoute
   '/profile/': typeof ProfileIndexLazyRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
+  '/profile/edit/': typeof ProfileEditIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -203,8 +224,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/profile/$user_id'
-    | '/profile/edit'
     | '/profile'
+    | '/profile/edit/$user_id'
+    | '/profile/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -214,8 +236,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/profile/$user_id'
-    | '/profile/edit'
     | '/profile'
+    | '/profile/edit/$user_id'
+    | '/profile/edit'
   id:
     | '__root__'
     | '/'
@@ -225,8 +248,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/profile/$user_id'
-    | '/profile/edit'
     | '/profile/'
+    | '/profile/edit/$user_id'
+    | '/profile/edit/'
   fileRoutesById: FileRoutesById
 }
 
@@ -238,8 +262,9 @@ export interface RootRouteChildren {
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
   ProfileUseridLazyRoute: typeof ProfileUseridLazyRoute
-  ProfileEditLazyRoute: typeof ProfileEditLazyRoute
   ProfileIndexLazyRoute: typeof ProfileIndexLazyRoute
+  ProfileEditUseridLazyRoute: typeof ProfileEditUseridLazyRoute
+  ProfileEditIndexLazyRoute: typeof ProfileEditIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -250,8 +275,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
   ProfileUseridLazyRoute: ProfileUseridLazyRoute,
-  ProfileEditLazyRoute: ProfileEditLazyRoute,
   ProfileIndexLazyRoute: ProfileIndexLazyRoute,
+  ProfileEditUseridLazyRoute: ProfileEditUseridLazyRoute,
+  ProfileEditIndexLazyRoute: ProfileEditIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -271,8 +297,9 @@ export const routeTree = rootRoute
         "/login",
         "/register",
         "/profile/$user_id",
-        "/profile/edit",
-        "/profile/"
+        "/profile/",
+        "/profile/edit/$user_id",
+        "/profile/edit/"
       ]
     },
     "/": {
@@ -296,11 +323,14 @@ export const routeTree = rootRoute
     "/profile/$user_id": {
       "filePath": "profile/$user_id.lazy.tsx"
     },
-    "/profile/edit": {
-      "filePath": "profile/edit.lazy.tsx"
-    },
     "/profile/": {
       "filePath": "profile/index.lazy.tsx"
+    },
+    "/profile/edit/$user_id": {
+      "filePath": "profile/edit/$user_id.lazy.tsx"
+    },
+    "/profile/edit/": {
+      "filePath": "profile/edit/index.lazy.tsx"
     }
   }
 }
