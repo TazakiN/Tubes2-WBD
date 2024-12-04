@@ -16,3 +16,12 @@ export const GetAllConnectResponseErrorSchema = z.object({
   success: z.boolean(),
   message: z.string(),
 });
+
+export const DeleteConnectionRequestSchema = z.object({
+  to_id: z.string(),
+});
+
+export const DeleteConnectionResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+});

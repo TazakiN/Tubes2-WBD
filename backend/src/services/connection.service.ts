@@ -74,4 +74,23 @@ export class ConnectionService {
 
     return connection;
   }
+
+  static async deleteConnection(from_id: bigint, to_id: bigint) {
+    const connection = await db.connection.deleteMany({
+      where: {
+        OR: [
+          {
+            from_id,
+            to_id,
+          },
+          {
+            from_id: to_id,
+            to_id: from_id,
+          },
+        ],
+      },
+    });
+
+    return connection;
+  }
 }
