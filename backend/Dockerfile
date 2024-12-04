@@ -8,6 +8,8 @@ RUN npm ci --include=dev
 
 COPY . .
 
+COPY ./.env.example ./.env
+
 ENV PORT=3000
 EXPOSE 3000
 
