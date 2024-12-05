@@ -3,18 +3,27 @@ import { X, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useQuery } from "@tanstack/react-query";
+import { ChatContactProp } from "./ChatContact";
+import { SelectedInterlocutorData } from "@/pages/Chat";
 
 interface ChatModelNewChatProps {
   onClose: () => void;
+  onAddChat: (newChat: ChatContactProp) => void;
+  onSelectChat: (data: SelectedInterlocutorData) => void;
 }
 
 interface User {
   user_id: string;
   username: string;
   email: string;
+  profile_photo_path: string;
 }
 
-function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
+function ChatModelNewChat({
+  onClose,
+  onAddChat,
+  onSelectChat,
+}: ChatModelNewChatProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const searchUsers = async (query: string) => {
@@ -83,7 +92,20 @@ function ChatModelNewChat({ onClose }: ChatModelNewChatProps) {
                 key={user.user_id}
                 className="cursor-pointer rounded-lg p-3 hover:bg-gray-100"
                 onClick={() => {
-                  // TODO: Add to ChatList and open in ChatPanel
+                  const newChat = {
+                    interlocutor_id: Number(user.user_id),
+                    username: user.username,
+                    profile_photo_path: user.profile_photo_path,
+                    last_message: {
+                      message: "",
+                      timestamp: new Date(),
+                    },
+                  };
+                  onAddChat(newChat);
+                  onSelectChat({
+                    interlocutor_id: Number(user.user_id),
+                    username: user.username,
+                  });
                   onClose();
                 }}
               >

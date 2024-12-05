@@ -28,6 +28,9 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
   };
 
   useEffect(() => {
+    if (!chatPanelProps.interlocutor_id) {
+      return;
+    }
     const webSocket = new WebSocket("ws://localhost:3000/ws");
 
     webSocket.onopen = () => {

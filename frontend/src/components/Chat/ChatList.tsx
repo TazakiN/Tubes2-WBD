@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChatContact, { ChatContactProp } from "./ChatContact";
 import { SelectedInterlocutorData } from "@/pages/Chat";
 import { CirclePlus } from "lucide-react";
@@ -6,34 +6,15 @@ import { Button } from "../ui/button";
 import ChatModelNewChat from "./ChatModelNewChat";
 
 function ChatList({
+  chatList,
   onSelectChat,
+  onAddChat,
 }: {
-  onSelectChat: (setSelectedInterlocutorData: SelectedInterlocutorData) => void;
+  chatList: ChatContactProp[];
+  onSelectChat: (data: SelectedInterlocutorData) => void;
+  onAddChat: (newChat: ChatContactProp) => void;
 }) {
-  const [chatList, setChatList] = useState<ChatContactProp[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chat/chat-interlocutors-history",
-          {
-            credentials: "include",
-          },
-        );
-        const result = await response.json();
-        if (result.success) {
-          setChatList(result.data);
-        }
-      } catch (error) {
-        console.error("Error fetching chat list:", error);
-      }
-    };
-
-    fetchChatList();
-  }, []);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -66,7 +47,13 @@ function ChatList({
           ))
         )}
       </div>
-      {isModalOpen && <ChatModelNewChat onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <ChatModelNewChat
+          onClose={handleCloseModal}
+          onAddChat={onAddChat}
+          onSelectChat={onSelectChat}
+        />
+      )}
     </div>
   );
 }
