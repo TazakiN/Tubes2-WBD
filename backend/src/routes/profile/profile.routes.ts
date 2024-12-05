@@ -1,35 +1,20 @@
-// import { Hono } from "hono";
-// import { profileController } from "../../controllers/profile.controller";
-// import { JwtVariables } from "hono/jwt";
-// import verifyJWT from "../../middlewares/verifyJWT";
-
-// const profileRoutes = new Hono<{ Variables: JwtVariables }>();
-
-// profileRoutes.get("/info", async (c) => {
-//   return await profileController.getProfileInfo(c);
-// });
-
-// profileRoutes.get("/:user_id", async (c) => {
-//   return await profileController.getProfile(c);
-// });
-
-// export default profileRoutes;
-
 import { createRoute, z } from "@hono/zod-openapi";
-import { 
+import {
   GetProfileInfoResponse,
   GetPrivateProfileResponse,
   GetPublicProfileResponse,
+  GetProfileInfoRequest,
 } from "./profile.schema";
-import {
-  errorPayloadSchema,
-} from "../schema/error.schema"
+import { errorPayloadSchema } from "../schema/error.schema";
 
 export const getProfileInfo = createRoute({
   method: "get",
   path: "/info",
   summary: "Get Profile Information for Navbar",
   tags: ["profile"],
+  request: {
+    params: GetProfileInfoRequest,
+  },
   responses: {
     200: {
       description: "Success get profile information for navbar",
@@ -42,7 +27,8 @@ export const getProfileInfo = createRoute({
             data: [
               {
                 username: "KSI",
-                profile_photo_path: "/src/frontend/src/assets/img/default-profile-picture.png"
+                profile_photo_path:
+                  "/src/frontend/src/assets/img/default-profile-picture.png",
               },
             ],
           },
@@ -67,13 +53,14 @@ export const getProfileInfo = createRoute({
 export const getProfile = createRoute({
   method: "get",
   path: "/:user_id",
-  summary: "Get User profile from user ID, depends on authentication and connection between current user",
+  summary:
+    "Get User profile from user ID, depends on authentication and connection between current user",
   parameters: [
     {
-      name: 'user_id',
-      in: 'path',
+      name: "user_id",
+      in: "path",
       required: true,
-      schema: { type: 'string' },
+      schema: { type: "string" },
     },
   ],
   tags: ["profile"],
@@ -82,16 +69,21 @@ export const getProfile = createRoute({
       description: "Success get user profile for authenticated current user",
       content: {
         "application/json": {
-          schema: z.union([GetPrivateProfileResponse, GetPublicProfileResponse]),
+          schema: z.union([
+            GetPrivateProfileResponse,
+            GetPublicProfileResponse,
+          ]),
           example: {
             success: true,
             message: "Authenticated",
             data: [
               {
                 username: "KSI",
-                profile_photo_path: "/src/frontend/src/assets/img/default-profile-picture.png",
+                profile_photo_path:
+                  "/src/frontend/src/assets/img/default-profile-picture.png",
                 name: "JJ Olantunji",
-                work_history: "From the Screen, to the ring, to the pen, to a king",
+                work_history:
+                  "From the Screen, to the ring, to the pen, to a king",
                 skills: "Awful Rapping",
                 connection_count: 3,
                 relevant_posts: [],

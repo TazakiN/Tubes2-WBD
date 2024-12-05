@@ -1,10 +1,11 @@
 import Connections from "@/pages/Connections";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/connections")({
+export const Route = createLazyFileRoute("/connections/$userId")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <Connections />;
+  const { userId } = Route.useParams();
+  return <Connections userId={userId} />;
 }
