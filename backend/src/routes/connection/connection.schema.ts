@@ -25,3 +25,20 @@ export const DeleteConnectionResponseSchema = z.object({
   success: z.literal(true),
   message: z.string(),
 });
+
+export const GetAllConnectionInfoRequestSchema = z.object({
+  user_id: z.string().optional(),
+});
+
+export const GetAllConnectionInfoResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  from_user: z.boolean(),
+  data: z.array(
+    z.object({
+      user_id: z.string(),
+      full_name: z.string(),
+      profile_photo_path: z.string(),
+    })
+  ),
+});

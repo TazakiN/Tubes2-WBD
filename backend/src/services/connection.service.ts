@@ -93,4 +93,36 @@ export class ConnectionService {
 
     return connection;
   }
+
+  static async getAllConnectionInfo(user_id: bigint) {
+    const connections = await db.connection.findMany({
+      where: {
+        OR: [{ from_id: user_id }, { to_id: user_id }],
+      },
+    });
+
+    const connectedUserIds = connections.map((conn) =>
+      conn.from_id === user_id ? conn.to_id : conn.from_id
+    );
+
+    const userInfos = await db.users.findMany({
+      where: {
+        id: {
+          in: connectedUserIds,
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        full_name: true,
+        profile_photo_path: true,
+      },
+    });
+
+    return userInfos.map((user) => ({
+      user_id: user.id.toString(),
+      full_name: user.full_name ?? user.username,
+      profile_photo_path: user.profile_photo_path,
+    }));
+  }
 }
