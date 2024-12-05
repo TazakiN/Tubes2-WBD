@@ -47,17 +47,19 @@ function Connections({ userId }: ConnectionPageProps) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-light px-80 py-6 text-gray-dark">
+    <main className="flex min-h-screen flex-col items-center bg-gray-light px-80 py-8 text-gray-dark">
       <ConnectionProfile connections={data.data.length} />
-      {data.data.map((connection: ConnectionCardProps) => (
-        <ConnectionCard
-          key={connection.user_id}
-          user_id={connection.user_id}
-          full_name={connection.full_name}
-          profile_photo_path={connection.profile_photo_path}
-          from_user={data.from_user}
-        />
-      ))}
+      <div className="my-8 flex flex-wrap gap-12">
+        {data.data.map((connection: ConnectionCardProps) => (
+          <ConnectionCard
+            key={connection.user_id}
+            user_id={connection.user_id}
+            full_name={connection.full_name}
+            profile_photo_path={connection.profile_photo_path}
+            from_user={data.from_user}
+          />
+        ))}
+      </div>
     </main>
   );
 }
