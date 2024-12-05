@@ -3,9 +3,9 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import * as handlers from "./connection.handlers";
 import * as routes from "./connection.routes";
 
-const connectionRequestRouter = new OpenAPIHono().openapi(
-  routes.getAllConnect,
-  handlers.getAllConnection
-);
+const connectionRouter = new OpenAPIHono()
+  .openapi(routes.getAllConnection, handlers.getAllConnection)
+  .openapi(routes.deleteConnection, handlers.deleteConnection)
+  .openapi(routes.getAllConnectionInfo, handlers.getAllConnectionInfo);
 
-export default connectionRequestRouter;
+export default connectionRouter;

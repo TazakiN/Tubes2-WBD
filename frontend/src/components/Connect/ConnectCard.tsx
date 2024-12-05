@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 
-export interface ConnectionCardProps {
+export interface ConnectCardProps {
   user_id: bigint;
   full_name: string;
   profile_photo_path: string;
@@ -11,7 +11,7 @@ export interface ConnectionCardProps {
   refetch: () => void;
 }
 
-const ConnectionCard: React.FC<ConnectionCardProps> = ({
+const ConnectCard: React.FC<ConnectCardProps> = ({
   user_id,
   full_name,
   profile_photo_path,
@@ -232,4 +232,4 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   );
 };
 
-export default ConnectionCard;
+export default ConnectCard;

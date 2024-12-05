@@ -6,9 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ConnectionCard, {
-  ConnectionCardProps,
-} from "@/components/Connect/ConnectionCard";
+import ConnectCard, {
+  ConnectCardProps,
+} from "@/components/Connect/ConnectCard";
 import { useQuery } from "@tanstack/react-query";
 
 function Connect() {
@@ -60,8 +60,8 @@ function Connect() {
         </Select>
       </div>
       <div className="mt-2 grid grid-cols-1 gap-4 pb-4 md:grid-cols-2 lg:grid-cols-3">
-        {data?.data.map((connection: ConnectionCardProps, index: number) => (
-          <ConnectionCard
+        {data?.data.map((connection: ConnectCardProps, index: number) => (
+          <ConnectCard
             key={index}
             {...connection}
             refetch={refetch}
