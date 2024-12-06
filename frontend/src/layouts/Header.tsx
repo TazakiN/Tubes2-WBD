@@ -1,16 +1,8 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Menu, X } from "lucide-react";
+import { Search } from "lucide-react";
 import NavLinks from "@/components/Header/NavLinks";
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
     <header className="relative bg-gray-lighter shadow">
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
@@ -33,19 +25,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="md:hidden">
-          <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </Button>
-        </div>
-
         <NavLinks />
-
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 top-16 z-50 overflow-y-auto bg-white md:hidden">
-            <NavLinks isMobile={true} />
-          </div>
-        )}
       </div>
     </header>
   );

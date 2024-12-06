@@ -18,12 +18,9 @@ import {
 } from "../ui/dropdown-menu";
 import { useNavigate } from "@tanstack/react-router";
 
-const NavLinks = ({ isMobile = false }) => {
+const NavLinks = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
-  const linkClasses = isMobile
-    ? "flex items-center gap-4 py-3 border-b hover:bg-gray-100 px-4"
-    : "hidden md:inline-flex items-end gap-10";
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -41,34 +38,18 @@ const NavLinks = ({ isMobile = false }) => {
   };
 
   return isAuthenticated ? (
-    <div className={linkClasses}>
-      <NavButton
-        imgSrc={Home}
-        navRoute="/"
-        navText="Home"
-        className={isMobile ? "w-full" : ""}
-      />
-      <NavButton
-        imgSrc={ChatBubble}
-        navRoute="/chat"
-        navText="Messages"
-        className={isMobile ? "w-full" : ""}
-      />
+    <div className="fixed inset-x-0 bottom-0 flex w-full justify-around gap-0 border-t bg-gray-lighter p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:gap-8 md:border-0 md:p-0">
+      <NavButton imgSrc={Home} navRoute="/" navText="Home" />
+      <NavButton imgSrc={ChatBubble} navRoute="/chat" navText="Messages" />
       <NavButton
         imgSrc={ToiletSignPeople}
         navRoute="/connect"
         navText="Connect"
-        className={isMobile ? "w-full" : ""}
       />
-      <NavButton
-        imgSrc={NetworkSparkle}
-        navRoute="/browse"
-        navText="Browse"
-        className={isMobile ? "w-full" : ""}
-      />
+      <NavButton imgSrc={NetworkSparkle} navRoute="/browse" navText="Browse" />
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className={`flex flex-col items-center gap-1 ${isMobile}`}>
+          <div className="flex flex-col items-center gap-1">
             <img
               src={UserProfileCircle}
               alt={"Profile Icon"}
@@ -87,19 +68,9 @@ const NavLinks = ({ isMobile = false }) => {
       </DropdownMenu>
     </div>
   ) : (
-    <div className={linkClasses}>
-      <NavButton
-        imgSrc={NetworkSparkle}
-        navRoute="/browse"
-        navText="Browse"
-        className={isMobile ? "w-full" : ""}
-      />
-      <NavButton
-        imgSrc={LoginSVG}
-        navRoute="/login"
-        navText="Login"
-        className={isMobile ? "w-full" : ""}
-      />
+    <div className="fixed inset-x-0 bottom-0 flex w-full justify-around border-t bg-white p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:border-0 md:p-0">
+      <NavButton imgSrc={NetworkSparkle} navRoute="/browse" navText="Browse" />
+      <NavButton imgSrc={LoginSVG} navRoute="/login" navText="Login" />
     </div>
   );
 };
