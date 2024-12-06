@@ -1,12 +1,11 @@
 import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
-import { ChatController } from "../../controllers/chat.controller";
 import { ChatService } from "../../services/chat.service";
 
 export const getChatInterlocutorsHistory = async (c: Context) => {
   try {
     const userId = await getUserIDbyTokenInCookie(c);
-    const data = await ChatController.getChatInterlocutorsHistory(userId);
+    const data = await ChatService.getChatInterlocutorsHistory(BigInt(userId));
     return c.json(
       {
         success: true,
@@ -39,9 +38,9 @@ export const getChatConversation = async (c: Context) => {
         400
       );
     }
-    const data = await ChatController.getChatConversation(
-      userId,
-      interlocutorId
+    const data = await ChatService.getChatConversation(
+      BigInt(userId),
+      BigInt(interlocutorId)
     );
 
     return c.json(
