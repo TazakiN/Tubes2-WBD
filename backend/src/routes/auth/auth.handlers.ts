@@ -1,11 +1,11 @@
 import { Context } from "hono";
-import { AuthController } from "../../controllers/auth.controller";
 import { deleteCookie, setCookie } from "hono/cookie";
+import AuthService from "../../services/auth.service";
 
 export const login = async (c: Context) => {
   const { identifier, password } = await c.req.json();
   try {
-    const token = await AuthController.login(identifier, password);
+    const token = await AuthService.login(identifier, password);
     setCookie(c, "token", token, {
       maxAge: 60 * 60,
       httpOnly: true,
@@ -24,12 +24,7 @@ export const login = async (c: Context) => {
 export const register = async (c: Context) => {
   try {
     const { username, email, name, password } = await c.req.json();
-    const token = await AuthController.register(
-      username,
-      email,
-      password,
-      name
-    );
+    const token = await AuthService.register(username, email, password, name);
     setCookie(c, "token", token, {
       maxAge: 60 * 60,
       httpOnly: true,
