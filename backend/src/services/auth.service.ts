@@ -12,7 +12,8 @@ export default class AuthService {
   ) {
     try {
       const hashedPassword = (await bcrypt.hash(password, 10)) as string;
-      const defaultPP = "/uploads/default-profile-picture.jpg";
+      const defaultPP =
+        "https://utfs.io/f/sSGG1cZ5sLHRjk0AwoMlDzsxaHvRBTV7LNtb8F3CmgidkIj9";
 
       const user = await db.users.create({
         data: {

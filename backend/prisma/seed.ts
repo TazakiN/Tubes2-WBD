@@ -3,6 +3,10 @@ import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+const defaultPP =
+  "https://utfs.io/f/sSGG1cZ5sLHRjk0AwoMlDzsxaHvRBTV7LNtb8F3CmgidkIj9";
+const defaultPassword = "123123";
+
 async function main() {
   await prisma.chat.deleteMany();
   await prisma.connection.deleteMany();
@@ -16,11 +20,11 @@ async function main() {
       data: {
         username: "john_doe",
         email: "john.doe@example.com",
-        password_hash: await bcrypt.hash("password123", 10),
+        password_hash: await bcrypt.hash(defaultPassword, 10),
         full_name: "John Doe",
         work_history: "Software Engineer at Tech Corp",
         skills: "JavaScript, React, Node.js",
-        profile_photo_path: "/uploads/john_doe.jpg",
+        profile_photo_path: defaultPP,
         updated_at: new Date(),
       },
     }),
@@ -28,11 +32,11 @@ async function main() {
       data: {
         username: "jane_smith",
         email: "jane.smith@example.com",
-        password_hash: await bcrypt.hash("password456", 10),
+        password_hash: await bcrypt.hash(defaultPassword, 10),
         full_name: "Jane Smith",
         work_history: "Product Manager at Innovation Inc",
         skills: "Product Management, Agile, UX Design",
-        profile_photo_path: "/uploads/jane_smith.jpg",
+        profile_photo_path: defaultPP,
         updated_at: new Date(),
       },
     }),
@@ -40,11 +44,11 @@ async function main() {
       data: {
         username: "mike_johnson",
         email: "mike.johnson@example.com",
-        password_hash: await bcrypt.hash("password789", 10),
+        password_hash: await bcrypt.hash(defaultPassword, 10),
         full_name: "Mike Johnson",
         work_history: "Data Scientist at Analytics Co",
         skills: "Python, Machine Learning, Data Analysis",
-        profile_photo_path: "/uploads/mike_johnson.jpg",
+        profile_photo_path: defaultPP,
         updated_at: new Date(),
       },
     }),
