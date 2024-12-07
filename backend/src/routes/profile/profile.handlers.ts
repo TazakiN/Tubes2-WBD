@@ -32,7 +32,14 @@ export const getProfile = async (c: Context) => {
 
   try {
     let message;
-    const profile = await profileService.getProfile(profileID);
+    let profile;
+    const currentID = BigInt(await getUserIDbyTokenInCookie(c));
+
+    if (profileID) {
+      profile = await profileService.getProfile(profileID);
+    } else {
+      profile = await profileService.getProfile(currentID);
+    }
 
     if (!profile) {
       return c.json(
@@ -45,7 +52,6 @@ export const getProfile = async (c: Context) => {
       );
     }
 
-    const currentID = BigInt(await getUserIDbyTokenInCookie(c));
     message = currentID
       ? profileID === currentID
         ? "Owner"
