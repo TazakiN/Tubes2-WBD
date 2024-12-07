@@ -14,6 +14,7 @@ import chatRouter from "./routes/chat/chat.index";
 import connectionRequestRouter from "./routes/connection_request/connection_request.index";
 import usersRouter from "./routes/users/users.index";
 import connectionRouter from "./routes/connection/connection.index";
+import feedsRouter from "./routes/feed/feed.index";
 
 dotenv.config();
 const app = new OpenAPIHono();
@@ -42,6 +43,7 @@ app.route("/api/chat", chatRouter);
 app.route("/api/connection_request", connectionRequestRouter);
 app.route("/api/connection", connectionRouter);
 app.route("/api/users", usersRouter);
+app.route("/api/feed", feedsRouter);
 
 // Open API + Swagger UI
 app.doc("/doc", {
