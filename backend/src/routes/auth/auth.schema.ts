@@ -5,10 +5,26 @@ export const registerSchema = z
     username: z.string().openapi({ description: "The username of the user" }),
     email: z
       .string()
-      .email()
+      .email({ message: "Invalid email" })
       .openapi({ description: "The email address of the user" }),
-    name: z.string().openapi({ description: "The full name of the user" }),
-    password: z.string().openapi({ description: "The password of the user" }),
+    name: z
+      .string()
+      .optional()
+      .openapi({ description: "The full name of the user" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number" })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "Password must contain at least one special character",
+      })
+      .openapi({ description: "The password of the user" }),
   })
   .openapi({ description: "Schema for user registration" });
 

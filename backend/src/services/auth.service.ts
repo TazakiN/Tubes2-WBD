@@ -8,23 +8,28 @@ export default class AuthService {
     username: string,
     email: string,
     password: string,
-    full_name: string
+    full_name?: string
   ) {
     try {
       const hashedPassword = (await bcrypt.hash(password, 10)) as string;
       const defaultPP =
         "https://utfs.io/f/sSGG1cZ5sLHRjk0AwoMlDzsxaHvRBTV7LNtb8F3CmgidkIj9";
 
+      const userData: Prisma.usersCreateInput = {
+        username,
+        email,
+        password_hash: hashedPassword,
+        created_at: new Date(),
+        updated_at: new Date(),
+        profile_photo_path: defaultPP,
+      };
+
+      if (full_name) {
+        userData.full_name = full_name;
+      }
+
       const user = await db.users.create({
-        data: {
-          username,
-          email,
-          password_hash: hashedPassword,
-          full_name,
-          created_at: new Date(),
-          updated_at: new Date(),
-          profile_photo_path: defaultPP,
-        },
+        data: userData,
       });
 
       const token = signJWT({
