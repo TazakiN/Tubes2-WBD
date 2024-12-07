@@ -24,7 +24,12 @@ export const login = async (c: Context) => {
 export const register = async (c: Context) => {
   try {
     const { username, email, name, password } = await c.req.json();
-    const token = await AuthService.register(username, email, password, name);
+    const token = await AuthService.register(
+      username,
+      email,
+      password,
+      name || undefined
+    );
     setCookie(c, "token", token, {
       maxAge: 60 * 60,
       httpOnly: true,

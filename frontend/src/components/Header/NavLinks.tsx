@@ -68,7 +68,7 @@ const NavLinks = () => {
       </DropdownMenu>
     </div>
   ) : (
-    <div className="fixed inset-x-0 bottom-0 flex w-full justify-around border-t bg-white p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:border-0 md:p-0">
+    <div className="fixed inset-x-0 bottom-0 flex w-full justify-around border-t bg-gray-lighter p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:gap-8 md:border-0 md:p-0">
       <NavButton imgSrc={NetworkSparkle} navRoute="/browse" navText="Browse" />
       <NavButton imgSrc={LoginSVG} navRoute="/login" navText="Login" />
     </div>

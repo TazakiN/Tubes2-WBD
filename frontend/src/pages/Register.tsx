@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -12,15 +14,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { setUserData } = useContext(UserDataContext);
   const navigate = useNavigate({ from: "/register" });
 
-  async function handleSubmit(e: React.FormEvent): Promise<void> {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
+  const registerMutation = useMutation({
+    mutationFn: async () => {
       const response = await fetch(
         import.meta.env.VITE_API_BASE_URL + "/register",
         {
@@ -33,32 +33,57 @@ const Register = () => {
         },
       );
 
-      const { message } = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log(errorData);
 
-      if (response.status === 201) {
-        const profileResponse = await fetch(
-          import.meta.env.VITE_API_BASE_URL + "/profile/info",
-          {
-            credentials: "include",
-          },
-        );
-
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          setUserData(profileData.body);
-          toast.success("Registration successful");
-          navigate({ to: "/" });
+        if (errorData.error.name === "ZodError") {
+          throw new z.ZodError(errorData.error.issues);
         }
-      } else {
-        toast.error(message);
+
+        throw new Error(errorData.message || "Registration failed");
       }
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("An error occurred during registration");
-    } finally {
+      return response.json();
+    },
+    onSuccess: async () => {
+      const profileResponse = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/profile/info",
+        {
+          credentials: "include",
+        },
+      );
+
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
+        setUserData(profileData.body);
+        toast.success("Registration successful");
+        navigate({ to: "/" });
+      }
+    },
+    onError: (error: z.ZodError | Error) => {
+      if (error instanceof z.ZodError) {
+        error.issues.forEach((issue) => {
+          toast.error(issue.message);
+        });
+      } else {
+        toast.error(error.message || "Registration failed");
+      }
       setIsLoading(false);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
     }
-  }
+    setIsLoading(true);
+    registerMutation.mutate();
+  };
 
   return (
     <AuthLayout>
@@ -85,7 +110,6 @@ const Register = () => {
             name="fullName"
             type="text"
             autoComplete="name"
-            required
             className="mt-1"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
@@ -118,6 +142,19 @@ const Register = () => {
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            className="mt-1"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
 

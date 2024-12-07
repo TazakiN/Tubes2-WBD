@@ -116,12 +116,17 @@ export const register = createRoute({
         "application/json": {
           schema: z.object({
             success: z.boolean(),
-            message: z.string().describe("Validation error details"),
+            message: z
+              .union([z.string(), z.array(z.string())])
+              .describe("Validation error details"),
           }),
           example: {
             success: false,
-            message:
-              "Email already exists or password does not meet requirements",
+            message: [
+              "Password must be at least 8 characters long",
+              "Password must contain at least one uppercase letter",
+              "Password must contain at least one number",
+            ],
           },
         },
       },
