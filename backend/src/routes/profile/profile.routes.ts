@@ -85,6 +85,18 @@ export const getProfile = createRoute({
         },
       },
     },
+    404: {
+      description: "Profile not found",
+      content: {
+        "application/json": {
+          schema: errorSchema,
+          example: {
+            success: false,
+            message: "Profile not found",
+          },
+        },
+      },
+    },
     500: {
       description: "Internal server error",
       content: {
