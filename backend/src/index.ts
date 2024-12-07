@@ -29,7 +29,7 @@ app.use(logger());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     allowMethods: ["GET", "POST", "PUT", "DELETE"],
     allowHeaders: ["Content-Type", "Authorization"],
     maxAge: 6000,
