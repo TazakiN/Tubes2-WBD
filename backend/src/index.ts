@@ -48,6 +48,16 @@ app.get(
   })
 );
 
+app.get(
+  "/api/feed",
+  cache({
+    cacheName: "my-cache",
+    wait: true,
+    cacheControl: "max-age=3600",
+    keyGenerator: (c) => c.req.url,
+  })
+);
+
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRouter);
 app.route("/api/chat", chatRouter);
