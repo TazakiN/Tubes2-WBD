@@ -1,9 +1,10 @@
 import db from "../config/db";
 
 export class FeedService {
-  static async getAllFeeds(limit: number) {
+  static async getAllFeeds(limit: number, cursor: number) {
     const feeds = await db.feed.findMany({
       take: limit,
+      skip: cursor * limit,
       orderBy: { created_at: "desc" },
       select: {
         id: true,

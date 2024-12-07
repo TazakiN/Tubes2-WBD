@@ -2,15 +2,18 @@ import UserProfile from "@/assets/svg/post-user.svg";
 import Edited from "@/assets/svg/post-edited.svg";
 import Add from "@/assets/svg/post-add.svg";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 function Feeds() {
+  const [cursor] = useState(0);
   const { data, error, isLoading, isError } = useQuery({
+    staleTime: 1000 * 60 * 5,
     queryKey: ["feeds"],
     queryFn: () =>
       fetch(
         import.meta.env.VITE_API_BASE_URL +
           "/feed?" +
-          new URLSearchParams({ limit: "10" }),
+          new URLSearchParams({ limit: "10", cursor: cursor.toString() }),
       ).then((res) => res.json()),
   });
 
