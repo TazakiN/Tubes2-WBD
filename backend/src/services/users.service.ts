@@ -1,12 +1,9 @@
 import db from "../config/db";
 
 export class UsersService {
-  static async getAllUsers(user_id: bigint, query: string) {
+  static async getAllUsers(query: string) {
     const users = await db.users.findMany({
       where: {
-        NOT: {
-          id: user_id,
-        },
         OR: [
           {
             full_name: {

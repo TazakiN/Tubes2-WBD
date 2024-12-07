@@ -1,4 +1,4 @@
-import { createRoute } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { getAllUsersResponseSchema } from "./users.schema";
 import { errorSchema } from "../schema/error.schema";
 
@@ -7,6 +7,11 @@ export const getAllUsers = createRoute({
   path: "/",
   summary: "Get all users",
   tags: ["users"],
+  request: {
+    query: z.object({
+      query: z.string().optional(),
+    }),
+  },
   responses: {
     200: {
       description: "Success get all users",

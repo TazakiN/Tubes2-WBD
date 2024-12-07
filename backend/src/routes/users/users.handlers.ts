@@ -8,8 +8,11 @@ export const getAllUsers = async (c: Context) => {
     const user_id = BigInt(await getUserIDbyTokenInCookie(c));
     const query = c.req.query("query") ?? "";
 
-    const data = await UsersService.getAllUsers(user_id, query);
+    let data = await UsersService.getAllUsers(query);
 
+    if (user_id) {
+      data = data.filter((user: { id: bigint }) => user.id !== user_id);
+    }
     const modifiedData = await Promise.all(
       data.map(
         async (user: {
