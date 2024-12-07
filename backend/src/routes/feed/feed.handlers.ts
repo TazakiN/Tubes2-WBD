@@ -13,7 +13,10 @@ export const getAllFeeds = async (c: Context) => {
       {
         success: true,
         message: "Success",
-        body: feeds,
+        body: {
+          cursor: cursor + limit,
+          feeds,
+        },
       },
       200
     );
