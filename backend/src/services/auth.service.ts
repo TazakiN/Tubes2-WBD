@@ -52,16 +52,28 @@ export default class AuthService {
 
   static async login(identifier: string, password: string) {
     try {
-      const user = await db.users.findFirst({
-        where: {
-          OR: [{ username: identifier }, { email: identifier }],
-        },
-        select: {
-          id: true,
-          email: true,
-          password_hash: true,
-        },
-      });
+      const user =
+        (await db.users.findUnique({
+          where: {
+            username: identifier,
+          },
+          select: {
+            id: true,
+            email: true,
+            password_hash: true,
+          },
+        })) ??
+        (await db.users.findUnique({
+          where: {
+            email: identifier,
+          },
+          select: {
+            id: true,
+            email: true,
+            password_hash: true,
+          },
+        }));
+
       if (!user) {
         throw new Error("Identifiers or password is incorrect");
       }
@@ -79,8 +91,6 @@ export default class AuthService {
         email: user.email,
         role: "job_seeker",
       });
-
-      console.log(token);
 
       return token;
     } catch (error) {
