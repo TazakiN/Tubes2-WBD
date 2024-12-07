@@ -15,7 +15,7 @@ import connectionRequestRouter from "./routes/connection_request/connection_requ
 import usersRouter from "./routes/users/users.index";
 import connectionRouter from "./routes/connection/connection.index";
 import feedsRouter from "./routes/feed/feed.index";
-import { cache } from "hono/cache";
+import { cacheMiddleware } from "./middlewares/cacheMiddleware";
 
 dotenv.config();
 const app = new OpenAPIHono();
@@ -38,25 +38,7 @@ app.use(
   })
 );
 
-app.get(
-  "/api/profile/*",
-  cache({
-    cacheName: "my-cache",
-    wait: true,
-    cacheControl: "max-age=3600",
-    keyGenerator: (c) => c.req.url,
-  })
-);
-
-app.get(
-  "/api/feed",
-  cache({
-    cacheName: "my-cache",
-    wait: true,
-    cacheControl: "max-age=3600",
-    keyGenerator: (c) => c.req.url,
-  })
-);
+app.use("/api/*", cacheMiddleware(300000));
 
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRouter);
