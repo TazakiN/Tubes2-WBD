@@ -2,7 +2,7 @@ import { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { sign, verify } from "hono/jwt";
 
-export function signJWT(userPayload: any) {
+export async function signJWT(userPayload: any) {
   const currentTimeInSeconds = Math.floor(Date.now() / 1000);
   const payload = {
     ...userPayload,
@@ -10,7 +10,7 @@ export function signJWT(userPayload: any) {
     exp: currentTimeInSeconds + 60 * 60,
   };
   const secret = process.env.JWT_SECRET!;
-  return sign(payload, secret);
+  return await sign(payload, secret);
 }
 
 export function verifyJWT(token: string) {
