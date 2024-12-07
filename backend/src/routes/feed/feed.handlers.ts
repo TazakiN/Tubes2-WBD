@@ -3,18 +3,16 @@ import { FeedService } from "../../services/feed.service";
 
 export const getAllFeeds = async (c: Context) => {
   try {
-    const limitParam = c.req.query("limit");
-    const cursorParam = c.req.query("cursor");
-    const limit = limitParam ? parseInt(limitParam, 10) : 10;
-    const cursor = cursorParam ? parseInt(cursorParam, 10) : 0;
-    const feeds = await FeedService.getAllFeeds(limit, cursor);
+    const limit = parseInt(c.req.query("limit") || "10", 10);
+    const cursor = parseInt(c.req.query("cursor") || "0", 10);
+    const feeds = await FeedService.getAllFeeds(limit, BigInt(cursor));
 
     return c.json(
       {
         success: true,
         message: "Success",
         body: {
-          cursor: cursor + limit,
+          cursor: cursor + feeds.length,
           feeds,
         },
       },

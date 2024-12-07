@@ -1,10 +1,11 @@
 import db from "../config/db";
 
 export class FeedService {
-  static async getAllFeeds(limit: number, cursor: number) {
+  static async getAllFeeds(limit: number, cursor_id?: bigint) {
     const feeds = await db.feed.findMany({
       take: limit,
-      skip: cursor * limit,
+      skip: cursor_id ? 1 : 0,
+      cursor: cursor_id ? { id: cursor_id } : undefined,
       orderBy: { created_at: "desc" },
       select: {
         id: true,
