@@ -48,7 +48,7 @@ export const getProfileInfo = createRoute({
 
 export const getProfile = createRoute({
   method: "get",
-  path: "/{user_id}",
+  path: "/:user_id",
   summary:
     "Get User profile from user ID, depends on authentication and connection between current user",
   tags: ["profile"],
