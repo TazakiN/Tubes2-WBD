@@ -20,24 +20,4 @@ export class profileController {
       throw error;
     }
   }
-
-  static async getPublicProfile(c: Context) {
-    const user_id = BigInt(c.req.param("user_id"));
-    try {
-      const profile = await profileService.getProfile(user_id);
-      return profile;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async getPrivateProfile(c: Context) {
-    const user_id = BigInt(c.req.param("user_id"));
-    try {
-      const profile = await profileService.getProfile(user_id);
-      return profile;
-    } catch (error) {
-      throw error;
-    }
-  }
 }
