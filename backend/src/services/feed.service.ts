@@ -3,9 +3,10 @@ import db from "../config/db";
 export class FeedService {
   static async getAllFeeds(limit: number, cursor_id?: bigint) {
     const feeds = await db.feed.findMany({
-      take: limit,
-      skip: cursor_id ? 1 : 0,
-      cursor: cursor_id ? { id: cursor_id } : undefined,
+      take: limit + 1,
+      ...(cursor_id && {
+        cursor: { id: cursor_id },
+      }),
       orderBy: { created_at: "desc" },
       select: {
         id: true,
@@ -23,19 +24,20 @@ export class FeedService {
       },
     });
 
-    const transformedFeeds = feeds.map((feed) => ({
-      id: feed.id.toString(),
-      content: feed.content,
-      created_at: feed.created_at.toISOString(),
-      updated_at: feed.updated_at.toISOString(),
+    const hasMore = feeds.length > limit;
+    const result = hasMore ? feeds.slice(0, -1) : feeds;
+
+    return result.map(({ id, content, created_at, updated_at, users }) => ({
+      id: id.toString(),
+      content,
+      created_at: created_at.toISOString(),
+      updated_at: updated_at.toISOString(),
       user: {
-        user_id: feed.users.id.toString(),
-        full_name: feed.users.full_name || feed.users.username,
-        profile_photo_path: feed.users.profile_photo_path,
+        user_id: users.id.toString(),
+        full_name: users.full_name || users.username,
+        profile_photo_path: users.profile_photo_path,
       },
     }));
-
-    return transformedFeeds;
   }
 
   static async getRelatedFeeds(

@@ -4,15 +4,22 @@ import { FeedService } from "../../services/feed.service";
 export const getAllFeeds = async (c: Context) => {
   try {
     const limit = parseInt(c.req.query("limit") || "10", 10);
-    const cursor = parseInt(c.req.query("cursor") || "0", 10);
-    const feeds = await FeedService.getAllFeeds(limit, BigInt(cursor));
+    const cursor = c.req.query("cursor");
+
+    const feeds = await FeedService.getAllFeeds(
+      limit,
+      cursor ? BigInt(cursor) : undefined
+    );
+
+    const lastItem = feeds[feeds.length - 1];
+    const nextCursor = feeds.length === limit ? lastItem?.id : null;
 
     return c.json(
       {
         success: true,
         message: "Success",
         body: {
-          cursor: cursor + feeds.length,
+          cursor: nextCursor,
           feeds,
         },
       },
