@@ -4,7 +4,7 @@ import { utapi } from "../utils/uploadthing";
 
 export default class profileService {
   static async getProfileInfo(user_id: bigint) {
-    return await db.users.findFirst({
+    return await db.users.findUnique({
       where: {
         id: user_id,
       },
@@ -16,7 +16,7 @@ export default class profileService {
   }
 
   static async getProfile(user_id: bigint) {
-    return await db.users.findFirst({
+    return await db.users.findUnique({
       where: {
         id: user_id,
       },
