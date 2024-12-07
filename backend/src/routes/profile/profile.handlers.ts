@@ -4,6 +4,7 @@ import { profileController } from "../../controllers/profile.controller";
 import profileService from "../../services/profile.service";
 import { ConnectionService } from "../../services/connection.service";
 import { FeedService } from "../../services/feed.service";
+import { getCookie } from "hono/cookie";
 
 export const getProfileInfo = async (c: Context) => {
   try {
@@ -28,17 +29,19 @@ export const getProfileInfo = async (c: Context) => {
 };
 
 export const getProfile = async (c: Context) => {
+  const token = getCookie(c, "token");
   const profileID = BigInt(c.req.param("user_id"));
 
   try {
+    let currentID;
+    if (token) currentID = await getUserIDbyTokenInCookie(c);
     let message;
     let profile;
-    const currentID = BigInt(await getUserIDbyTokenInCookie(c));
 
     if (profileID) {
       profile = await profileService.getProfile(profileID);
-    } else {
-      profile = await profileService.getProfile(currentID);
+    } else if (currentID) {
+      profile = await profileService.getProfile(BigInt(currentID));
     }
 
     if (!profile) {
@@ -53,7 +56,7 @@ export const getProfile = async (c: Context) => {
     }
 
     message = currentID
-      ? profileID === currentID
+      ? profileID === BigInt(currentID)
         ? "Owner"
         : "Authenticated"
       : "Unauthenticated";
