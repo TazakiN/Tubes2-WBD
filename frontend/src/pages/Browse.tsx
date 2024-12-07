@@ -1,5 +1,6 @@
 import ConnectCard from "@/components/Connect/ConnectCard";
 import { useQuery } from "@tanstack/react-query";
+import { getRouteApi } from "@tanstack/react-router";
 
 interface User {
   user_id: bigint;
@@ -8,22 +9,32 @@ interface User {
   status: string;
 }
 
+const Route = getRouteApi("/browse");
+
 function Browse() {
+  const { query } = Route.useSearch();
   const { data, isError, isLoading, refetch } = useQuery({
     staleTime: 1000 * 60 * 5,
-    queryKey: ["users"],
-    queryFn: () =>
-      fetch(import.meta.env.VITE_API_BASE_URL + "/users", {
+    queryKey: ["users", query],
+    queryFn: async () => {
+      let url = import.meta.env.VITE_API_BASE_URL + "/users";
+
+      if (query) {
+        url += "?" + new URLSearchParams({ query }).toString();
+      }
+
+      const res = await fetch(url.toString(), {
         credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => ({
-          ...data,
-          data: data.data.map((user: User) => ({
-            ...user,
-            user_id: BigInt(user.user_id),
-          })),
+      });
+      const data = await res.json();
+      return {
+        ...data,
+        data: data.data.map((user: User) => ({
+          ...user,
+          user_id: BigInt(user.user_id),
         })),
+      };
+    },
   });
 
   return (

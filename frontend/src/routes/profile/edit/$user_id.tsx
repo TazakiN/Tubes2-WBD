@@ -1,7 +1,7 @@
 import ProfileEdit from '@/pages/ProfileEdit'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/profile/edit/')({
+export const Route = createFileRoute('/profile/edit/$user_id')({
   component: RouteComponent,
 })
 

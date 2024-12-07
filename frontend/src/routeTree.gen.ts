@@ -8,47 +8,42 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
+import { Route as FeedsImport } from './routes/feeds'
 import { Route as ConnectImport } from './routes/connect'
 import { Route as ChatImport } from './routes/chat'
 import { Route as BrowseImport } from './routes/browse'
-
-// Create Virtual Routes
-
-const RegisterLazyImport = createFileRoute('/register')()
-const LoginLazyImport = createFileRoute('/login')()
-const FeedsLazyImport = createFileRoute('/feeds')()
-const IndexLazyImport = createFileRoute('/')()
-const ProfileIndexLazyImport = createFileRoute('/profile/')()
-const ConnectionsIndexLazyImport = createFileRoute('/connections/')()
-const ProfileUseridLazyImport = createFileRoute('/profile/$user_id')()
-const ConnectionsUserIdLazyImport = createFileRoute('/connections/$userId')()
-const ProfileEditIndexLazyImport = createFileRoute('/profile/edit/')()
-const ProfileEditUseridLazyImport = createFileRoute('/profile/edit/$user_id')()
+import { Route as IndexImport } from './routes/index'
+import { Route as ProfileIndexImport } from './routes/profile/index'
+import { Route as ConnectionsIndexImport } from './routes/connections/index'
+import { Route as ProfileUseridImport } from './routes/profile/$user_id'
+import { Route as ConnectionsUserIdImport } from './routes/connections/$userId'
+import { Route as ProfileEditIndexImport } from './routes/profile/edit/index'
+import { Route as ProfileEditUseridImport } from './routes/profile/edit/$user_id'
 
 // Create/Update Routes
 
-const RegisterLazyRoute = RegisterLazyImport.update({
+const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
+} as any)
 
-const LoginLazyRoute = LoginLazyImport.update({
+const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+} as any)
 
-const FeedsLazyRoute = FeedsLazyImport.update({
+const FeedsRoute = FeedsImport.update({
   id: '/feeds',
   path: '/feeds',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/feeds.lazy').then((d) => d.Route))
+} as any)
 
 const ConnectRoute = ConnectImport.update({
   id: '/connect',
@@ -68,57 +63,47 @@ const BrowseRoute = BrowseImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
 
-const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
+const ProfileIndexRoute = ProfileIndexImport.update({
   id: '/profile/',
   path: '/profile/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
+} as any)
 
-const ConnectionsIndexLazyRoute = ConnectionsIndexLazyImport.update({
+const ConnectionsIndexRoute = ConnectionsIndexImport.update({
   id: '/connections/',
   path: '/connections/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/connections/index.lazy').then((d) => d.Route),
-)
+} as any)
 
-const ProfileUseridLazyRoute = ProfileUseridLazyImport.update({
+const ProfileUseridRoute = ProfileUseridImport.update({
   id: '/profile/$user_id',
   path: '/profile/$user_id',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/profile/$user_id.lazy').then((d) => d.Route),
-)
+} as any)
 
-const ConnectionsUserIdLazyRoute = ConnectionsUserIdLazyImport.update({
+const ConnectionsUserIdRoute = ConnectionsUserIdImport.update({
   id: '/connections/$userId',
   path: '/connections/$userId',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/connections/$userId.lazy').then((d) => d.Route),
-)
+} as any)
 
-const ProfileEditIndexLazyRoute = ProfileEditIndexLazyImport.update({
+const ProfileEditIndexRoute = ProfileEditIndexImport.update({
   id: '/profile/edit/',
   path: '/profile/edit/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/profile/edit/index.lazy').then((d) => d.Route),
-)
+} as any)
 
-const ProfileEditUseridLazyRoute = ProfileEditUseridLazyImport.update({
+const ProfileEditUseridRoute = ProfileEditUseridImport.update({
   id: '/profile/edit/$user_id',
   path: '/profile/edit/$user_id',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/profile/edit/$user_id.lazy').then((d) => d.Route),
-)
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -128,7 +113,7 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/browse': {
@@ -156,63 +141,63 @@ declare module '@tanstack/react-router' {
       id: '/feeds'
       path: '/feeds'
       fullPath: '/feeds'
-      preLoaderRoute: typeof FeedsLazyImport
+      preLoaderRoute: typeof FeedsImport
       parentRoute: typeof rootRoute
     }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyImport
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof RegisterLazyImport
+      preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
     '/connections/$userId': {
       id: '/connections/$userId'
       path: '/connections/$userId'
       fullPath: '/connections/$userId'
-      preLoaderRoute: typeof ConnectionsUserIdLazyImport
+      preLoaderRoute: typeof ConnectionsUserIdImport
       parentRoute: typeof rootRoute
     }
     '/profile/$user_id': {
       id: '/profile/$user_id'
       path: '/profile/$user_id'
       fullPath: '/profile/$user_id'
-      preLoaderRoute: typeof ProfileUseridLazyImport
+      preLoaderRoute: typeof ProfileUseridImport
       parentRoute: typeof rootRoute
     }
     '/connections/': {
       id: '/connections/'
       path: '/connections'
       fullPath: '/connections'
-      preLoaderRoute: typeof ConnectionsIndexLazyImport
+      preLoaderRoute: typeof ConnectionsIndexImport
       parentRoute: typeof rootRoute
     }
     '/profile/': {
       id: '/profile/'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof ProfileIndexLazyImport
+      preLoaderRoute: typeof ProfileIndexImport
       parentRoute: typeof rootRoute
     }
     '/profile/edit/$user_id': {
       id: '/profile/edit/$user_id'
       path: '/profile/edit/$user_id'
       fullPath: '/profile/edit/$user_id'
-      preLoaderRoute: typeof ProfileEditUseridLazyImport
+      preLoaderRoute: typeof ProfileEditUseridImport
       parentRoute: typeof rootRoute
     }
     '/profile/edit/': {
       id: '/profile/edit/'
       path: '/profile/edit'
       fullPath: '/profile/edit'
-      preLoaderRoute: typeof ProfileEditIndexLazyImport
+      preLoaderRoute: typeof ProfileEditIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -221,52 +206,52 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
-  '/feeds': typeof FeedsLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/connections/$userId': typeof ConnectionsUserIdLazyRoute
-  '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/connections': typeof ConnectionsIndexLazyRoute
-  '/profile': typeof ProfileIndexLazyRoute
-  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
-  '/profile/edit': typeof ProfileEditIndexLazyRoute
+  '/feeds': typeof FeedsRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/connections/$userId': typeof ConnectionsUserIdRoute
+  '/profile/$user_id': typeof ProfileUseridRoute
+  '/connections': typeof ConnectionsIndexRoute
+  '/profile': typeof ProfileIndexRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridRoute
+  '/profile/edit': typeof ProfileEditIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
-  '/feeds': typeof FeedsLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/connections/$userId': typeof ConnectionsUserIdLazyRoute
-  '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/connections': typeof ConnectionsIndexLazyRoute
-  '/profile': typeof ProfileIndexLazyRoute
-  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
-  '/profile/edit': typeof ProfileEditIndexLazyRoute
+  '/feeds': typeof FeedsRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/connections/$userId': typeof ConnectionsUserIdRoute
+  '/profile/$user_id': typeof ProfileUseridRoute
+  '/connections': typeof ConnectionsIndexRoute
+  '/profile': typeof ProfileIndexRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridRoute
+  '/profile/edit': typeof ProfileEditIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
-  '/feeds': typeof FeedsLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/connections/$userId': typeof ConnectionsUserIdLazyRoute
-  '/profile/$user_id': typeof ProfileUseridLazyRoute
-  '/connections/': typeof ConnectionsIndexLazyRoute
-  '/profile/': typeof ProfileIndexLazyRoute
-  '/profile/edit/$user_id': typeof ProfileEditUseridLazyRoute
-  '/profile/edit/': typeof ProfileEditIndexLazyRoute
+  '/feeds': typeof FeedsRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/connections/$userId': typeof ConnectionsUserIdRoute
+  '/profile/$user_id': typeof ProfileUseridRoute
+  '/connections/': typeof ConnectionsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/profile/edit/$user_id': typeof ProfileEditUseridRoute
+  '/profile/edit/': typeof ProfileEditIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -319,35 +304,35 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
+  IndexRoute: typeof IndexRoute
   BrowseRoute: typeof BrowseRoute
   ChatRoute: typeof ChatRoute
   ConnectRoute: typeof ConnectRoute
-  FeedsLazyRoute: typeof FeedsLazyRoute
-  LoginLazyRoute: typeof LoginLazyRoute
-  RegisterLazyRoute: typeof RegisterLazyRoute
-  ConnectionsUserIdLazyRoute: typeof ConnectionsUserIdLazyRoute
-  ProfileUseridLazyRoute: typeof ProfileUseridLazyRoute
-  ConnectionsIndexLazyRoute: typeof ConnectionsIndexLazyRoute
-  ProfileIndexLazyRoute: typeof ProfileIndexLazyRoute
-  ProfileEditUseridLazyRoute: typeof ProfileEditUseridLazyRoute
-  ProfileEditIndexLazyRoute: typeof ProfileEditIndexLazyRoute
+  FeedsRoute: typeof FeedsRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  ConnectionsUserIdRoute: typeof ConnectionsUserIdRoute
+  ProfileUseridRoute: typeof ProfileUseridRoute
+  ConnectionsIndexRoute: typeof ConnectionsIndexRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
+  ProfileEditUseridRoute: typeof ProfileEditUseridRoute
+  ProfileEditIndexRoute: typeof ProfileEditIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
+  IndexRoute: IndexRoute,
   BrowseRoute: BrowseRoute,
   ChatRoute: ChatRoute,
   ConnectRoute: ConnectRoute,
-  FeedsLazyRoute: FeedsLazyRoute,
-  LoginLazyRoute: LoginLazyRoute,
-  RegisterLazyRoute: RegisterLazyRoute,
-  ConnectionsUserIdLazyRoute: ConnectionsUserIdLazyRoute,
-  ProfileUseridLazyRoute: ProfileUseridLazyRoute,
-  ConnectionsIndexLazyRoute: ConnectionsIndexLazyRoute,
-  ProfileIndexLazyRoute: ProfileIndexLazyRoute,
-  ProfileEditUseridLazyRoute: ProfileEditUseridLazyRoute,
-  ProfileEditIndexLazyRoute: ProfileEditIndexLazyRoute,
+  FeedsRoute: FeedsRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+  ConnectionsUserIdRoute: ConnectionsUserIdRoute,
+  ProfileUseridRoute: ProfileUseridRoute,
+  ConnectionsIndexRoute: ConnectionsIndexRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
+  ProfileEditUseridRoute: ProfileEditUseridRoute,
+  ProfileEditIndexRoute: ProfileEditIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -376,7 +361,7 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
     },
     "/browse": {
       "filePath": "browse.tsx"
@@ -388,31 +373,31 @@ export const routeTree = rootRoute
       "filePath": "connect.tsx"
     },
     "/feeds": {
-      "filePath": "feeds.lazy.tsx"
+      "filePath": "feeds.tsx"
     },
     "/login": {
-      "filePath": "login.lazy.tsx"
+      "filePath": "login.tsx"
     },
     "/register": {
-      "filePath": "register.lazy.tsx"
+      "filePath": "register.tsx"
     },
     "/connections/$userId": {
-      "filePath": "connections/$userId.lazy.tsx"
+      "filePath": "connections/$userId.tsx"
     },
     "/profile/$user_id": {
-      "filePath": "profile/$user_id.lazy.tsx"
+      "filePath": "profile/$user_id.tsx"
     },
     "/connections/": {
-      "filePath": "connections/index.lazy.tsx"
+      "filePath": "connections/index.tsx"
     },
     "/profile/": {
-      "filePath": "profile/index.lazy.tsx"
+      "filePath": "profile/index.tsx"
     },
     "/profile/edit/$user_id": {
-      "filePath": "profile/edit/$user_id.lazy.tsx"
+      "filePath": "profile/edit/$user_id.tsx"
     },
     "/profile/edit/": {
-      "filePath": "profile/edit/index.lazy.tsx"
+      "filePath": "profile/edit/index.tsx"
     }
   }
 }
