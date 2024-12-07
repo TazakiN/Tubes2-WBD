@@ -19,12 +19,12 @@ const ProfileInfoSchema = z.object({
 export const GetProfileInfoResponse = z.object({
   success: z.literal(true),
   message: z.string(),
-  data: ProfileInfoSchema,
+  data: ProfileInfoSchema.nullable(),
 });
 
 const PublicProfileSchema = z.object({
   username: z.string(),
-  name: z.string(),
+  name: z.string().nullable(),
   work_history: z.string().nullable(),
   skills: z.string().nullable(),
   connection_count: z.number().int(),

@@ -50,29 +50,22 @@ export const getProfile = async (c: Context) => {
         message,
         body: {
           username: profile.username,
-          name: profile.full_name ?? profile.username,
-          work_history: profile.work_history ?? "",
-          skills: profile.skills ?? "",
+          name: profile.full_name,
+          work_history: profile.work_history,
+          skills: profile.skills,
           connection_count:
             (await ConnectionService.countConnections(profileID)) ?? 0,
-          relevant_posts: (await FeedService.getRelatedFeeds(profileID)) ?? [],
+          relevant_posts: await FeedService.getRelatedFeeds(profileID),
           profile_photo: profile.profile_photo_path,
         },
       },
       200
     );
-  } catch (error: unknown) {
-    const err = error as { code: string; message: string };
+  } catch (error) {
     return c.json(
       {
         success: false,
         message: "Internal server error",
-        error: [
-          {
-            code: err.code,
-            details: err.message,
-          },
-        ],
       },
       500
     );

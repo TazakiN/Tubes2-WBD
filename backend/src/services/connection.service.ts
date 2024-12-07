@@ -129,10 +129,10 @@ export class ConnectionService {
   static async countConnections(user_id: bigint) {
     const connectionCount = await db.connection.count({
       where: {
-        OR: [{ from_id: user_id }, { to_id: user_id }],
+        from_id: user_id,
       },
     });
 
-    return connectionCount / 2;
+    return connectionCount;
   }
 }
