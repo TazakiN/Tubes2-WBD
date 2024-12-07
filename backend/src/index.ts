@@ -7,7 +7,6 @@ import { createNodeWebSocket } from "@hono/node-ws";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { Context, Hono } from "hono";
 import { websocketHandler } from "./utils/ws";
-import { rateLimiter } from "hono-rate-limiter";
 
 import authRoutes from "./routes/auth/auth.index";
 import profileRouter from "./routes/profile/profile.index";
@@ -16,10 +15,11 @@ import connectionRequestRouter from "./routes/connection_request/connection_requ
 import usersRouter from "./routes/users/users.index";
 import connectionRouter from "./routes/connection/connection.index";
 import feedsRouter from "./routes/feed/feed.index";
+import { cache } from "hono/cache";
 
 dotenv.config();
 const app = new OpenAPIHono();
-const port: number = Number(process.env.PORT); //
+const port: number = Number(process.env.PORT);
 
 const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
   app: app as Hono,
@@ -29,22 +29,22 @@ export { upgradeWebSocket };
 app.use(logger());
 
 app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-    standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-    keyGenerator: (c) => "<unique_key>", // Method to generate custom identifiers for clients.
-    // store: ... , // Redis, MemoryStore, etc. See below.
-  })
-);
-
-app.use(
   cors({
     origin: "http://localhost:5173",
     allowMethods: ["GET", "POST", "PUT", "DELETE"],
     allowHeaders: ["Content-Type", "Authorization"],
     maxAge: 6000,
     credentials: true,
+  })
+);
+
+app.get(
+  "/api/profile/*",
+  cache({
+    cacheName: "my-cache",
+    wait: true,
+    cacheControl: "max-age=3600",
+    keyGenerator: (c) => c.req.url,
   })
 );
 
