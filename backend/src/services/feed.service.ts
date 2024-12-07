@@ -36,4 +36,21 @@ export class FeedService {
 
     return transformedFeeds;
   }
+
+  static async getRelatedFeeds(
+    user_id: bigint,
+    limit: number = 10,
+    cursor: number = 0
+  ) {
+    const feeds = await db.feed.findMany({
+      take: limit,
+      skip: cursor * limit,
+      orderBy: { created_at: "desc" },
+      where: {
+        user_id: user_id,
+      },
+    });
+
+    return feeds;
+  }
 }

@@ -125,4 +125,14 @@ export class ConnectionService {
       profile_photo_path: user.profile_photo_path,
     }));
   }
+
+  static async countConnections(user_id: bigint) {
+    const connectionCount = await db.connection.count({
+      where: {
+        OR: [{ from_id: user_id }, { to_id: user_id }],
+      },
+    });
+
+    return connectionCount / 2;
+  }
 }

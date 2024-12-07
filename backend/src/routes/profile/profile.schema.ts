@@ -10,13 +10,9 @@ export const GetProfileInfoRequest = z.object({
 });
 
 const ProfileInfoSchema = z.object({
-  username: z
-    .string()
-    .nullable()
-    .openapi({ description: "The username of the user" }),
+  username: z.string().openapi({ description: "The username of the user" }),
   profile_photo_path: z
     .string()
-    .nullable()
     .openapi({ description: "Path to Profile Picture from Front End root" }),
 });
 
@@ -29,8 +25,8 @@ export const GetProfileInfoResponse = z.object({
 const PublicProfileSchema = z.object({
   username: z.string(),
   name: z.string(),
-  work_history: z.string(),
-  skills: z.string(),
+  work_history: z.string().nullable(),
+  skills: z.string().nullable(),
   connection_count: z.number().int(),
   profile_photo: z.string().url(),
 });
@@ -38,7 +34,13 @@ const PublicProfileSchema = z.object({
 const PrivateProfileSchema = PublicProfileSchema.extend({
   relevant_posts: z
     .array(
-      z.null() //TODO: Integrate with Feed
+      z.object({
+        id: z.string(),
+        user_id: z.string(),
+        content: z.string(),
+        created_at: z.string(),
+        updated_at: z.string(),
+      })
     )
     .nullable(),
 });

@@ -3,18 +3,14 @@ import {
   GetProfileInfoResponse,
   GetPrivateProfileResponse,
   GetPublicProfileResponse,
-  GetProfileInfoRequest,
 } from "./profile.schema";
-import { errorPayloadSchema } from "../schema/error.schema";
+import { errorSchema } from "../schema/error.schema";
 
 export const getProfileInfo = createRoute({
   method: "get",
   path: "/info",
   summary: "Get Profile Information for Navbar",
   tags: ["profile"],
-  request: {
-    params: GetProfileInfoRequest,
-  },
   responses: {
     200: {
       description: "Success get profile information for navbar",
@@ -39,7 +35,7 @@ export const getProfileInfo = createRoute({
       description: "Internal server error",
       content: {
         "application/json": {
-          schema: errorPayloadSchema,
+          schema: errorSchema,
           example: {
             success: false,
             message: "Internal server error",
@@ -52,18 +48,15 @@ export const getProfileInfo = createRoute({
 
 export const getProfile = createRoute({
   method: "get",
-  path: "/:user_id",
+  path: "/{user_id}",
   summary:
     "Get User profile from user ID, depends on authentication and connection between current user",
-  parameters: [
-    {
-      name: "user_id",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-    },
-  ],
   tags: ["profile"],
+  request: {
+    params: z.object({
+      user_id: z.string(),
+    }),
+  },
   responses: {
     200: {
       description: "Success get user profile for authenticated current user",
@@ -79,14 +72,13 @@ export const getProfile = createRoute({
             data: [
               {
                 username: "KSI",
-                profile_photo_path:
+                name: "KSI",
+                work_history: "Software Engineer at Google",
+                skills: "React, Node.js, TypeScript",
+                connection_count: 0,
+                relevant_posts: null,
+                profile_photo:
                   "/src/frontend/src/assets/img/default-profile-picture.png",
-                name: "JJ Olantunji",
-                work_history:
-                  "From the Screen, to the ring, to the pen, to a king",
-                skills: "Awful Rapping",
-                connection_count: 3,
-                relevant_posts: [],
               },
             ],
           },
@@ -97,7 +89,7 @@ export const getProfile = createRoute({
       description: "Internal server error",
       content: {
         "application/json": {
-          schema: errorPayloadSchema,
+          schema: errorSchema,
           example: {
             success: false,
             message: "Internal server error",

@@ -1,8 +1,9 @@
 import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
 import { profileController } from "../../controllers/profile.controller";
-import { getCookie } from "hono/cookie";
 import profileService from "../../services/profile.service";
+import { ConnectionService } from "../../services/connection.service";
+import { FeedService } from "../../services/feed.service";
 
 export const getProfileInfo = async (c: Context) => {
   try {
@@ -20,7 +21,6 @@ export const getProfileInfo = async (c: Context) => {
       {
         success: false,
         message: "Internal server error",
-        error: error,
       },
       500
     );
@@ -28,31 +28,33 @@ export const getProfileInfo = async (c: Context) => {
 };
 
 export const getProfile = async (c: Context) => {
-  const profileID = c.req.param("user_id");
-  const token = getCookie(c, "token");
+  const profileID = BigInt(c.req.param("user_id"));
 
   try {
     let message;
-    const profile = await profileService.getProfile(BigInt(profileID));
-
-    if (token) {
-      const currentID = await getUserIDbyTokenInCookie(c);
-      message = profileID === currentID ? "Owner" : "Authenticated";
-    } else {
-      message = "Unauthenticated";
+    const profile = await profileService.getProfile(profileID);
+    if (!profile) {
+      throw new Error("Profile not found");
     }
+
+    const currentID = BigInt(await getUserIDbyTokenInCookie(c));
+    message = currentID
+      ? profileID === currentID
+        ? "Owner"
+        : "Authenticated"
+      : "Unauthenticated";
 
     return c.json(
       {
         success: true,
         message,
         body: {
-          username: profile!.username,
-          name: profile!.full_name,
-          work_history: profile?.work_history,
-          skills: profile?.skills,
-          connection_count: 0, // TODO: Get Connection Count
-          relevant_posts: null, // TODO: Get Feed Array
+          username: profile.username,
+          name: profile.full_name ?? profile.username,
+          work_history: profile.work_history,
+          skills: profile.skills,
+          connection_count: await ConnectionService.countConnections(profileID),
+          relevant_posts: await FeedService.getRelatedFeeds(profileID),
           profile_photo: profile?.profile_photo_path,
         },
       },
@@ -63,7 +65,6 @@ export const getProfile = async (c: Context) => {
       {
         success: false,
         message: "Internal server error",
-        error: error,
       },
       500
     );
