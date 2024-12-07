@@ -5,7 +5,7 @@ import { cors } from "hono/cors";
 import { swaggerUI } from "@hono/swagger-ui";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import { websocketHandler } from "./utils/ws";
 
 import authRoutes from "./routes/auth/auth.index";
@@ -55,8 +55,11 @@ app.doc("/doc", {
 });
 
 app.get("/ui", swaggerUI({ url: "/doc" }));
-
 app.get("/ws", websocketHandler());
+
+app.get("/health", (c: Context) => {
+  return c.json({ status: "ok" });
+});
 
 console.log(`Server is listening on port ${port}`);
 const server = serve({ fetch: app.fetch, port: port });
