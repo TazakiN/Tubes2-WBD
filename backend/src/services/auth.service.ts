@@ -11,6 +11,10 @@ export default class AuthService {
     full_name?: string
   ) {
     try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(username)) {
+        throw new Error("Username cannot be an email address");
+      }
       const hashedPassword = (await bcrypt.hash(password, 10)) as string;
       const defaultPP =
         "https://utfs.io/f/sSGG1cZ5sLHRjk0AwoMlDzsxaHvRBTV7LNtb8F3CmgidkIj9";
@@ -42,17 +46,23 @@ export default class AuthService {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new Error("Username or Email already exists");
       }
-      throw new Error("An unexpected error occurred during registration");
+      throw error;
     }
   }
 
   static async login(identifier: string, password: string) {
     try {
+      console.log("identifier", identifier);
+      console.log("password", password);
       const user = await db.users.findFirst({
         where: {
           OR: [{ username: identifier }, { email: identifier }],
         },
       });
+
+      if (user) {
+        console.log("user", user);
+      }
 
       if (!user) {
         throw new Error("Identifiers or password is incorrect");

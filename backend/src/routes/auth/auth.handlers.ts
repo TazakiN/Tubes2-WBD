@@ -9,7 +9,7 @@ export const login = async (c: Context) => {
     setCookie(c, "token", token, {
       maxAge: 60 * 60,
       httpOnly: true,
-      secure: false,
+      secure: true,
       path: "/",
     });
     return c.json(
