@@ -53,9 +53,9 @@ export const getProfile = async (c: Context) => {
           name: profile.full_name,
           work_history: profile.work_history,
           skills: profile.skills,
-          connection_count: 0,
-          // (await ConnectionService.countConnections(profileID)) ?? 0,
-          relevant_posts: null,
+          connection_count:
+            Number(await ConnectionService.countConnections(profileID)) ?? 0,
+          relevant_posts: await FeedService.getRelatedFeeds(profileID),
           profile_photo: profile.profile_photo_path,
         },
       },
