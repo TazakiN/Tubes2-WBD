@@ -7,6 +7,7 @@ import { createNodeWebSocket } from "@hono/node-ws";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { Context, Hono } from "hono";
 import { websocketHandler } from "./utils/ws";
+import { rateLimiter } from "hono-rate-limiter";
 
 import authRoutes from "./routes/auth/auth.index";
 import profileRouter from "./routes/profile/profile.index";
@@ -18,7 +19,7 @@ import feedsRouter from "./routes/feed/feed.index";
 
 dotenv.config();
 const app = new OpenAPIHono();
-const port: number = Number(process.env.PORT);
+const port: number = Number(process.env.PORT); //
 
 const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
   app: app as Hono,
@@ -26,6 +27,16 @@ const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
 export { upgradeWebSocket };
 
 app.use(logger());
+
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    keyGenerator: (c) => "<unique_key>", // Method to generate custom identifiers for clients.
+    // store: ... , // Redis, MemoryStore, etc. See below.
+  })
+);
 
 app.use(
   cors({

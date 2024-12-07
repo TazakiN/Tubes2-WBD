@@ -4,9 +4,9 @@
   "main": "src/index.tss",
   "type": "module",
   "scripts": {
-    "docker:dev": "npm run db:migrate && npm run dev",
-    "dev": "tsx watch src/index.ts --poll --watch-files src",
-    "start": "npm run db:migrate && tsx src/index.ts",
+    "docker:dev": "npm run db:generate && npm run dev",
+    "dev": "tsx watch src/index.ts --poll",
+    "start": "npm run db:generate && tsx src/index.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:pull": "prisma db pull",
     "db:push": "prisma db push",
@@ -26,6 +26,7 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "hono": "^4.6.11",
+    "hono-rate-limiter": "^0.4.2",
     "uploadthing": "^7.4.0",
     "zod": "^3.23.8"
   },
