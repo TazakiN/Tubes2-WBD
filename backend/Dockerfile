@@ -13,4 +13,4 @@ COPY .env.example ./.env
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["npm", "run", "docker:dev"]
+CMD ["npm", "run", "start"]

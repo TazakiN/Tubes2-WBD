@@ -6,7 +6,7 @@
   "scripts": {
     "docker:dev": "npm run db:migrate && npm run dev",
     "dev": "tsx watch src/index.ts --poll --watch-files src",
-    "start": "tsx src/index.ts",
+    "start": "npm run db:migrate && tsx src/index.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:pull": "prisma db pull",
     "db:push": "prisma db push",
