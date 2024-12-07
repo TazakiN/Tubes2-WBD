@@ -4,13 +4,21 @@ import { UsersService } from "../../services/users.service";
 import { ConnectionService } from "../../services/connection.service";
 
 export const getAllUsers = async (c: Context) => {
+  const query = c.req.query("query") ?? "";
   try {
-    const user_id = BigInt(await getUserIDbyTokenInCookie(c));
-    const query = c.req.query("query") ?? "";
+    let user_id: bigint | null = null;
+    try {
+      user_id = BigInt(await getUserIDbyTokenInCookie(c));
+    } catch (error) {
+      console.log(
+        "Token not found or invalid, proceeding with user_id as null"
+      );
+    }
 
     let data = await UsersService.getAllUsers(query);
 
     if (user_id) {
+      console.log("user_id", user_id);
       data = data.filter((user: { id: bigint }) => user.id !== user_id);
     }
     const modifiedData = await Promise.all(
@@ -21,7 +29,9 @@ export const getAllUsers = async (c: Context) => {
           full_name: string | null;
           profile_photo_path: string;
         }) => {
-          const status = await ConnectionService.getStatus(user_id, user.id);
+          const status = user_id
+            ? await ConnectionService.getStatus(user_id, user.id)
+            : "Not Connected";
           return {
             user_id: user.id.toString(),
             full_name: user.full_name ?? user.username,
