@@ -28,13 +28,17 @@ export const login = createRoute({
         "application/json": {
           schema: z.object({
             success: z.boolean(),
-            token: z
-              .string()
-              .describe("JWT access token for authenticated sessions"),
+            message: z.string().describe("Login confirmation message"),
+            body: z.object({
+              token: z.string().describe("JWT access token for user"),
+            }),
           }),
           example: {
             success: true,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            message: "Login successful",
+            body: {
+              token: "asdlsajldsajkdsajdk",
+            },
           },
         },
       },
@@ -101,11 +105,17 @@ export const register = createRoute({
         "application/json": {
           schema: z.object({
             success: z.boolean(),
-            token: z.string().describe("JWT access token for new user"),
+            message: z.string().describe("Registration confirmation message"),
+            body: z.object({
+              token: z.string().describe("JWT access token for new user"),
+            }),
           }),
           example: {
             success: true,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            message: "Registration successful",
+            body: {
+              token: "asdlsajldsajkdsajdk",
+            },
           },
         },
       },

@@ -12,7 +12,10 @@ export const login = async (c: Context) => {
       secure: false,
       path: "/",
     });
-    return c.json({ success: true, token }, 200);
+    return c.json(
+      { success: true, message: "Login successful", body: { token } },
+      200
+    );
   } catch (error) {
     if ((error as Error).message === "Identifiers or password is incorrect") {
       return c.json({ success: false, message: (error as Error).message }, 401);
@@ -35,7 +38,10 @@ export const register = async (c: Context) => {
       httpOnly: true,
       secure: false,
     });
-    return c.json({ success: true, token }, 201);
+    return c.json(
+      { success: true, message: "Registration successful", body: { token } },
+      201
+    );
   } catch (error) {
     if ((error as Error).message === "Username or Email already exists") {
       return c.json({ success: false, message: (error as Error).message }, 409);
