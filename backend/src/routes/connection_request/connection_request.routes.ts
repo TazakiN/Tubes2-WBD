@@ -142,6 +142,18 @@ export const createConnectionRequest = createRoute({
         },
       },
     },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: CreateCOnnectionResponseErrorSchema,
+          example: {
+            success: false,
+            message: "Login first to Connect with others",
+          },
+        },
+      },
+    },
     500: {
       description: "Internal server error",
       content: {

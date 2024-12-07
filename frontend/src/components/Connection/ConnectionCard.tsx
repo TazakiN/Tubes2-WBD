@@ -38,7 +38,8 @@ function ConnectionCard({
     onSuccess: () => {
       toast.success("Unconnected");
     },
-    onError: () => {
+    onError: (error: Error) => {
+      toast.error(error.message);
       toast.error("Failed to unconnect");
     },
   });

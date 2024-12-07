@@ -60,11 +60,27 @@ export const getConnectionRequest = async (c: Context) => {
 };
 
 export const createConnectionRequest = async (c: Context) => {
-  const user_id = BigInt(await getUserIDbyTokenInCookie(c));
+  let user_id: string | null = null;
+  try {
+    user_id = await getUserIDbyTokenInCookie(c);
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: "Login first to Connect with others",
+      },
+      401
+    );
+  }
+
+  const user_id_bigint = BigInt(user_id);
   const { to_id } = await c.req.json();
 
   try {
-    await ConnectionRequestService.createConnectionRequest(user_id, to_id);
+    await ConnectionRequestService.createConnectionRequest(
+      user_id_bigint,
+      to_id
+    );
 
     return c.json(
       {

@@ -42,8 +42,12 @@ const ConnectCard: React.FC<ConnectCardProps> = ({
       toast.success("Connection request sent");
       refetch();
     },
-    onError: () => {
-      toast.error("Failed to send connection request");
+    onError: (error: Error) => {
+      if (error.message === "Unauthorized") {
+        toast.error("You must be logged in to send connection request");
+      } else {
+        toast.error("Failed to send connection request");
+      }
     },
   });
 
