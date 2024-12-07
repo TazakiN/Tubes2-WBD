@@ -1,7 +1,32 @@
 services:
   backend:
+    build: ./backend
+    volumes:
+      - ./backend/src:/app/src
+      - /home/node/app/node_modules
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
   frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/app/src
+    ports:
+      - "5173:5173"
   db:
     image: postgres:latest
-  redis:
-    image: redis:latest
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: maindb
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d
+
+  # redis:
+  #   image: redis:latest

@@ -1,21 +1,16 @@
 FROM node:20-alpine
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /app
 
-WORKDIR /home/node/app
+COPY package*.json ./
 
-USER node
+RUN npm ci --include=dev
 
-COPY --chown=node:node package*.json ./
+COPY . .
 
-RUN npm ci
-
-COPY --chown=node:node . .
-
-COPY ./.env.example ./.env
+COPY .env.example ./.env
 
 ENV PORT=3000
-
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["npm", "run", "docker:dev"]
