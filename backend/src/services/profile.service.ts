@@ -3,6 +3,84 @@ import bcrypt from "bcrypt";
 import { utapi } from "../utils/uploadthing";
 
 export default class profileService {
+  static async getProfileAuthenticated(user_id: bigint) {
+    const user = await db.users.findUnique({
+      where: {
+        id: user_id,
+      },
+      select: {
+        username: true,
+        full_name: true,
+        work_history: true,
+        skills: true,
+        profile_photo_path: true,
+        feed: {
+          select: {
+            id: true,
+            content: true,
+            created_at: true,
+            updated_at: true,
+          },
+          orderBy: {
+            created_at: "desc",
+          },
+        },
+        _count: {
+          select: {
+            connection_connection_from_idTousers: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      username: user.username,
+      name: user.full_name,
+      work_history: user.work_history,
+      skills: user.skills,
+      profile_photo: user.profile_photo_path,
+      relevant_posts: user.feed,
+      connection_count: user._count.connection_connection_from_idTousers,
+    };
+  }
+
+  static async getProfilePublic(user_id: bigint) {
+    const user = await db.users.findUnique({
+      where: {
+        id: user_id,
+      },
+      select: {
+        username: true,
+        full_name: true,
+        work_history: true,
+        skills: true,
+        profile_photo_path: true,
+        _count: {
+          select: {
+            connection_connection_from_idTousers: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      username: user.username,
+      name: user.full_name,
+      work_history: user.work_history,
+      skills: user.skills,
+      profile_photo: user.profile_photo_path,
+      connection_count: user._count.connection_connection_from_idTousers,
+    };
+  }
+
   static async getProfileInfo(user_id: bigint) {
     return await db.users.findUnique({
       where: {

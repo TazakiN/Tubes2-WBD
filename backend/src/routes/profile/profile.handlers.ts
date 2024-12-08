@@ -29,68 +29,25 @@ export const getProfileInfo = async (c: Context) => {
 };
 
 export const getProfile = async (c: Context) => {
-  const token = getCookie(c, "token");
-  const profileID = BigInt(c.req.param("user_id"));
-
+  const profileID = BigInt(c.req.param("profileID"));
+  const loggedInToken = getCookie(c, "token");
+  let profile = null;
+  let message = null;
   try {
-    let currentID;
-    if (token) currentID = await getUserIDbyTokenInCookie(c);
-    let message;
-    let profile;
-
-    if (profileID) {
-      profile = await profileService.getProfile(profileID);
-    } else if (currentID) {
-      profile = await profileService.getProfile(BigInt(currentID));
+    if (loggedInToken === undefined) {
+      // akses publik
+      profile = await profileService.getProfilePublic(BigInt(profileID));
+      message = "Unathenticated";
+    } else {
+      const currentID = BigInt(await getUserIDbyTokenInCookie(c));
+      profile = await profileService.getProfileAuthenticated(BigInt(profileID));
+      message = profileID === BigInt(currentID) ? "Owner" : "Authenticated";
     }
-
-    if (!profile) {
-      return c.json(
-        {
-          success: false,
-          message: "Profile not found",
-          body: null,
-        },
-        404
-      );
-    }
-
-    message = currentID
-      ? profileID === BigInt(currentID)
-        ? "Owner"
-        : "Authenticated"
-      : "Unauthenticated";
-
-    const connectionCount =
-      Number(await ConnectionService.countConnections(profileID)) ?? 0;
-    const responseBody: {
-      username: string;
-      name: string | null;
-      work_history: string | null;
-      skills: string | null;
-      connection_count: number;
-      profile_photo: string;
-      relevant_posts?: any[];
-    } = {
-      username: profile.username,
-      name: profile.full_name,
-      work_history: profile.work_history,
-      skills: profile.skills,
-      connection_count: connectionCount,
-      profile_photo: profile.profile_photo_path,
-    };
-
-    if (message !== "Unauthenticated") {
-      responseBody.relevant_posts = await FeedService.getRelatedFeeds(
-        profileID
-      );
-    }
-
     return c.json(
       {
         success: true,
         message,
-        body: responseBody,
+        body: profile,
       },
       200
     );
