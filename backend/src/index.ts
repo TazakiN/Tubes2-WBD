@@ -17,8 +17,6 @@ import connectionRouter from "./routes/connection/connection.index";
 import feedsRouter from "./routes/feed/feed.index";
 import { cacheMiddleware } from "./middlewares/cacheMiddleware";
 
-import { rateLimiter } from "hono-rate-limiter";
-
 dotenv.config();
 const app = new OpenAPIHono();
 const port: number = Number(process.env.PORT);
@@ -29,16 +27,6 @@ const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
 export { upgradeWebSocket };
 
 app.use(logger());
-// Apply the rate limiting middleware to all requests.
-app.use(
-  rateLimiter({
-    windowMs: 3 * 1000, // 10 seconds
-    limit: 20, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-    standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-    keyGenerator: (c) => "<unique_key>", // Method to generate custom identifiers for clients.
-    // store: "memory", // Store the rate limit data in memory.
-  })
-);
 
 app.use(
   cors({

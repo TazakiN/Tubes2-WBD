@@ -12,12 +12,18 @@ export const cacheMiddleware = (
     const cache = CacheStore;
     const key = c.req.url;
 
+    c.header("Cache-Control", `max-age=${Math.floor(duration / 1000)}, public`);
+    c.header("Expires", new Date(Date.now() + duration).toUTCString());
+
     const cachedResponse = cache.get(key);
     if (cachedResponse) {
+      c.header("X-Cache", "HIT");
       return c.json(cachedResponse);
     }
 
+    c.header("X-Cache", "MISS");
     await next();
+
     const response = c.res;
     if (response) {
       try {

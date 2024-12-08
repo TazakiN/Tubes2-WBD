@@ -2,8 +2,6 @@ import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
 import { profileController } from "../../controllers/profile.controller";
 import profileService from "../../services/profile.service";
-import { ConnectionService } from "../../services/connection.service";
-import { FeedService } from "../../services/feed.service";
 import { getCookie } from "hono/cookie";
 
 export const getProfileInfo = async (c: Context) => {
@@ -29,7 +27,7 @@ export const getProfileInfo = async (c: Context) => {
 };
 
 export const getProfile = async (c: Context) => {
-  const profileID = BigInt(c.req.param("profileID"));
+  const profileID = BigInt(c.req.param("user_id"));
   const loggedInToken = getCookie(c, "token");
   let profile = null;
   let message = null;
