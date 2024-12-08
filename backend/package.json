@@ -28,6 +28,7 @@
     "hono": "^4.6.11",
     "hono-rate-limiter": "^0.4.2",
     "uploadthing": "^7.4.0",
+    "web-push": "^3.6.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
