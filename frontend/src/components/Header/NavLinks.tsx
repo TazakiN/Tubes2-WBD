@@ -5,7 +5,9 @@ import UserProfileCircle from "@/assets/svg/user-profile-circle.svg";
 import ToiletSignPeople from "@/assets/svg/toilet-sign-people.svg";
 import ChatBubble from "@/assets/svg/chat-bubble.svg";
 import Home from "@/assets/svg/home.svg";
+
 import { useAuth } from "@/hooks/useAuth";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,24 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useNavigate } from "@tanstack/react-router";
 
-interface NavLinksProps {
-  isAuthenticated: boolean;
-}
-
-const NavLinks = ({ isAuthenticated }: NavLinksProps) => {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate({ to: "/login" });
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+const NavLinks = () => {
+  const { isAuthenticated, logout } = useAuth();
 
   return isAuthenticated ? (
     <div className="fixed inset-x-0 bottom-0 flex w-full justify-around gap-0 border-t bg-gray-lighter p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:gap-8 md:border-0 md:p-0">
@@ -56,7 +43,7 @@ const NavLinks = ({ isAuthenticated }: NavLinksProps) => {
         <DropdownMenuContent>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
+          <DropdownMenuItem onClick={logout}>
             <span className="text-red">Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

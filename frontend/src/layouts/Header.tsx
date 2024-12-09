@@ -3,12 +3,10 @@ import { Search } from "lucide-react";
 import NavLinks from "@/components/Header/NavLinks";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/hooks/useAuth"; // Tambahkan import
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth(); // Tambahkan ini
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +44,7 @@ const Header = () => {
           </form>
         </div>
 
-        <NavLinks isAuthenticated={isAuthenticated} />
+        <NavLinks />
       </div>
     </header>
   );
