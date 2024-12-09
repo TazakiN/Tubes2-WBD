@@ -19,13 +19,26 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const user_id = getUserIdFromUrl();
-        const requestPath = `${BASE_URL}/profile/${user_id}`;
-        const response = await fetch(requestPath, {credentials: "include"});
+        let user_id = getUserIdFromUrl();
+
+        if (user_id == "profile") {
+          const response = await fetch(`${BASE_URL}/profile/info`, {
+            credentials: "include",
+          });
+          if (!response.ok) throw new Error("User not found");
+          const data = await response.json();
+          setAuthenticated(true);
+          user_id = `/${data.data.id}`;
+        } else {
+          user_id = `/${user_id}`;
+        }
+
+        const requestPath = `${BASE_URL}/profile${user_id}`;
+        const response = await fetch(requestPath, { credentials: "include" });
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        setAuthenticated(data.message!="Unauthenticated");
-        setOwner(data.message=="Owner");
+        setAuthenticated(data.message != "Unauthenticated");
+        setOwner(data.message == "Owner");
         setProfileData(data.body);
       } catch (err) {
         if (err instanceof Error) {
@@ -42,7 +55,13 @@ const Profile = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  return <ProfileLayout profile={profileData} authenticated={authenticated} owner={owner}/>;
+  return (
+    <ProfileLayout
+      profile={profileData}
+      authenticated={authenticated}
+      owner={owner}
+    />
+  );
 };
 
 export default Profile;

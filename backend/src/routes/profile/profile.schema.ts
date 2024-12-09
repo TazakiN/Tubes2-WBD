@@ -10,6 +10,7 @@ export const GetProfileInfoRequest = z.object({
 });
 
 const ProfileInfoSchema = z.object({
+  id: z.string().openapi({ description: "The id of the user" }),
   username: z.string().openapi({ description: "The username of the user" }),
   profile_photo_path: z
     .string()

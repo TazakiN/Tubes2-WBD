@@ -22,6 +22,7 @@ export const getProfileInfo = createRoute({
             message: "Success get profile information",
             data: [
               {
+                id: "1",
                 username: "KSI",
                 profile_photo_path:
                   "/src/frontend/src/assets/img/default-profile-picture.png",

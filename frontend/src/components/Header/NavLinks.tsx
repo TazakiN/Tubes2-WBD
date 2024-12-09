@@ -5,6 +5,7 @@ import UserProfileCircle from "@/assets/svg/user-profile-circle.svg";
 import ToiletSignPeople from "@/assets/svg/toilet-sign-people.svg";
 import ChatBubble from "@/assets/svg/chat-bubble.svg";
 import Home from "@/assets/svg/home.svg";
+import { useNavigate } from "@tanstack/react-router";
 
 import { useAuth } from "@/hooks/useAuth";
 
@@ -17,6 +18,7 @@ import {
 } from "../ui/dropdown-menu";
 
 const NavLinks = () => {
+  const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
   return isAuthenticated ? (
@@ -41,7 +43,9 @@ const NavLinks = () => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+            Profile
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={logout}>
             <span className="text-red">Logout</span>

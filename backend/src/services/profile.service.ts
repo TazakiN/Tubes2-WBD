@@ -43,7 +43,10 @@ export default class profileService {
       work_history: user.work_history,
       skills: user.skills,
       profile_photo: user.profile_photo_path,
-      relevant_posts: user.feed,
+      relevant_posts: user.feed.map((post) => ({
+        ...post,
+        id: post.id.toString(),
+      })),
       connection_count: user._count.connection_connection_from_idTousers,
     };
   }
@@ -82,15 +85,26 @@ export default class profileService {
   }
 
   static async getProfileInfo(user_id: bigint) {
-    return await db.users.findUnique({
+    const user = await db.users.findUnique({
       where: {
         id: user_id,
       },
       select: {
+        id: true,
         username: true,
         profile_photo_path: true,
       },
     });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      id: user.id.toString(),
+      username: user.username,
+      profile_photo_path: user.profile_photo_path,
+    };
   }
 
   static async getProfile(user_id: bigint) {

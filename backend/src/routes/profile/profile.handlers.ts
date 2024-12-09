@@ -50,6 +50,7 @@ export const getProfile = async (c: Context) => {
       200
     );
   } catch (error) {
+    console.log(error);
     return c.json(
       {
         success: false,
