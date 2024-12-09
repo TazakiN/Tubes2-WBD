@@ -65,3 +65,59 @@ export const createFeed = async (c: Context) => {
     );
   }
 };
+
+export const updateFeed = async (c: Context) => {
+  try {
+    const userID = await getUserIDbyTokenInCookie(c);
+    const feed_id = c.req.param("post_id");
+    const { content } = await c.req.json();
+
+    const feed = await FeedService.updateFeed(
+      BigInt(feed_id),
+      content.toString(),
+      BigInt(userID)
+    );
+
+    return c.json(
+      {
+        success: true,
+        message: "Success",
+        body: feed,
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
+  }
+};
+
+export const deleteFeed = async (c: Context) => {
+  try {
+    const userID = await getUserIDbyTokenInCookie(c);
+    const feed_id = c.req.param("post_id");
+
+    await FeedService.deleteFeed(BigInt(feed_id), BigInt(userID));
+
+    return c.json(
+      {
+        success: true,
+        message: "Success",
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
+  }
+};

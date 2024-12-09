@@ -26,6 +26,11 @@ export const getAllFeedsResponseSchema = z.object({
   }),
 });
 
+export const successFeedResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+});
+
 export const feedRequestSchema = z.object({
   content: z.string(),
 });
