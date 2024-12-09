@@ -23,7 +23,7 @@ export const getProfileInfo = createRoute({
             data: [
               {
                 id: "1",
-                username: "KSI",
+                full_name: "KSI",
                 profile_photo_path:
                   "/src/frontend/src/assets/img/default-profile-picture.png",
               },
@@ -114,62 +114,64 @@ export const getProfile = createRoute({
 });
 
 export const updateProfile = createRoute({
-  method: 'put',
-  path: '/edit/:user_id',
-  summary: 'Update User profile from user ID',
-  tags: ['profile'],
+  method: "put",
+  path: "/edit/:user_id",
+  summary: "Update User profile from user ID",
+  tags: ["profile"],
   request: {
     params: z.object({
       user_id: z.string(),
     }),
     body: {
       content: {
-        'application/json': z.object({
-          username: z.string().optional(),
-          name: z.string().optional(),
-          work_history: z.string().optional(),
-          skills: z.string().optional(),
-          profile_photo: z.string().optional(),
-        }),
+        "application/json": {
+          schema: z.object({
+            username: z.string().optional(),
+            name: z.string().optional(),
+            work_history: z.string().optional(),
+            skills: z.string().optional(),
+            profile_photo: z.string().optional(),
+          }),
+        },
       },
     },
   },
   responses: {
     204: {
-      description: 'Profile updated successfully, no content to return',
+      description: "Profile updated successfully, no content to return",
     },
     400: {
-      description: 'Invalid request data',
+      description: "Invalid request data",
       content: {
-        'application/json': {
+        "application/json": {
           schema: errorSchema,
           example: {
             success: false,
-            message: 'Invalid request data',
+            message: "Invalid request data",
           },
         },
       },
     },
     404: {
-      description: 'Profile not found',
+      description: "Profile not found",
       content: {
-        'application/json': {
+        "application/json": {
           schema: errorSchema,
           example: {
             success: false,
-            message: 'Profile not found',
+            message: "Profile not found",
           },
         },
       },
     },
     500: {
-      description: 'Internal server error',
+      description: "Internal server error",
       content: {
-        'application/json': {
+        "application/json": {
           schema: errorSchema,
           example: {
             success: false,
-            message: 'Internal server error',
+            message: "Internal server error",
           },
         },
       },
