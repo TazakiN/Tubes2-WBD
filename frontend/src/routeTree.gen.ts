@@ -14,6 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as FeedsImport } from './routes/feeds'
+import { Route as EditpostImport } from './routes/editpost'
+import { Route as CreatepostImport } from './routes/createpost'
 import { Route as ConnectImport } from './routes/connect'
 import { Route as ChatImport } from './routes/chat'
 import { Route as BrowseImport } from './routes/browse'
@@ -42,6 +44,18 @@ const LoginRoute = LoginImport.update({
 const FeedsRoute = FeedsImport.update({
   id: '/feeds',
   path: '/feeds',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EditpostRoute = EditpostImport.update({
+  id: '/editpost',
+  path: '/editpost',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CreatepostRoute = CreatepostImport.update({
+  id: '/createpost',
+  path: '/createpost',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -137,6 +151,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectImport
       parentRoute: typeof rootRoute
     }
+    '/createpost': {
+      id: '/createpost'
+      path: '/createpost'
+      fullPath: '/createpost'
+      preLoaderRoute: typeof CreatepostImport
+      parentRoute: typeof rootRoute
+    }
+    '/editpost': {
+      id: '/editpost'
+      path: '/editpost'
+      fullPath: '/editpost'
+      preLoaderRoute: typeof EditpostImport
+      parentRoute: typeof rootRoute
+    }
     '/feeds': {
       id: '/feeds'
       path: '/feeds'
@@ -210,6 +238,8 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
+  '/createpost': typeof CreatepostRoute
+  '/editpost': typeof EditpostRoute
   '/feeds': typeof FeedsRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -226,6 +256,8 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
+  '/createpost': typeof CreatepostRoute
+  '/editpost': typeof EditpostRoute
   '/feeds': typeof FeedsRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -243,6 +275,8 @@ export interface FileRoutesById {
   '/browse': typeof BrowseRoute
   '/chat': typeof ChatRoute
   '/connect': typeof ConnectRoute
+  '/createpost': typeof CreatepostRoute
+  '/editpost': typeof EditpostRoute
   '/feeds': typeof FeedsRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -261,6 +295,8 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/createpost'
+    | '/editpost'
     | '/feeds'
     | '/login'
     | '/register'
@@ -276,6 +312,8 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/createpost'
+    | '/editpost'
     | '/feeds'
     | '/login'
     | '/register'
@@ -291,6 +329,8 @@ export interface FileRouteTypes {
     | '/browse'
     | '/chat'
     | '/connect'
+    | '/createpost'
+    | '/editpost'
     | '/feeds'
     | '/login'
     | '/register'
@@ -308,6 +348,8 @@ export interface RootRouteChildren {
   BrowseRoute: typeof BrowseRoute
   ChatRoute: typeof ChatRoute
   ConnectRoute: typeof ConnectRoute
+  CreatepostRoute: typeof CreatepostRoute
+  EditpostRoute: typeof EditpostRoute
   FeedsRoute: typeof FeedsRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
@@ -324,6 +366,8 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseRoute: BrowseRoute,
   ChatRoute: ChatRoute,
   ConnectRoute: ConnectRoute,
+  CreatepostRoute: CreatepostRoute,
+  EditpostRoute: EditpostRoute,
   FeedsRoute: FeedsRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
@@ -349,6 +393,8 @@ export const routeTree = rootRoute
         "/browse",
         "/chat",
         "/connect",
+        "/createpost",
+        "/editpost",
         "/feeds",
         "/login",
         "/register",
@@ -371,6 +417,12 @@ export const routeTree = rootRoute
     },
     "/connect": {
       "filePath": "connect.tsx"
+    },
+    "/createpost": {
+      "filePath": "createpost.tsx"
+    },
+    "/editpost": {
+      "filePath": "editpost.tsx"
     },
     "/feeds": {
       "filePath": "feeds.tsx"

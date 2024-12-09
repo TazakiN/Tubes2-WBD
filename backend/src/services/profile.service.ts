@@ -124,7 +124,7 @@ export default class profileService {
   }
 
   static async updateProfile(user_id: bigint, data: UpdateProfileData) {
-    const hashed_password = await bcrypt.hash(data.password, 10);
+    const hashed_password = await bcrypt.hash(data.password, 10) as string;
     const response = await utapi.uploadFiles(data.profile_photo);
     const profile_photo_path = response.data?.url;
     return await db.users.update({

@@ -66,8 +66,13 @@ export default {
           dark: "#757575",
         },
         green: "#A6AD64",
-        red: "#AD6465",
+        
         black: "#1E1E1E",
+
+        red:{
+          DEFAULT: "#AD6465",
+          light: "#b9797a",
+        },
       },
     },
   },
