@@ -1,18 +1,18 @@
-import { useState, useContext } from "react";
-import { UserDataContext } from "@/contexts/UserDataContext";
+import { useState } from "react";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth"; // Tambahkan import useAuth
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserData } = useContext(UserDataContext);
   const navigate = useNavigate();
+  useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,26 +33,18 @@ export default function Login() {
       );
 
       if (response.ok) {
-        const profileResponse = await fetch(
-          import.meta.env.VITE_API_BASE_URL + "/profile/info",
-          {
-            credentials: "include",
-          },
-        );
+        // Tidak perlu lagi fetch ke /profile/info
+        // await refetch(); // Jika perlu, panggil refetch untuk memperbarui status autentikasi
 
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          setUserData(profileData.body);
-          toast.success("Login successful");
-          navigate({ to: "/" });
-        }
+        toast.success("Login berhasil");
+        navigate({ to: "/" });
       } else {
         const data = await response.json();
-        toast.error(data.message || "Invalid credentials");
+        toast.error(data.message || "Kredensial tidak valid");
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("An error occurred during login");
+      toast.error("Terjadi kesalahan selama login");
     } finally {
       setIsLoading(false);
     }

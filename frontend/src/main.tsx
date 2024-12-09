@@ -2,8 +2,6 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { UserDataProvider } from "@/contexts/UserDataProvider";
 import App from "./App";
 
 const queryClient = new QueryClient();
@@ -14,9 +12,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <UserDataProvider>
-          <App />
-        </UserDataProvider>
+        <App />
       </QueryClientProvider>
     </StrictMode>,
   );

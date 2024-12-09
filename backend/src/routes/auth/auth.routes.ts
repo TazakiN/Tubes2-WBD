@@ -209,3 +209,58 @@ export const logout = createRoute({
     },
   },
 });
+
+export const verify = createRoute({
+  method: "get",
+  path: "/verify",
+  summary: "Verify User",
+  description: "Verify the user's access token",
+  tags: ["Authentication"],
+  responses: {
+    200: {
+      description: "Successful token verification",
+      content: {
+        "application/json": {
+          schema: z.object({
+            success: z.boolean(),
+            message: z.string().describe("Token verification message"),
+          }),
+          example: {
+            success: true,
+            message: "Token is valid",
+          },
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized - Invalid or expired token",
+      content: {
+        "application/json": {
+          schema: z.object({
+            success: z.boolean(),
+            message: z.string().describe("Detailed error message"),
+          }),
+          example: {
+            success: false,
+            message: "Invalid or expired token",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal Server Error - Token verification failed",
+      content: {
+        "application/json": {
+          schema: z.object({
+            success: z.boolean(),
+            message: z.string().describe("Server-side error description"),
+          }),
+          example: {
+            success: false,
+            message: "An unexpected error occurred during token verification",
+          },
+        },
+      },
+    },
+  },
+});
