@@ -1,16 +1,11 @@
 import { Hono } from "hono";
 import { getVapidPublicKey, sendPushNotification } from "../utils/webpush";
-
-interface PushSubscription {
-  endpoint: string;
-  keys: {
-    p256dh: string;
-    auth: string;
-  };
-}
+import { push_subscriptions } from "@prisma/client";
+import { getCookie } from "hono/cookie";
+import db from "../config/db";
+import { getUserIDbyTokenInCookie } from "../utils/jwt";
 
 // TODO: Simpan subscription di database
-const subscriptions: PushSubscription[] = [];
 
 export const pushRoutes = new Hono();
 
@@ -20,14 +15,36 @@ pushRoutes.get("/vapid-public-key", (c) => {
 
 pushRoutes.post("/subscribe", async (c) => {
   try {
-    const subscription = (await c.req.json()) as PushSubscription;
+    const subscription = await c.req.json();
+    const token = getCookie(c, "token");
+    const user_id = token ? BigInt(await getUserIDbyTokenInCookie(c)) : null;
 
-    const existingSubscription = subscriptions.find(
-      (sub) => sub.endpoint === subscription.endpoint
-    );
+    const existingSubscription = await db.push_subscriptions.findFirst({
+      where: { endpoint: subscription.endpoint },
+    });
 
     if (!existingSubscription) {
-      subscriptions.push(subscription);
+      await db.push_subscriptions.create({
+        data: {
+          user_id,
+          endpoint: subscription.endpoint,
+          keys: {
+            p256dh: subscription.keys.p256dh,
+            auth: subscription.keys.auth,
+          },
+        },
+      });
+    } else {
+      await db.push_subscriptions.update({
+        where: { endpoint: subscription.endpoint },
+        data: {
+          user_id,
+          keys: {
+            p256dh: subscription.keys.p256dh,
+            auth: subscription.keys.auth,
+          },
+        },
+      });
     }
 
     return c.json({
@@ -46,34 +63,40 @@ pushRoutes.post("/subscribe", async (c) => {
   }
 });
 
-pushRoutes.post("/send-notification", async (c) => {
-  try {
-    const { title, body } = await c.req.json();
+// pushRoutes.post("/send-notification", async (c) => {
+//   try {
+//     const { title, body } = await c.req.json();
 
-    const payload = JSON.stringify({
-      title,
-      body,
-      icon: "/icon.png",
-    });
+//     const payload = JSON.stringify({
+//       title,
+//       body,
+//       icon: "/icon.png",
+//     });
 
-    const sendPromises = subscriptions.map((sub) =>
-      sendPushNotification(sub, payload)
-    );
+//     const sendPromises = (await db.push_subscriptions.findMany()).map(
+//       async (subscription: push_subscriptions) => {
+//         try {
+//           await sendPushNotification(subscription, payload);
+//         } catch (error) {
+//           console.error("Gagal mengirim notifikasi ke", subscription.endpoint);
+//         }
+//       }
+//     );
 
-    await Promise.all(sendPromises);
+//     await Promise.all(sendPromises);
 
-    return c.json({
-      status: "success",
-      message: "Notifikasi terkirim",
-    });
-  } catch (error) {
-    console.error("Gagal mengirim notifikasi:", error);
-    return c.json(
-      {
-        status: "error",
-        message: "Gagal mengirim notifikasi",
-      },
-      500
-    );
-  }
-});
+//     return c.json({
+//       status: "success",
+//       message: "Notifikasi terkirim",
+//     });
+//   } catch (error) {
+//     console.error("Gagal mengirim notifikasi:", error);
+//     return c.json(
+//       {
+//         status: "error",
+//         message: "Gagal mengirim notifikasi",
+//       },
+//       500
+//     );
+//   }
+// });

@@ -42,7 +42,8 @@ app.use(
 
 configureWebPush();
 
-app.use("/api/*", cacheMiddleware(300000));
+app.use("/api/profile/*", cacheMiddleware(300000));
+app.use("/api/feed/*", cacheMiddleware(300000));
 
 app.route("/api/", authRoutes);
 app.route("/api/profile", profileRouter);

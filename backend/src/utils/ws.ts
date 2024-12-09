@@ -3,6 +3,8 @@ import { getCookie } from "hono/cookie";
 import { upgradeWebSocket } from "../index";
 import { WSContext } from "hono/ws";
 import { ChatService } from "../services/chat.service";
+import { PushService } from "../services/push.service";
+import { sendPushNotification } from "./webpush";
 
 const clients = new Map<string, WSContext>();
 
@@ -44,7 +46,24 @@ export function websocketHandler() {
           );
         } else {
           // TODO Penerima tidak online, kirim notifikasi
-          // ...
+          const subscriber = await PushService.getSubsriberByUserId(
+            BigInt(to_id)
+          );
+
+          console.log("hit");
+
+          if (subscriber.length > 0) {
+            console.log("hit2");
+            subscriber.forEach((sub) => {
+              const { endpoint, keys } = sub;
+              const pushSubscription = {
+                endpoint,
+                keys: keys as { p256dh: string; auth: string },
+              };
+
+              sendPushNotification(pushSubscription, message);
+            });
+          }
         }
       },
       onClose: () => {

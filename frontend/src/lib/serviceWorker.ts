@@ -52,7 +52,15 @@ export async function requestNotificationPermission(): Promise<boolean> {
 // Subscribe push notification
 export async function subscribeUser(
   registration: ServiceWorkerRegistration,
+  isAuthenticated: boolean,
 ): Promise<PushSubscription | null> {
+  if (!isAuthenticated) {
+    console.warn(
+      "User must be authenticated to subscribe to push notifications",
+    );
+    return null;
+  }
+
   try {
     // Get public key from backend
     const response = await fetch("http://localhost:3000/push/vapid-public-key");
@@ -70,6 +78,7 @@ export async function subscribeUser(
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     return subscription;
