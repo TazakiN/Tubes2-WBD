@@ -36,42 +36,42 @@ function Feeds() {
   }
 
   const messages: Message[] = [
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:14 | Nov 14, 2024',
-      content: 'at TypeScriptParserMixin.parseMaybeAssign (/app/node_modules/@babel/parser/lib/index.js:10379:21)...',
-      editedAt: '15:14 | Nov 14, 2024',
-    },
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:15 | Nov 14, 2024',
-      content: 'Another error message...',
-      editedAt: '15:15 | Nov 14, 2024',
-    },
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:15 | Nov 14, 2024',
-      content: 'Another error message...',
-      editedAt: '15:15 | Nov 14, 2024',
-    },
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:15 | Nov 14, 2024',
-      content: 'Another error message...',
-      editedAt: '15:15 | Nov 14, 2024',
-    },
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:15 | Nov 14, 2024',
-      content: 'Another error message...',
-      editedAt: '15:15 | Nov 14, 2024',
-    },
-    {
-      from: 'Tazkia Nizami',
-      timestamp: '15:15 | Nov 14, 2024',
-      content: 'Another error message...',
-      editedAt: '15:15 | Nov 14, 2024',
-    },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:14 | Nov 14, 2024',
+    //   content: 'at TypeScriptParserMixin.parseMaybeAssign (/app/node_modules/@babel/parser/lib/index.js:10379:21)...',
+    //   editedAt: '15:14 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
     // Add more message objects as needed
   ];
 
@@ -115,15 +115,21 @@ function Feeds() {
             className="flex flex-col space-y-[1rem] overflow-y-auto"
             style={{ maxHeight: '50rem' }}
           >
-            {messages.map((message, index) => (
-              <MessageCard
-                key={index}
-                from={message.from}
-                timestamp={message.timestamp}
-                content={message.content}
-                editedAt={message.editedAt}
-              />
-      ))}
+            {messages.length > 0 ? (
+              messages.map((message, index) => (
+                <MessageCard
+                  key={index}
+                  from={message.from}
+                  timestamp={message.timestamp}
+                  content={message.content}
+                  editedAt={message.editedAt}
+                />
+              ))
+            ) : (
+              <div className="text-gray-500 text-lg flex flex-col">
+                <p className="text-center"> -- No posts yet ! --</p>
+              </div>
+            )}
           </div>
 
         </div>
@@ -139,10 +145,10 @@ function Feeds() {
                   <p className="ml-2 text-base leading-none">Start a post</p>
                 </div>
               </button>
-
+{/* 
               <button className="flex h-[2rem] w-[8.25rem] items-center justify-center rounded-md bg-blue-primary bg-opacity-15 p-[0.5rem] hover:bg-black">
                 <p className="text-base leading-none">View your posts</p>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
