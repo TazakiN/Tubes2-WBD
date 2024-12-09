@@ -144,8 +144,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="full name"> Full Name </Label>
                 <Input
-                  id="full name"
-                  name="full name"
+                  id="full-name"
+                  name="full-name"
                   type="text"
                   className="mt-1 border-2 border-gray-dark"
                   required
@@ -158,8 +158,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="new password">New Password</Label>
                 <Input
-                  id="new password"
-                  name="new password"
+                  id="new-password"
+                  name="new-password"
                   type="password"
                   className="mt-1 border-2 border-gray-dark"
                   value={newPassword}
@@ -171,8 +171,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="confirm password">Confirm Password</Label>
                 <Input
-                  id="confirm password"
-                  name="confirm password"
+                  id="confirm-password"
+                  name="confirm-password"
                   type="password"
                   className="mt-1 border-2 border-gray-dark"
                   value={confirmPassword}

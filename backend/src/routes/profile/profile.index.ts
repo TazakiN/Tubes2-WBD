@@ -5,6 +5,7 @@ import * as routes from "./profile.routes";
 
 const profileRouter = new OpenAPIHono()
   .openapi(routes.getProfileInfo, handlers.getProfileInfo)
-  .openapi(routes.getProfile, handlers.getProfile);
+  .openapi(routes.getProfile, handlers.getProfile)
+  .openapi(routes.updateProfile, handlers.updateProfile);
 
 export default profileRouter;
