@@ -1,6 +1,53 @@
 import db from "../config/db";
 
 export class FeedService {
+  static async deleteFeed(feed_id: bigint, user_id: bigint) {
+    const feed = await db.feed.findUnique({
+      where: { id: feed_id },
+    });
+
+    if (!feed || feed.user_id !== user_id) {
+      throw new Error("Unauthorized or feed not found");
+    }
+
+    return await db.feed.delete({
+      where: {
+        id: feed_id,
+        user_id,
+      },
+    });
+  }
+  static async updateFeed(feed_id: bigint, content: string, user_id: bigint) {
+    const feed = await db.feed.findUnique({
+      where: { id: feed_id },
+    });
+
+    if (!feed || feed.user_id !== user_id) {
+      throw new Error("Unauthorized or feed not found");
+    }
+
+    return db.feed.update({
+      where: {
+        id: feed_id,
+      },
+      data: {
+        content,
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  static async createFeed(content: string, userID: bigint) {
+    await db.feed.create({
+      data: {
+        content,
+        user_id: userID,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    });
+  }
+
   static async getAllFeeds(limit: number, cursor_id?: bigint) {
     const feeds = await db.feed.findMany({
       take: limit + 1,

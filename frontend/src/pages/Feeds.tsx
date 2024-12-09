@@ -1,10 +1,17 @@
-import UserProfile from "@/assets/svg/post-user.svg";
-import Edited from "@/assets/svg/post-edited.svg";
 import Add from "@/assets/svg/post-add.svg";
+import MessageCard from "@/components/Feeds/PostCard.jsx";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+interface Message {
+  from: string;
+  timestamp: string;
+  content: string;
+  editedAt: string;
+}
 
 function Feeds() {
+
   const [cursor] = useState(0);
   const { data, error, isLoading, isError } = useQuery({
     staleTime: 1000 * 60 * 5,
@@ -28,6 +35,46 @@ function Feeds() {
       </div>
     );
   }
+
+  const messages: Message[] = [
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:14 | Nov 14, 2024',
+    //   content: 'at TypeScriptParserMixin.parseMaybeAssign (/app/node_modules/@babel/parser/lib/index.js:10379:21)...',
+    //   editedAt: '15:14 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // {
+    //   from: 'Tazkia Nizami',
+    //   timestamp: '15:15 | Nov 14, 2024',
+    //   content: 'Another error message...',
+    //   editedAt: '15:15 | Nov 14, 2024',
+    // },
+    // Add more message objects as needed
+  ];
 
   console.log(data);
 
@@ -65,45 +112,27 @@ function Feeds() {
             </div>
           </div>
 
-          <div>
-            <div className="flex w-[39rem] flex-col rounded-xl bg-gray-lighter p-[1.25rem] drop-shadow">
-              <div className="flex flex-row">
-                <p className="text-lg">from</p>
-                <img src={UserProfile} className="ml-[0.5rem] mr-[0.5rem]" />
-                <p className="text-lg text-blue-primary">Tazkia Nizami</p>
+          <div
+            className="flex flex-col space-y-[1rem] overflow-y-auto"
+            style={{ maxHeight: '50rem' }}
+          >
+            {messages.length > 0 ? (
+              messages.map((message, index) => (
+                <MessageCard
+                  key={index}
+                  from={message.from}
+                  timestamp={message.timestamp}
+                  content={message.content}
+                  editedAt={message.editedAt}
+                />
+              ))
+            ) : (
+              <div className="text-gray-500 text-lg flex flex-col">
+                <p className="text-center"> -- No posts yet ! --</p>
               </div>
-
-              <div className="mt-[0.5rem] flex flex-row">
-                <p className="mr-[3.375rem] text-lg">15:14 | Nov 14, 2024</p>
-                <img src={Edited} className="mr-[0.5rem]" />
-                <p className="text-lg">15:14 | Nov 14, 2024</p>
-              </div>
-
-              <div className="mt-[0.5rem]">
-                <p>
-                  at TypeScriptParserMixin.parseMaybeAssign
-                  (/app/node_modules/@babel/parser/lib/index.js:10379:21)
-                  frontend-1 | at TypeScriptParserMixin.parseMaybeAssign
-                  (/app/node_modules/@babel/parser/lib/index.js:9438:20)
-                  frontend-1 | at TypeScriptParserMixin.parseExpressionBase
-                  (/app/node_modules/@babel/parser/lib/index.js:10333:23)
-                  frontend-1 | at
-                  /app/node_modules/@babel/parser/lib/index.js:10329:39
-                  frontend-1 | at TypeScriptParserMixin.allowInAnd
-                  (/app/node_modules/@babel/parser/lib/index.js:11946:16)
-                  frontend-1 | at TypeScriptParserMixin.parseExpression
-                  (/app/node_modules/@babel/parser/lib/index.js:10329:17)
-                  frontend-1 | at TypeScriptParserMixin.parseReturnStatement
-                  (/app/node_modules/@babel/parser/lib/index.js:12636:28)
-                  frontend-1 | 11:27:10 AM [vite] hmr update
-                  /src/pages/Feeds.tsx, /src/index.css frontend-1 | 11:27:15 AM
-                  [vite] hmr update /src/pages/Feeds.tsx, /src/index.css
-                  frontend-1 | 11:27:17 AM [vite] hmr update
-                  /src/pages/Feeds.tsx, /src/index.css
-                </p>
-              </div>
-            </div>
+            )}
           </div>
+
         </div>
 
         <div className="w-[15rem]">
@@ -111,16 +140,18 @@ function Feeds() {
             <div className="h-[2.75rem] w-[15rem] rounded-t-xl bg-blue-secondary"></div>
             <h1 className="mt-[1rem] text-xl">More Options</h1>
             <div className="mt-2 flex flex-col space-y-[0.75rem]">
+            <Link to="/createpost">
               <button className="flex h-[2rem] w-[8.25rem] items-center justify-center rounded-md bg-blue-primary bg-opacity-15 p-[0.5rem] hover:bg-black">
                 <div className="flex w-fit flex-row opacity-100">
-                  <img src={Add} />
+                  <img src={Add} alt="icon" />
                   <p className="ml-2 text-base leading-none">Start a post</p>
                 </div>
               </button>
-
+          </Link>
+{/* 
               <button className="flex h-[2rem] w-[8.25rem] items-center justify-center rounded-md bg-blue-primary bg-opacity-15 p-[0.5rem] hover:bg-black">
                 <p className="text-base leading-none">View your posts</p>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
