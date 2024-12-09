@@ -1,8 +1,8 @@
 import Add from "@/assets/svg/post-add.svg";
 import MessageCard from "@/components/Feeds/PostCard.jsx";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-
 interface Message {
   from: string;
   timestamp: string;
@@ -11,6 +11,7 @@ interface Message {
 }
 
 function Feeds() {
+
   const [cursor] = useState(0);
   const { data, error, isLoading, isError } = useQuery({
     staleTime: 1000 * 60 * 5,
@@ -139,12 +140,14 @@ function Feeds() {
             <div className="h-[2.75rem] w-[15rem] rounded-t-xl bg-blue-secondary"></div>
             <h1 className="mt-[1rem] text-xl">More Options</h1>
             <div className="mt-2 flex flex-col space-y-[0.75rem]">
+            <Link to="/createpost">
               <button className="flex h-[2rem] w-[8.25rem] items-center justify-center rounded-md bg-blue-primary bg-opacity-15 p-[0.5rem] hover:bg-black">
                 <div className="flex w-fit flex-row opacity-100">
-                  <img src={Add} />
+                  <img src={Add} alt="icon" />
                   <p className="ml-2 text-base leading-none">Start a post</p>
                 </div>
               </button>
+          </Link>
 {/* 
               <button className="flex h-[2rem] w-[8.25rem] items-center justify-center rounded-md bg-blue-primary bg-opacity-15 p-[0.5rem] hover:bg-black">
                 <p className="text-base leading-none">View your posts</p>
