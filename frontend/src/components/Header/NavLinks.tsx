@@ -21,7 +21,7 @@ const NavLinks = () => {
 
   return isAuthenticated ? (
     <div className="fixed inset-x-0 bottom-0 flex w-full justify-around gap-0 border-t bg-gray-lighter p-4 md:relative md:inset-x-auto md:bottom-auto md:w-auto md:gap-8 md:border-0 md:p-0">
-      <NavButton imgSrc={Home} navRoute="/" navText="Home" />
+      <NavButton imgSrc={Home} navRoute="/feeds" navText="Home" />
       <NavButton imgSrc={ChatBubble} navRoute="/chat" navText="Messages" />
       <NavButton
         imgSrc={ToiletSignPeople}
