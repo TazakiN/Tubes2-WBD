@@ -1,4 +1,4 @@
-import Home from '@/pages/home'
+import Feeds from '@/pages/Feeds'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -6,5 +6,5 @@ export const Route = createFileRoute('/')({
 })
 
 function Index() {
-  return <Home />
+  return <Feeds />
 }
