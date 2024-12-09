@@ -1,19 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { usePushNotification } from "@/hooks/usePushNotification";
 
 const Home = () => {
   const { logout } = useAuth();
   const navigate = useNavigate({ from: "/" });
-  const { isSupported, isSubscribed } = usePushNotification();
-
-  useEffect(() => {
-    if (isSupported && !isSubscribed) {
-      // Setup notifikasi
-    }
-  }, [isSupported, isSubscribed]);
 
   const handleLogout = async () => {
     try {
