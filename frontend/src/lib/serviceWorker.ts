@@ -20,8 +20,13 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   }
 
   try {
-    const registration = await navigator.serviceWorker.register("/sw.js");
-    console.log("Service Worker registered successfully:", registration);
+    const registration = await navigator.serviceWorker.register("/sw.js", {
+      scope: "/",
+    });
+
+    await navigator.serviceWorker.ready;
+    console.log("Service Worker active:", registration.active);
+
     return registration;
   } catch (error) {
     console.error("Service Worker registration failed:", error);
@@ -54,15 +59,24 @@ export async function subscribeUser(
   registration: ServiceWorkerRegistration,
   isAuthenticated: boolean,
 ): Promise<PushSubscription | null> {
-  if (!isAuthenticated) {
-    console.warn(
-      "User must be authenticated to subscribe to push notifications",
-    );
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   try {
-    // Get public key from backend
+    // Check and remove existing subscription
+    const existingSubscription =
+      await registration.pushManager.getSubscription();
+    if (existingSubscription) {
+      try {
+        // Test if subscription is still valid
+        await existingSubscription.getKey("p256dh");
+        return existingSubscription; // Return if valid
+      } catch {
+        await existingSubscription.unsubscribe();
+        console.log("Removed invalid subscription");
+      }
+    }
+
+    // Create new subscription
     const response = await fetch("http://localhost:3000/push/vapid-public-key");
     const { publicKey } = await response.json();
 
@@ -71,21 +85,36 @@ export async function subscribeUser(
       applicationServerKey: urlBase64ToUint8Array(publicKey),
     });
 
-    // Send subscription to backend
-    await fetch("http://localhost:3000/push/subscribe", {
+    // Send to backend
+    const subResponse = await fetch("http://localhost:3000/push/subscribe", {
       method: "POST",
       body: JSON.stringify(subscription),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
 
+    if (!subResponse.ok) {
+      throw new Error(`Subscription failed: ${subResponse.status}`);
+    }
+
+    console.log("Push subscription successful");
     return subscription;
   } catch (error) {
-    console.error("Failed to subscribe to push notification:", error);
+    console.error("Push subscription failed:", error);
     return null;
   }
+}
+
+// Add backend cleanup for 410 status codes:
+export async function cleanupInvalidSubscriptions(
+  subscription: PushSubscription,
+) {
+  await fetch("http://localhost:3000/push/unsubscribe", {
+    method: "POST",
+    body: JSON.stringify({ endpoint: subscription.endpoint }),
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
 }
 
 // Send test notification

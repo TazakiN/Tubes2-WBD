@@ -45,15 +45,17 @@ export function websocketHandler() {
             })
           );
         } else {
-          // TODO Penerima tidak online, kirim notifikasi
           const subscriber = await PushService.getSubsriberByUserId(
             BigInt(to_id)
           );
 
-          console.log("hit");
+          const payload = JSON.stringify({
+            title: "New message",
+            body: message,
+            icon: "/favicon.ico",
+          });
 
           if (subscriber.length > 0) {
-            console.log("hit2");
             subscriber.forEach((sub) => {
               const { endpoint, keys } = sub;
               const pushSubscription = {
@@ -61,7 +63,7 @@ export function websocketHandler() {
                 keys: keys as { p256dh: string; auth: string },
               };
 
-              sendPushNotification(pushSubscription, message);
+              sendPushNotification(pushSubscription, payload);
             });
           }
         }

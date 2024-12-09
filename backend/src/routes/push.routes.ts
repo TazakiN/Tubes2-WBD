@@ -100,3 +100,15 @@ pushRoutes.post("/subscribe", async (c) => {
 //     );
 //   }
 // });
+
+pushRoutes.post("/unsubscribe", async (c) => {
+  try {
+    const { endpoint } = await c.req.json();
+    await db.push_subscriptions.deleteMany({
+      where: { endpoint },
+    });
+    return c.json({ status: "success" });
+  } catch (error) {
+    return c.json({ status: "error" }, 500);
+  }
+});

@@ -1,13 +1,21 @@
 self.addEventListener("push", (event) => {
+  console.log("Push event received:", event.data?.json());
   const data = event.data.json();
 
   const options = {
     body: data.body,
-    icon: data.icon,
-    badge: data.badge || "./favicon.ico",
+    icon: data.icon || "/icon.png",
+    badge: data.badge || "/badge.png",
+    data: {
+      url: data.url || "/",
+    },
   };
 
-  event.waitUntil(self.registration.showNotification(data.title, options));
+  event.waitUntil(
+    self.registration
+      .showNotification(data.title, options)
+      .catch((error) => console.error("Error showing notification:", error)),
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {
