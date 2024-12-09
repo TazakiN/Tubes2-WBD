@@ -1,5 +1,6 @@
 import { createRoute } from "@hono/zod-openapi";
 import {
+  feedRequestSchema,
   getAllFeedsRequestQuerySchema,
   getAllFeedsResponseSchema,
 } from "./feed.schema";
@@ -41,6 +42,51 @@ export const getAllFeeds = createRoute({
               },
             },
           ],
+        },
+      },
+    },
+    500: {
+      description: "Internal Server Error",
+      content: {
+        "application/json": {
+          schema: errorSchema,
+          example: {
+            success: false,
+            message: "Internal Server Error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const createFeed = createRoute({
+  method: "post",
+  path: "/",
+  summary: "Create a feed",
+  tags: ["feeds"],
+  request: {
+    body: {
+      description: "Feed content",
+      content: {
+        "application/json": {
+          schema: feedRequestSchema,
+          example: {
+            content: "Hello World",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        "application/json": {
+          schema: {
+            success: true,
+            message: "Success Create Feed",
+          },
         },
       },
     },

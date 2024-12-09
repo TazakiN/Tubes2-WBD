@@ -1,6 +1,17 @@
 import db from "../config/db";
 
 export class FeedService {
+  static async createFeed(content: string, userID: bigint) {
+    await db.feed.create({
+      data: {
+        content,
+        user_id: userID,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    });
+  }
+
   static async getAllFeeds(limit: number, cursor_id?: bigint) {
     const feeds = await db.feed.findMany({
       take: limit + 1,

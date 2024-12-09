@@ -1,5 +1,6 @@
 import { Context } from "hono";
 import { FeedService } from "../../services/feed.service";
+import { getUserIDbyTokenInCookie } from "../../utils/jwt";
 
 export const getAllFeeds = async (c: Context) => {
   try {
@@ -22,6 +23,35 @@ export const getAllFeeds = async (c: Context) => {
           cursor: nextCursor,
           feeds,
         },
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        success: false,
+        message: (error as Error).message,
+      },
+      500
+    );
+  }
+};
+
+export const createFeed = async (c: Context) => {
+  try {
+    const userID = await getUserIDbyTokenInCookie(c);
+    const { content } = await c.req.json();
+
+    const feed = await FeedService.createFeed(
+      content.toString(),
+      BigInt(userID)
+    );
+
+    return c.json(
+      {
+        success: true,
+        message: "Success",
+        body: feed,
       },
       200
     );

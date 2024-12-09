@@ -25,3 +25,7 @@ export const getAllFeedsResponseSchema = z.object({
     ),
   }),
 });
+
+export const feedRequestSchema = z.object({
+  content: z.string(),
+});
