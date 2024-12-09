@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import FileUpload from "@/components/ui/file-upload";
-import { utapi } from "uploadthing/server";
 import TextArea from "@/components/ui/text-area";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -136,8 +135,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="full name"> Full Name </Label>
                 <Input
-                  id="full name"
-                  name="full name"
+                  id="full-name"
+                  name="full-name"
                   type="text"
                   className="border-2 border-gray-dark mt-1"
                   required
@@ -150,8 +149,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="new password">New Password</Label>
                 <Input
-                  id="new password"
-                  name="new password"
+                  id="new-password"
+                  name="new-password"
                   type="password"
                   className="border-2 border-gray-dark mt-1"
                   value={newPassword}
@@ -163,8 +162,8 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="confirm password">Confirm Password</Label>
                 <Input
-                  id="confirm password"
-                  name="confirm password"
+                  id="confirm-password"
+                  name="confirm-password"
                   type="password"
                   className="border-2 border-gray-dark mt-1"
                   value={confirmPassword}
