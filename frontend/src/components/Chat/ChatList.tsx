@@ -21,7 +21,7 @@ function ChatList({
   };
 
   return (
-    <div className="flex min-h-7 flex-col gap-2">
+    <div className="flex min-h-7 w-full flex-col gap-2 md:w-auto">
       <Button
         className="text-xl text-gray-dark"
         variant="ghost"
@@ -29,7 +29,7 @@ function ChatList({
       >
         <CirclePlus /> Add new chat
       </Button>
-      <div className="flex h-[555px] max-w-sm flex-col divide-y-2 divide-gray-dark overflow-y-auto rounded-lg bg-gray-lighter drop-shadow-xl">
+      <div className="flex h-full w-full flex-col divide-y-2 divide-gray-dark overflow-y-auto rounded-lg bg-gray-lighter drop-shadow-xl md:h-[555px] md:max-w-sm">
         {chatList.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center px-8 py-4 text-center text-3xl">
             <span className="text-3xl text-gray-600">No chat history</span>
