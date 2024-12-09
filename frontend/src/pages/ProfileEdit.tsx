@@ -34,16 +34,6 @@ export default function ProfileEdit() {
   };
 
   useEffect(() => {
-    // const uploadFile = async () => {
-    //   try {
-
-    //   } catch(err) {
-
-    //   } finally {
-
-    //   }
-    // };
-
     const fetchProfile = async () => {
       try {
         setIsLoading(true);
@@ -78,29 +68,26 @@ export default function ProfileEdit() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
-    const formData = new FormData(e.target as HTMLFormElement);
-    if (
-      fileRef.current?.name &&
-      fileRef.current?.files &&
-      fileRef.current.files[0]
-    ) {
-      formData.append(fileRef.current.name, fileRef.current.files[0]);
-    }
-    if (jobHistoryRef.current?.name && jobHistoryRef.current?.value) {
-      formData.append(jobHistoryRef.current.name, jobHistoryRef.current.value);
-    }
-    if (skillsRef.current?.name && skillsRef.current?.value) {
-      formData.append(skillsRef.current.name, skillsRef.current.value);
-    }
+    const formData = new FormData(e.target);
+    formData.append('password', newPassword);
+    formData.append(fileRef.current?.name, fileRef.current?.files[0]);
+    formData.append(jobHistoryRef.current?.name, jobHistoryRef.current?.value);
+    formData.append(skillsRef.current?.name, skillsRef.current?.value);
+
     try {
       const user_id = getUserIdFromUrl();
-      const requestPath = `${BASE_URL}/profile/${user_id}`;
+      const requestPath = `${BASE_URL}/profile/edit/${user_id}`;
       const response = await fetch(requestPath, {
         method: "PUT",
         credentials: "include",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "multipart/form-data",
         },
         body: formData,
       });

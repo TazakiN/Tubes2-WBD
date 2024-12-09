@@ -3,6 +3,7 @@ import {
   GetProfileInfoResponse,
   GetPrivateProfileResponse,
   GetPublicProfileResponse,
+  updateProfileSchema,
 } from "./profile.schema";
 import { errorSchema } from "../schema/error.schema";
 
@@ -124,14 +125,8 @@ export const updateProfile = createRoute({
     }),
     body: {
       content: {
-        "application/json": {
-          schema: z.object({
-            username: z.string().optional(),
-            name: z.string().optional(),
-            work_history: z.string().optional(),
-            skills: z.string().optional(),
-            profile_photo: z.string().optional(),
-          }),
+        "form-data": {
+          schema: updateProfileSchema,
         },
       },
     },

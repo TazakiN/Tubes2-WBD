@@ -100,20 +100,15 @@ export const updateProfile = async (c: Context) => {
         work_history: job_history,
         skills: skills,
       };
+      console.log(updateProfileData);
       profile = await profileService.updateProfile(
         BigInt(profileID),
         updateProfileData
       );
     }
     if (profile) {
-      return c.json(
-        {
-          success: true,
-          message,
-          body: profile,
-        },
-        204
-      );
+      c.status(204);
+      return c.body(null);
     }
     return c.json(
       {
