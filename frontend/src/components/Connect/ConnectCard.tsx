@@ -2,6 +2,7 @@ import React from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "../ui/button";
+import { useNavigate } from "@tanstack/react-router";
 
 export interface ConnectCardProps {
   user_id: bigint;
@@ -18,6 +19,7 @@ const ConnectCard: React.FC<ConnectCardProps> = ({
   status,
   refetch,
 }) => {
+  const navigate = useNavigate();
   const createConnectionRequest = useMutation({
     mutationFn: async () => {
       const response = await fetch(
@@ -177,6 +179,9 @@ const ConnectCard: React.FC<ConnectCardProps> = ({
               <Button
                 variant="outline"
                 className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl"
+                onClick={() => {
+                  navigate({ to: `/profile/${user_id}` });
+                }}
               >
                 Profile
               </Button>
@@ -208,6 +213,9 @@ const ConnectCard: React.FC<ConnectCardProps> = ({
               <Button
                 variant={"outline"}
                 className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl text-gray-600 hover:bg-gray-100"
+                onClick={() => {
+                  navigate({ to: `/profile/${user_id}` });
+                }}
               >
                 Profile
               </Button>
@@ -225,6 +233,9 @@ const ConnectCard: React.FC<ConnectCardProps> = ({
               <Button
                 variant={"outline"}
                 className="rounded-full border border-gray-300 bg-transparent px-3 py-1 text-xl text-gray-600 hover:bg-gray-100"
+                onClick={() => {
+                  navigate({ to: `/profile/${user_id}` });
+                }}
               >
                 Profile
               </Button>
