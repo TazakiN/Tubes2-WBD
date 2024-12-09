@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProfileLayout } from "@/layouts/ProfileLayout";
 import { ProfileData } from "@/lib/types/userData";
 import { toast } from "sonner";
@@ -15,17 +15,31 @@ const Profile = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [owner, setOwner] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({});
+  const user_id = useRef<string | null>(null);
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const user_id = getUserIdFromUrl();
-        const requestPath = `${BASE_URL}/profile/${user_id}`;
-        const response = await fetch(requestPath, {credentials: "include"});
+        user_id.current = getUserIdFromUrl();
+
+        if (user_id.current == "profile") {
+          const response = await fetch(`${BASE_URL}/profile/info`, {
+            credentials: "include",
+          });
+          if (!response.ok) throw new Error("User not found");
+          const data = await response.json();
+          setAuthenticated(true);
+          user_id.current = `/${data.data.id}`;
+        } else {
+          user_id.current = `/${user_id.current}`;
+        }
+
+        const requestPath = `${BASE_URL}/profile${user_id.current}`;
+        const response = await fetch(requestPath, { credentials: "include" });
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        setAuthenticated(data.message!="Unauthenticated");
-        setOwner(data.message=="Owner");
+        setAuthenticated(data.message != "Unauthenticated");
+        setOwner(data.message == "Owner");
         setProfileData(data.body);
       } catch (err) {
         if (err instanceof Error) {
@@ -42,7 +56,14 @@ const Profile = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  return <ProfileLayout profile={profileData} authenticated={authenticated} owner={owner}/>;
+  return (
+    <ProfileLayout
+      user_id={user_id.current ?? ""}
+      profile={profileData}
+      authenticated={authenticated}
+      owner={owner}
+    />
+  );
 };
 
 export default Profile;

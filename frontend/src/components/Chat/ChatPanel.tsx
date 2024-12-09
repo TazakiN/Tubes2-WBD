@@ -83,7 +83,7 @@ function ChatPanel(chatPanelProps: ChatPanelProp) {
   }, [messages]);
 
   return (
-    <div className="flex h-[600px] w-[600px] flex-col rounded-lg bg-gray-lighter">
+    <div className="flex h-full max-h-[66vh] w-full flex-col rounded-lg bg-gray-lighter md:w-[600px]">
       <div className="rounded-t-xl bg-blue-secondary px-10 py-5">
         <h3
           className="cursor-pointer truncate text-2xl text-gray-lighter transition-all duration-300 ease-in-out hover:text-3xl"

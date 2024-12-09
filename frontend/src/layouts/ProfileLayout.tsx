@@ -9,6 +9,7 @@ interface ProfileLayoutProps {
   profile: ProfileData;
   authenticated: boolean;
   owner: boolean;
+  user_id: string;
 }
 
 const UnauthenticatedComponent = () => {
@@ -61,11 +62,13 @@ const AuthenticatedComponent = ({
 
 interface ProfileConditionalButtonProps {
   type: "Owner" | "Connected" | "Pending" | "Not Connected";
+  user_id: string;
 }
 
-const ProfileConditionalButton = ({ type }: ProfileConditionalButtonProps) => {
-  const pathParts = window.location.pathname.split("/");
-  const user_id = pathParts[pathParts.length - 1];
+const ProfileConditionalButton = ({
+  type,
+  user_id,
+}: ProfileConditionalButtonProps) => {
   switch (type) {
     case "Owner":
       return (
@@ -113,6 +116,7 @@ const ProfileConditionalButton = ({ type }: ProfileConditionalButtonProps) => {
 };
 
 export function ProfileLayout({
+  user_id,
   profile,
   authenticated,
   owner,
@@ -161,6 +165,7 @@ export function ProfileLayout({
             </Link>
 
             <ProfileConditionalButton
+              user_id={user_id}
               type={buttonType as ProfileConditionalButtonProps["type"]}
             />
           </div>

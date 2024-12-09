@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import FileUpload from "@/components/ui/file-upload";
 import TextArea from "@/components/ui/text-area";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -16,11 +17,20 @@ export default function ProfileEdit() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [jobHistory, setJobHistory] = useState("");
   const [skills, setSkills] = useState("");
-  // const navigate = useNavigate();
+  const [fileName, setFileName] = useState("File Name");
+  const navigate = useNavigate();
+
+  const fileRef = useRef<HTMLInputElement>(null);
+  const jobHistoryRef = useRef<HTMLTextAreaElement>(null);
+  const skillsRef = useRef<HTMLTextAreaElement>(null);
 
   const getUserIdFromUrl = () => {
     const pathParts = window.location.pathname.split("/");
     return pathParts[pathParts.length - 1];
+  };
+
+  const handleFileSelect = (file: File) => {
+    setFileName(file.name);
   };
 
   useEffect(() => {
@@ -29,13 +39,15 @@ export default function ProfileEdit() {
         setIsLoading(true);
         const user_id = getUserIdFromUrl();
         const requestPath = `${BASE_URL}/profile/${user_id}`;
-        const response = await fetch(requestPath, {credentials: "include"});
+        const response = await fetch(requestPath, { credentials: "include" });
         if (!response.ok) throw new Error("User not found");
         const data = await response.json();
-        if (data.message!="Owner"){
-          // TODO: Navigate to Home Page
+        if (data.message != "Owner") {
+          navigate({ to: "/" });
         }
         const profile = data.body;
+        profile.skills = profile.skills || "";
+        profile.work_history = profile.work_history || "";
         setUsername(profile.username);
         setFullName(profile.name);
         setJobHistory(profile.work_history);
@@ -50,61 +62,58 @@ export default function ProfileEdit() {
         setIsLoading(false);
       }
     };
+
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        console.log(e);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
     }
+    setIsLoading(true);
+    const formData = new FormData(e.target);
+    formData.append('password', newPassword);
+    formData.append(fileRef.current?.name, fileRef.current?.files[0]);
+    formData.append(jobHistoryRef.current?.name, jobHistoryRef.current?.value);
+    formData.append(skillsRef.current?.name, skillsRef.current?.value);
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setIsLoading(true);
+    try {
+      const user_id = getUserIdFromUrl();
+      const requestPath = `${BASE_URL}/profile/edit/${user_id}`;
+      const response = await fetch(requestPath, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          // "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
 
-//     try {
-//       const payload = { identifier, password };
-//       const response = await fetch("http://localhost:4001/api/login", {
-//         method: "POST",
-//         credentials: "include",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(payload),
-//       });
-
-//       if (response.ok) {
-//         const profileResponse = await fetch(
-//           "http://localhost:4001/api/profile/info",
-//           {
-//             credentials: "include",
-//           },
-//         );
-
-//         if (profileResponse.ok) {
-//           const profileData = await profileResponse.json();
-//           setUserData(profileData.body);
-//           toast.success("Login successful");
-//           navigate({ to: "/" });
-//         }
-//       } else {
-//         const data = await response.json();
-//         toast.error(data.message || "Invalid credentials");
-//       }
-//     } catch (error) {
-//       console.error("Login error:", error);
-//       toast.error("An error occurred during login");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
+      if (response.ok) {
+        toast.success("Login successful");
+        navigate({ to: `/profile/${user_id}` });
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("An unknown error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="bg-gray-light flex min-h-screen flex-col items-center py-12 sm:px-6 lg:px-8">
-      <h1 className="text-4xl text-gray-dark font-medium"> Edit Profile </h1>
-      <div className="px-12 sm:px-36 max-w-screen-lg w-full mx-auto">
-        <div className="flex flex-col items-center bg-gray-lighter text-gray-dark px-8 py-12 mt-10 text-center shadow-lg rounded-xl">
+    <div className="flex min-h-screen flex-col items-center bg-gray-light py-12 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-medium text-gray-dark"> Edit Profile </h1>
+      <div className="mx-auto w-full max-w-screen-lg px-12 sm:px-36">
+        <div className="mt-10 flex flex-col items-center rounded-xl bg-gray-lighter px-8 py-12 text-center text-gray-dark shadow-lg">
           <form className="w-full py-2" onSubmit={handleSubmit}>
-            <div className="text-left space-y-8 w-full">
+            <div className="w-full space-y-8 text-left">
               <div>
                 <Label htmlFor="username"> Username </Label>
                 <Input
@@ -122,10 +131,10 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="full name"> Full Name </Label>
                 <Input
-                  id="full name"
-                  name="full name"
+                  id="full-name"
+                  name="full-name"
                   type="text"
-                  className="border-2 border-gray-dark mt-1"
+                  className="mt-1 border-2 border-gray-dark"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -136,10 +145,10 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="new password">New Password</Label>
                 <Input
-                  id="new password"
-                  name="new password"
+                  id="new-password"
+                  name="new-password"
                   type="password"
-                  className="border-2 border-gray-dark mt-1"
+                  className="mt-1 border-2 border-gray-dark"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   disabled={isLoading}
@@ -149,10 +158,10 @@ export default function ProfileEdit() {
               <div>
                 <Label htmlFor="confirm password">Confirm Password</Label>
                 <Input
-                  id="confirm password"
-                  name="confirm password"
+                  id="confirm-password"
+                  name="confirm-password"
                   type="password"
-                  className="border-2 border-gray-dark mt-1"
+                  className="mt-1 border-2 border-gray-dark"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={isLoading}
@@ -162,43 +171,76 @@ export default function ProfileEdit() {
               <div className="mt-8">
                 <Label htmlFor="profile picture"> Profile Picture </Label>
                 <div className="mt-2 flex flex-row items-center justify-start">
-                  <Button variant="ghost" className="border-2 border-gray-dark text-md rounded-lg"> Choose Image </Button>
-                  <h3 className="text-lg text-gray-dark font-normal ml-2"> File Path </h3>
+                  <FileUpload
+                    buttonText="Choose Image"
+                    className="text-md rounded-lg border-2 border-gray-dark"
+                    onFileSelect={handleFileSelect}
+                    ref={fileRef}
+                    inputName="profile-picture"
+                  />
+                  <h3 className="ml-2 text-lg font-normal text-gray-dark">
+                    {" "}
+                    {fileName}{" "}
+                  </h3>
                 </div>
               </div>
 
               <div className="mt-8 flex flex-col">
-                <Label htmlFor="job history" className="mb-2"> Job History </Label>
-                <TextArea value={jobHistory} onChange={(newValue : string) => setJobHistory(newValue)} maxLength={1000} initialRow={6} id={"job history"} placeholder={"Write your job history here!"}/>
+                <Label htmlFor="job history" className="mb-2">
+                  {" "}
+                  Job History{" "}
+                </Label>
+                <TextArea
+                  value={jobHistory}
+                  onChange={(newValue: string) => setJobHistory(newValue)}
+                  maxLength={1000}
+                  initialRow={6}
+                  id={"job history"}
+                  placeholder={"Write your job history here!"}
+                  inputName="job-history"
+                  ref={jobHistoryRef}
+                />
               </div>
 
               <div className="mt-8 flex flex-col">
-                <Label htmlFor="skills" className="mb-2"> Skills </Label>
-                <TextArea value={skills} onChange={(newValue : string) => setSkills(newValue)} maxLength={1000} initialRow={6} id={"skills"} placeholder={"Write your skills here!"}/>
+                <Label htmlFor="skills" className="mb-2">
+                  {" "}
+                  Skills{" "}
+                </Label>
+                <TextArea
+                  value={skills}
+                  onChange={(newValue: string) => setSkills(newValue)}
+                  maxLength={1000}
+                  initialRow={6}
+                  id={"skills"}
+                  placeholder={"Write your skills here!"}
+                  inputName="skills"
+                  ref={skillsRef}
+                />
               </div>
             </div>
             <Button
               type="submit"
               variant="default"
-              className="bg-blue-secondary w-52 mx-auto mt-8 rounded px-4 py-2 font-lg text-white hover:bg-blue-secondary/90"
+              className="font-lg mx-auto mt-8 w-52 rounded bg-blue-secondary px-4 py-2 text-white hover:bg-blue-secondary/90"
               disabled={isLoading}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-                  Logging in...
+                  Editing...
                 </div>
               ) : (
-                "EDITING"
+                "Edit Profile"
               )}
             </Button>
           </form>
 
-          <Link to="/"> 
+          <Link to="/">
             {/* TODO: Adjust Link */}
             <Button
               variant="destructive"
-              className="mt-4 w-52 rounded px-4 py-2 font-lg text-white"
+              className="font-lg mt-4 w-52 rounded px-4 py-2 text-white"
               disabled={isLoading}
             >
               DISCARD CHANGES

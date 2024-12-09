@@ -3,6 +3,7 @@ import {
   GetProfileInfoResponse,
   GetPrivateProfileResponse,
   GetPublicProfileResponse,
+  updateProfileSchema,
 } from "./profile.schema";
 import { errorSchema } from "../schema/error.schema";
 
@@ -22,7 +23,8 @@ export const getProfileInfo = createRoute({
             message: "Success get profile information",
             data: [
               {
-                username: "KSI",
+                id: "1",
+                full_name: "KSI",
                 profile_photo_path:
                   "/src/frontend/src/assets/img/default-profile-picture.png",
               },
@@ -81,6 +83,66 @@ export const getProfile = createRoute({
                   "/src/frontend/src/assets/img/default-profile-picture.png",
               },
             ],
+          },
+        },
+      },
+    },
+    404: {
+      description: "Profile not found",
+      content: {
+        "application/json": {
+          schema: errorSchema,
+          example: {
+            success: false,
+            message: "Profile not found",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: errorSchema,
+          example: {
+            success: false,
+            message: "Internal server error",
+          },
+        },
+      },
+    },
+  },
+});
+
+export const updateProfile = createRoute({
+  method: "put",
+  path: "/edit/:user_id",
+  summary: "Update User profile from user ID",
+  tags: ["profile"],
+  request: {
+    params: z.object({
+      user_id: z.string(),
+    }),
+    body: {
+      content: {
+        "form-data": {
+          schema: updateProfileSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    204: {
+      description: "Profile updated successfully, no content to return",
+    },
+    400: {
+      description: "Invalid request data",
+      content: {
+        "application/json": {
+          schema: errorSchema,
+          example: {
+            success: false,
+            message: "Invalid request data",
           },
         },
       },

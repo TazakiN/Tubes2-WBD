@@ -10,7 +10,8 @@ export const GetProfileInfoRequest = z.object({
 });
 
 const ProfileInfoSchema = z.object({
-  username: z.string().openapi({ description: "The username of the user" }),
+  id: z.string().openapi({ description: "The id of the user" }),
+  full_name: z.string().openapi({ description: "The username of the user" }),
   profile_photo_path: z
     .string()
     .openapi({ description: "Path to Profile Picture from Front End root" }),
@@ -61,4 +62,12 @@ export const ProfileResponseError = z.object({
   success: z.literal(false),
   message: z.string(),
   error: errorPayloadSchema,
+});
+
+export const updateProfileSchema = z.object({
+  username: z.string().optional(),
+  name: z.string().optional(),
+  work_history: z.string().optional(),
+  skills: z.string().optional(),
+  profile_photo: z.string().optional(),
 });

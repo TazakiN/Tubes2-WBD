@@ -32,4 +32,18 @@ export class UsersService {
 
     return users;
   }
+
+  static async getUserNameByID(id: bigint) {
+    const user = await db.users.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        full_name: true,
+        username: true,
+      },
+    });
+
+    return user?.full_name || user?.username;
+  }
 }

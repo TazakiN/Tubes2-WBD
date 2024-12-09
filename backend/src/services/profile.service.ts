@@ -43,7 +43,10 @@ export default class profileService {
       work_history: user.work_history,
       skills: user.skills,
       profile_photo: user.profile_photo_path,
-      relevant_posts: user.feed,
+      relevant_posts: user.feed.map((post) => ({
+        ...post,
+        id: post.id.toString(),
+      })),
       connection_count: user._count.connection_connection_from_idTousers,
     };
   }
@@ -82,15 +85,27 @@ export default class profileService {
   }
 
   static async getProfileInfo(user_id: bigint) {
-    return await db.users.findUnique({
+    const user = await db.users.findUnique({
       where: {
         id: user_id,
       },
       select: {
+        id: true,
+        full_name: true,
         username: true,
         profile_photo_path: true,
       },
     });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      id: user.id.toString(),
+      full_name: user.full_name ?? user.username,
+      profile_photo_path: user.profile_photo_path,
+    };
   }
 
   static async getProfile(user_id: bigint) {
@@ -108,9 +123,8 @@ export default class profileService {
     });
   }
 
-  // ? Cuman contoh aja, atur atur ae kalo perlu
   static async updateProfile(user_id: bigint, data: UpdateProfileData) {
-    const hashed_password = await bcrypt.hash(data.password, 10);
+    const hashed_password = await bcrypt.hash(data.password, 10) as string;
     const response = await utapi.uploadFiles(data.profile_photo);
     const profile_photo_path = response.data?.url;
     return await db.users.update({
@@ -120,7 +134,6 @@ export default class profileService {
       data: {
         username: data.username,
         full_name: data.full_name,
-        email: data.email,
         profile_photo_path: profile_photo_path,
         password_hash: hashed_password,
         work_history: data.work_history,
@@ -131,7 +144,6 @@ export default class profileService {
 }
 
 interface UpdateProfileData {
-  email: string;
   username: string;
   full_name: string;
   password: string;

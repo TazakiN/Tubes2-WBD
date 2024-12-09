@@ -49,7 +49,7 @@ function ConnectionProfile({ connections, user_id }: ConnectionProfileProps) {
         className="flex size-44 items-center justify-center rounded-full bg-transparent"
       />
       <div>
-        <h1 className="text-3xl">{data?.data.username}</h1>
+        <h1 className="text-3xl">{data?.data.full_name}</h1>
         <span className="text-3xl">Connections: {connections}</span>
       </div>
     </div>

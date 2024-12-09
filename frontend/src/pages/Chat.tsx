@@ -81,11 +81,11 @@ const Chat = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-light px-64 py-6">
-      <div className="w-full rounded-lg bg-gray-lighter px-12 py-4 drop-shadow-lg">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-light px-4 py-6 md:px-16">
+      <div className="w-full rounded-lg bg-gray-lighter px-4 py-4 drop-shadow-lg md:px-12">
         <h1 className="text-left text-3xl text-gray-dark">Messages</h1>
       </div>
-      <div className="flex flex-grow flex-row gap-8">
+      <div className="flex flex-grow flex-col gap-8 md:flex-row">
         <ChatList
           chatList={chatList}
           onSelectChat={setSelectedInterlocutorData}

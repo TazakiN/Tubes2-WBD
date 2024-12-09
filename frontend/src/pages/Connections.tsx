@@ -10,7 +10,7 @@ export interface ConnectionPageProps {
 
 function Connections({ userId }: ConnectionPageProps) {
   const fetchAllConnection = async () => {
-    let fetchURL = import.meta.env.VITE_API_BASE_URL + "/connection/info";
+    let fetchURL = import.meta.env.VITE_API_BASE_URL + "/connection/info?";
     if (userId) {
       fetchURL += new URLSearchParams({ user_id: userId });
     }
@@ -48,7 +48,7 @@ function Connections({ userId }: ConnectionPageProps) {
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-light px-80 py-8 text-gray-dark">
-      <ConnectionProfile connections={data.data.length} />
+      <ConnectionProfile connections={data.data.length} user_id={userId} />
       <div className="my-8 flex flex-wrap gap-12">
         {data.data.map((connection: ConnectionCardProps) => (
           <ConnectionCard

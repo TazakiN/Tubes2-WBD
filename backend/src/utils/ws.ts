@@ -5,6 +5,7 @@ import { WSContext } from "hono/ws";
 import { ChatService } from "../services/chat.service";
 import { PushService } from "../services/push.service";
 import { sendPushNotification } from "./webpush";
+import { UsersService } from "../services/users.service";
 
 const clients = new Map<string, WSContext>();
 
@@ -45,12 +46,14 @@ export function websocketHandler() {
             })
           );
         } else {
-          const subscriber = await PushService.getSubsriberByUserId(
+          const subscriber = await PushService.getLastSubscriberByUserId(
             BigInt(to_id)
           );
 
+          const senderName = await UsersService.getUserNameByID(BigInt(userId));
+
           const payload = JSON.stringify({
-            title: "New message",
+            title: "New message from " + senderName,
             body: message,
             icon: "/favicon.ico",
           });
