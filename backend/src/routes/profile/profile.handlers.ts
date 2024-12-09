@@ -1,12 +1,19 @@
 import { Context } from "hono";
 import { getUserIDbyTokenInCookie } from "../../utils/jwt";
-import { profileController } from "../../controllers/profile.controller";
 import profileService from "../../services/profile.service";
 import { getCookie } from "hono/cookie";
 
 export const getProfileInfo = async (c: Context) => {
   try {
-    const data = await profileController.getProfileInfo(c);
+    const user_id_query = c.req.query("user_id");
+    const user_id = user_id_query ? BigInt(user_id_query) : null;
+    let requesting_id = null;
+    if (user_id === null) {
+      requesting_id = BigInt(await getUserIDbyTokenInCookie(c));
+    } else {
+      requesting_id = BigInt(user_id);
+    }
+    const data = await profileService.getProfileInfo(requesting_id);
     return c.json(
       {
         success: true,

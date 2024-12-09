@@ -91,6 +91,7 @@ export default class profileService {
       },
       select: {
         id: true,
+        full_name: true,
         username: true,
         profile_photo_path: true,
       },
@@ -102,7 +103,7 @@ export default class profileService {
 
     return {
       id: user.id.toString(),
-      username: user.username,
+      full_name: user.full_name ?? user.username,
       profile_photo_path: user.profile_photo_path,
     };
   }
