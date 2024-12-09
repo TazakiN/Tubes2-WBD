@@ -16,6 +16,8 @@ import usersRouter from "./routes/users/users.index";
 import connectionRouter from "./routes/connection/connection.index";
 import feedsRouter from "./routes/feed/feed.index";
 import { cacheMiddleware } from "./middlewares/cacheMiddleware";
+import { configureWebPush } from "./utils/webpush";
+import { pushRoutes } from "./routes/push.routes";
 
 dotenv.config();
 const app = new OpenAPIHono();
@@ -38,6 +40,8 @@ app.use(
   })
 );
 
+configureWebPush();
+
 app.use("/api/*", cacheMiddleware(300000));
 
 app.route("/api/", authRoutes);
@@ -53,12 +57,14 @@ app.doc("/doc", {
   openapi: "3.0.0",
   info: {
     version: "1.0.0",
-    title: "Anjay API",
+    title: "LinkInPurry API",
   },
 });
 
 app.get("/ui", swaggerUI({ url: "/doc" }));
 app.get("/ws", websocketHandler());
+
+app.route("/push", pushRoutes);
 
 app.get("/health", (c: Context) => {
   return c.json({ status: "ok" });
