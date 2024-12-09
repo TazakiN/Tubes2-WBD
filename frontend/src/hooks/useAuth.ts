@@ -1,46 +1,38 @@
-import { useState, useEffect, useContext } from "react";
-import { UserDataContext } from "@/contexts/UserDataContext";
-import { UserData } from "@/lib/types/userData";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 export const useAuth = () => {
-  const { userData, setUserData } = useContext(UserDataContext);
-  const [profileData, setProfileData] = useState<UserData | null>(null);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const { error, data, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["verify"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/verify`,
+        {
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Unauthorized");
+      }
+
+      const result = await response.json();
+      return result.body;
+    },
+    retry: false,
     staleTime: 1000 * 60 * 5,
-    queryKey: ["userData"],
-    queryFn: () =>
-      fetch(import.meta.env.VITE_API_BASE_URL + "/profile/info", {
-        credentials: "include",
-      }).then((res) => {
-        if (res.status === 401) {
-          setUserData(null);
-          setProfileData(null);
-          throw new Error("Profile not found");
-        }
-        return res.json();
-      }),
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
   });
-
-  useEffect(() => {
-    if (data) {
-      setUserData(data);
-      setProfileData(data);
-    }
-  }, [data, setUserData]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Failed to fetch profile data");
-    }
-  }, [error]);
 
   const logout = async () => {
     try {
       const response = await fetch(
-        import.meta.env.VITE_API_BASE_URL + "/logout",
+        `${import.meta.env.VITE_API_BASE_URL}/logout`,
         {
           method: "POST",
           credentials: "include",
@@ -48,26 +40,25 @@ export const useAuth = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to logout");
+        throw new Error("Logout gagal");
       }
 
-      setUserData(null);
-      setProfileData(null);
-      const queryClient = new QueryClient();
-      const queryKey = ["userData"];
-      queryClient.removeQueries({ queryKey, exact: true });
-      toast.success("Logout successful");
+      queryClient.removeQueries({ queryKey: ["verify"], exact: true });
+      queryClient.clear();
+
+      navigate({ to: "/login" });
+
+      toast.success("Logout berhasil");
     } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error("Logout failed");
+      console.error("Logout gagal:", error);
+      toast.error("Logout gagal. Silakan coba lagi.");
     }
   };
 
   return {
-    isAuthenticated: Boolean(userData),
-    userData,
-    profileData,
+    isAuthenticated: !isError && !!data && data.success !== false,
+    isLoading,
     logout,
-    refetch,
+    refetch: () => queryClient.invalidateQueries({ queryKey: ["verify"] }),
   };
 };

@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { toast } from "sonner";
 import NavButton from "./NavButton";
-
 import LoginSVG from "@/assets/svg/login.svg";
 import NetworkSparkle from "@/assets/svg/network-sparkle.svg";
 import UserProfileCircle from "@/assets/svg/user-profile-circle.svg";
@@ -18,15 +15,13 @@ import {
 } from "../ui/dropdown-menu";
 import { useNavigate } from "@tanstack/react-router";
 
-const NavLinks = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+interface NavLinksProps {
+  isAuthenticated: boolean;
+}
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      toast.info("Logged in as a Guest.");
-    }
-  }, [isAuthenticated]);
+const NavLinks = ({ isAuthenticated }: NavLinksProps) => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {

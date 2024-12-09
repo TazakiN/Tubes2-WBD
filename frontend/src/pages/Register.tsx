@@ -4,10 +4,11 @@ import { AuthLayout } from "@/layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { UserDataContext } from "@/contexts/UserDataContext";
+import { usePushNotification } from "@/hooks/usePushNotification";
+import { useAuth } from "@/hooks/useAuth"; // Tambahkan import useAuth
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -16,8 +17,9 @@ const Register = () => {
   const [fullName, setFullName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserData } = useContext(UserDataContext);
   const navigate = useNavigate({ from: "/register" });
+  usePushNotification();
+  useAuth();
 
   const registerMutation = useMutation({
     mutationFn: async () => {
@@ -46,19 +48,8 @@ const Register = () => {
       return response.json();
     },
     onSuccess: async () => {
-      const profileResponse = await fetch(
-        import.meta.env.VITE_API_BASE_URL + "/profile/info",
-        {
-          credentials: "include",
-        },
-      );
-
-      if (profileResponse.ok) {
-        const profileData = await profileResponse.json();
-        setUserData(profileData.body);
-        toast.success("Registration successful");
-        navigate({ to: "/" });
-      }
+      toast.success("Registrasi berhasil");
+      navigate({ to: "/" });
     },
     onError: (error: z.ZodError | Error) => {
       if (error instanceof z.ZodError) {

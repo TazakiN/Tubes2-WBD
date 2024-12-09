@@ -1,6 +1,7 @@
 import { Context } from "hono";
-import { deleteCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import AuthService from "../../services/auth.service";
+import { verifyJWT } from "../../utils/jwt";
 
 export const login = async (c: Context) => {
   const { identifier, password } = await c.req.json();
@@ -59,5 +60,21 @@ export const logout = async (c: Context) => {
       { success: false, message: "An unexpected error occurred during logout" },
       500
     );
+  }
+};
+
+export const verify = async (c: Context) => {
+  try {
+    const token = getCookie(c, "token");
+    if (!token) {
+      return c.json({ success: false, message: "Unauthorized" }, 401);
+    }
+    const user = await verifyJWT(token);
+    return c.json(
+      { success: true, message: "Token verified", body: user },
+      200
+    );
+  } catch (error) {
+    return c.json({ success: false, message: "Unauthorized" }, 401);
   }
 };

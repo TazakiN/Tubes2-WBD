@@ -113,20 +113,6 @@ async function main() {
     ],
   });
 
-  await prisma.push_subscriptions.createMany({
-    data: [
-      {
-        user_id: users[0].id,
-        endpoint: "https://example.com/push/john_doe",
-        keys: {
-          p256dh: "some_p256dh_key",
-          auth: "some_auth_key",
-        },
-        created_at: new Date(),
-      },
-    ],
-  });
-
   console.log("Seeding completed successfully!");
 }
 
